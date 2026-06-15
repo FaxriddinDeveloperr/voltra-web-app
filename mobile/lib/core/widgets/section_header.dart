@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_typography.dart';
 import '../theme/app_colors.dart';
+import '../l10n_ext.dart';
 
 /// Spec 1.4.6 — SectionHeader (chapda sarlavha, o'ngda "Hammasi >").
 class SectionHeader extends StatelessWidget {
@@ -21,10 +22,11 @@ class SectionHeader extends StatelessWidget {
           GestureDetector(
             onTap: onSeeAll,
             behavior: HitTestBehavior.opaque,
-            child: const Row(
+            child: Row(
               children: [
-                Text('Hammasi', style: AppTypography.link),
-                Icon(Icons.chevron_right, size: 18, color: AppColors.tealText),
+                Text(context.l10n.seeAll, style: AppTypography.link),
+                const Icon(Icons.chevron_right,
+                    size: 18, color: AppColors.tealText),
               ],
             ),
           ),

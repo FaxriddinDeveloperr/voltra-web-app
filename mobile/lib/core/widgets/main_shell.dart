@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/app_colors.dart';
+import '../l10n_ext.dart';
 import '../../features/cart/cart_providers.dart';
 
 /// Spec 0 — Bottom Navigation (4 tab: Asosiy, Katalog, Savat, Profil).
@@ -11,10 +12,10 @@ class MainShell extends ConsumerWidget {
   final Widget child;
 
   static const _tabs = [
-    _TabSpec('/home', Icons.home_outlined, Icons.home, 'Asosiy'),
-    _TabSpec('/catalog', Icons.grid_view_outlined, Icons.grid_view, 'Katalog'),
-    _TabSpec('/cart', Icons.shopping_cart_outlined, Icons.shopping_cart, 'Savat'),
-    _TabSpec('/profile', Icons.person_outline, Icons.person, 'Profil'),
+    _TabSpec('/home', Icons.home_outlined, Icons.home),
+    _TabSpec('/catalog', Icons.grid_view_outlined, Icons.grid_view),
+    _TabSpec('/cart', Icons.shopping_cart_outlined, Icons.shopping_cart),
+    _TabSpec('/profile', Icons.person_outline, Icons.person),
   ];
 
   int _indexFor(String location) {
@@ -27,6 +28,12 @@ class MainShell extends ConsumerWidget {
     final location = GoRouterState.of(context).uri.path;
     final current = _indexFor(location);
     final cartCount = ref.watch(cartCountProvider);
+    final labels = [
+      context.l10n.navHome,
+      context.l10n.navCatalog,
+      context.l10n.navCart,
+      context.l10n.navProfile,
+    ];
 
     return Scaffold(
       body: child,
@@ -45,6 +52,7 @@ class MainShell extends ConsumerWidget {
               final active = i == current;
               return _NavItem(
                 spec: t,
+                label: labels[i],
                 active: active,
                 badge: t.path == '/cart' ? cartCount : 0,
                 onTap: () => context.go(t.path),
@@ -58,21 +66,22 @@ class MainShell extends ConsumerWidget {
 }
 
 class _TabSpec {
-  const _TabSpec(this.path, this.icon, this.activeIcon, this.label);
+  const _TabSpec(this.path, this.icon, this.activeIcon);
   final String path;
   final IconData icon;
   final IconData activeIcon;
-  final String label;
 }
 
 class _NavItem extends StatelessWidget {
   const _NavItem({
     required this.spec,
+    required this.label,
     required this.active,
     required this.onTap,
     this.badge = 0,
   });
   final _TabSpec spec;
+  final String label;
   final bool active;
   final VoidCallback onTap;
   final int badge;
@@ -130,7 +139,7 @@ class _NavItem extends StatelessWidget {
             if (active) ...[
               const SizedBox(width: 6),
               Text(
-                spec.label,
+                label,
                 style: const TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w600,

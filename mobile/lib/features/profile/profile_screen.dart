@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../core/l10n_ext.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/utils/formatters.dart';
@@ -19,7 +20,7 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profil'),
+        title: Text(context.l10n.profileTitle),
         automaticallyImplyLeading: false,
       ),
       body: ListView(
@@ -50,34 +51,34 @@ class ProfileScreen extends ConsumerWidget {
           // Menyu
           _MenuTile(
             icon: Icons.shopping_bag_outlined,
-            label: 'Mening buyurtmalarim',
+            label: context.l10n.myOrders,
             onTap: () => context.push('/orders'),
           ),
           _MenuTile(
             icon: Icons.assignment_outlined,
-            label: 'Mening arizalarim',
+            label: context.l10n.myApplications,
             onTap: () => context.push('/applications'),
           ),
           _MenuTile(
             icon: Icons.headset_mic_outlined,
-            label: "Biz bilan bog'lanish",
+            label: context.l10n.contactUs,
             onTap: () => launchUrl(Uri.parse('tel:+998940196141')),
           ),
 
-          const _SectionLabel('Sozlamalar'),
+          _SectionLabel(context.l10n.settings),
           _MenuTile(
             icon: Icons.language,
-            label: 'Til',
+            label: context.l10n.language,
             onTap: () => context.push('/profile/language'),
           ),
           _MenuTile(
             icon: Icons.info_outline,
-            label: 'Ilova haqida',
+            label: context.l10n.about,
             onTap: () => context.push('/content/about'),
           ),
           _MenuTile(
             icon: Icons.description_outlined,
-            label: 'Oferta va foydalanish shartlari',
+            label: context.l10n.offer,
             onTap: () => context.push('/content/offer'),
           ),
 
@@ -87,8 +88,8 @@ class ProfileScreen extends ConsumerWidget {
             child: TextButton.icon(
               onPressed: () => _confirmLogout(context, ref),
               icon: const Icon(Icons.logout, color: AppColors.dangerRed),
-              label: const Text('Chiqish',
-                  style: TextStyle(
+              label: Text(context.l10n.logout,
+                  style: const TextStyle(
                       color: AppColors.dangerRed, fontWeight: FontWeight.w600)),
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/l10n_ext.dart';
 import '../../core/models/product.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
@@ -76,17 +77,17 @@ class HomeScreen extends ConsumerWidget {
 
                   // Sections
                   _ProductSection(
-                    title: 'Qaynoq narxlar!!',
+                    title: context.l10n.sectionHot,
                     provider: hotProductsProvider,
                     filter: 'hot',
                   ),
                   _ProductSection(
-                    title: 'Yangi mahsulotlar',
+                    title: context.l10n.sectionNew,
                     provider: newProductsProvider,
                     filter: 'new',
                   ),
                   _ProductSection(
-                    title: "Ko'p sotilgan mahsulotlar",
+                    title: context.l10n.sectionBest,
                     provider: bestSellerProvider,
                     filter: 'best',
                   ),
@@ -113,23 +114,23 @@ class _QuickActions extends StatelessWidget {
         children: [
           QuickActionButton(
             icon: Icons.grid_view_rounded,
-            label: 'Katalog',
+            label: context.l10n.qaCatalog,
             onTap: () => context.go('/catalog'),
           ),
           QuickActionButton(
             icon: Icons.build_outlined,
-            label: 'Xizmatlar',
+            label: context.l10n.qaServices,
             onTap: () => context.push('/services'),
           ),
           QuickActionButton(
             icon: Icons.handshake_outlined,
-            label: 'Hamkorlik',
-            badge: 'Yangi',
+            label: context.l10n.qaPartnership,
+            badge: context.l10n.badgeNew,
             onTap: () => showPartnershipMenu(context),
           ),
           QuickActionButton(
             icon: Icons.info_outline,
-            label: 'Foydali',
+            label: context.l10n.qaUseful,
             onTap: () => showUsefulMenu(context),
           ),
         ],
@@ -200,9 +201,10 @@ class _BrandsSection extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-              child: Text('Brendlar', style: AppTypography.sectionTitle),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+              child: Text(context.l10n.sectionBrands,
+                  style: AppTypography.sectionTitle),
             ),
             const SizedBox(height: AppSpacing.md),
             SizedBox(
