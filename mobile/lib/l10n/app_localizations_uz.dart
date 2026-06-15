@@ -9,7 +9,7 @@ class AppLocalizationsUz extends AppLocalizations {
   AppLocalizationsUz([String locale = 'uz']) : super(locale);
 
   @override
-  String get appName => 'Quyoshli';
+  String get appName => 'Voltra';
 
   @override
   String get navHome => 'Asosiy';

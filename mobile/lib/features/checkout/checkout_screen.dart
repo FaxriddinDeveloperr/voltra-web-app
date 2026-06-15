@@ -205,7 +205,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           const SizedBox(height: AppSpacing.section),
 
           // Mijoz turi
-          const Text('Mijoz', style: AppTypography.sectionTitle),
+          Text('Mijoz', style: AppTypography.sectionTitle),
           const SizedBox(height: AppSpacing.md),
           Segmented<_Customer>(
             label: (v) => '',
@@ -228,7 +228,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           const SizedBox(height: AppSpacing.section),
 
           // O'rnatish
-          const Text("O'rnatish", style: AppTypography.sectionTitle),
+          Text("O'rnatish", style: AppTypography.sectionTitle),
           const SizedBox(height: AppSpacing.md),
           RadioRow(
             selected: _install == _Install.self,
@@ -260,7 +260,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Jami', style: AppTypography.hint),
+                    Text('Jami', style: AppTypography.hint),
                     Text(Formatters.price(cart.grandTotal),
                         style: AppTypography.price),
                   ],
@@ -333,7 +333,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final cities =
         _region == null ? null : ref.watch(citiesProvider(_region!.id));
     return [
-      const Text('Yetkazib berish manzili:',
+      Text('Yetkazib berish manzili:',
           style: AppTypography.sectionTitle),
       const SizedBox(height: AppSpacing.md),
       regions.maybeWhen(
@@ -378,7 +378,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Buyurtmani qabul qilish punkti',
+        Text('Buyurtmani qabul qilish punkti',
             style: AppTypography.sectionTitle),
         const SizedBox(height: AppSpacing.md),
         points.maybeWhen(

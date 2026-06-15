@@ -55,14 +55,14 @@ class QuantitySelector extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: enabled ? AppColors.primaryAccent : AppColors.border,
+            color: enabled ? AppColors.forest : AppColors.border,
             width: 1.4,
           ),
         ),
         child: Icon(
           icon,
           size: 18,
-          color: enabled ? AppColors.primaryAccent : AppColors.border,
+          color: enabled ? AppColors.forest : AppColors.border,
         ),
       ),
     );

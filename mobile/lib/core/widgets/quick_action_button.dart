@@ -36,7 +36,7 @@ class QuickActionButton extends StatelessWidget {
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
                 ),
-                child: Icon(icon, size: 32, color: AppColors.primaryAccent),
+                child: Icon(icon, size: 32, color: AppColors.forest),
               ),
               if (badge != null)
                 Positioned(

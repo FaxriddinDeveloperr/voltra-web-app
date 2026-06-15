@@ -50,7 +50,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   child: ListView(
                     padding: const EdgeInsets.all(AppSpacing.screen),
                     children: [
-                      const Text('Tayyor yechimlar',
+                      Text('Tayyor yechimlar',
                           style: AppTypography.sectionTitle),
                       const SizedBox(height: AppSpacing.md),
                       ...cart.items.map((line) => _CartItemCard(line: line)),
@@ -117,7 +117,7 @@ class _CartItemCard extends ConsumerWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.delete_outline,
-                    color: AppColors.primaryAccent),
+                    color: AppColors.forest),
                 onPressed: () => notifier.remove(line.id),
               ),
             ],

@@ -61,9 +61,9 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
               const SizedBox(height: 40),
               const Center(child: AppLogo(size: 80)),
               const SizedBox(height: 40),
-              const Text('Xush kelibsiz', style: AppTypography.screenTitle),
+              Text('Xush kelibsiz', style: AppTypography.screenTitle),
               const SizedBox(height: AppSpacing.sm),
-              const Text(
+              Text(
                 'Davom etish uchun telefon raqamingizni kiriting',
                 style: AppTypography.hint,
               ),

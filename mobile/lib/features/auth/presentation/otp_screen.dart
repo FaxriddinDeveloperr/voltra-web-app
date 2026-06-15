@@ -69,7 +69,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Tasdiqlash kodi', style: AppTypography.screenTitle),
+              Text('Tasdiqlash kodi', style: AppTypography.screenTitle),
               const SizedBox(height: AppSpacing.sm),
               Text(
                 '${Formatters.phone(widget.phone)} raqamiga yuborilgan kodni kiriting',

@@ -106,7 +106,7 @@ class _ServiceFormScreenState extends ConsumerState<ServiceFormScreen> {
           Text(widget.serviceName, style: AppTypography.screenTitle),
           const SizedBox(height: AppSpacing.section),
 
-          const Text('Xizmat tafsilotlari',
+          Text('Xizmat tafsilotlari',
               style: AppTypography.sectionTitle),
           const SizedBox(height: AppSpacing.md),
           if (widget.hasPowerField) ...[
@@ -123,7 +123,7 @@ class _ServiceFormScreenState extends ConsumerState<ServiceFormScreen> {
               controller: _comment, label: 'Izoh', maxLines: 4),
           const SizedBox(height: AppSpacing.section),
 
-          const Text('Manzil', style: AppTypography.sectionTitle),
+          Text('Manzil', style: AppTypography.sectionTitle),
           const SizedBox(height: AppSpacing.md),
           regions.maybeWhen(
             data: (list) => CustomDropdown<Region>(
@@ -152,7 +152,7 @@ class _ServiceFormScreenState extends ConsumerState<ServiceFormScreen> {
             ),
           const SizedBox(height: AppSpacing.section),
 
-          const Text('Mijoz', style: AppTypography.sectionTitle),
+          Text('Mijoz', style: AppTypography.sectionTitle),
           const SizedBox(height: AppSpacing.md),
           CustomTextField(
               controller: _fullName,

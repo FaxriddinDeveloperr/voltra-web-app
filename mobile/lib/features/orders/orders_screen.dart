@@ -115,7 +115,7 @@ class _OrderCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Jami:', style: AppTypography.hint),
+              Text('Jami:', style: AppTypography.hint),
               Text(Formatters.price(order.grandTotal),
                   style: AppTypography.price.copyWith(fontSize: 16)),
             ],

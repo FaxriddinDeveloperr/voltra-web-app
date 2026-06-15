@@ -23,7 +23,7 @@ class LanguageScreen extends ConsumerWidget {
               color: selected ? AppColors.primaryLight : AppColors.surface,
               borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
               border: Border.all(
-                color: selected ? AppColors.primaryAccent : Colors.transparent,
+                color: selected ? AppColors.forest : Colors.transparent,
                 width: 1.4,
               ),
             ),

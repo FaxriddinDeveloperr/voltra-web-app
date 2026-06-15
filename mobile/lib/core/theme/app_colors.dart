@@ -1,37 +1,60 @@
 import 'package:flutter/material.dart';
 
-/// Spec 1.1 — Rang palitrasi (videodan piksel darajasida).
+/// Voltra Brand Book (05 — Color). Forest + Sun + Cream.
 abstract class AppColors {
-  // Primary
-  static const primary = Color(0xFF0F4A3F); // to'q yashil — asosiy tugmalar
-  static const primaryAccent = Color(0xFF3DD6C0); // turkuaz/mint
-  static const primaryAccentAlt = Color(0xFF4ECDC4);
-  static const primaryLight = Color(0xFFD4F5F0); // och mint — aktiv tab foni
-  static const primaryLightAlt = Color(0xFFC5F2EB);
-  static const tealText = Color(0xFF1A9E8F); // narx matni, "Hammasi >"
+  // ── Voltra asosiy palitrasi ────────────────────────────────
+  static const forest = Color(0xFF155233); // Voltra Forest — asosiy
+  static const deepForest = Color(0xFF0E3A24);
+  static const softForest = Color(0xFF1F6F46);
+  static const sun = Color(0xFFF0C71D); // Voltra Sun — akssent
+  static const cream = Color(0xFFF9F3D9); // Voltra Cream — kanvas
+  static const creamDeep = Color(0xFFEFE7C4);
+  static const ink = Color(0xFF0B1D13);
+  static const muted = Color(0xFF6B7A70);
+  static const rule = Color(0xFFD8D2B8);
+
+  // ── Eski semantik nomlar (Voltra qiymatlariga ko'chirilgan) ─
+  static const primary = forest; // asosiy tugmalar, interaktiv
+  static const primaryAccent = sun; // akssent (badge, nuqta, narx highlight)
+  static const primaryAccentAlt = softForest;
+  static const primaryLight = Color(0xFFE4EFE8); // och forest tint (selected)
+  static const primaryLightAlt = creamDeep;
+  static const tealText = softForest; // havola va narx matni (yashil)
 
   // Status
-  static const discountRed = Color(0xFFE63946); // chegirma badge
-  static const discountRedAlt = Color(0xFFEF3B3B);
-  static const newGreen = Color(0xFF3AAA35); // "Tez kunda", "Yangi"
-  static const newGreenAlt = Color(0xFF34A853);
-  static const dangerRed = Color(0xFFE03131); // o'chirish/chiqish
-  static const inStockGreen = Color(0xFF2E9E4F); // "100 dona"
+  static const discountRed = Color(0xFFD6453B);
+  static const discountRedAlt = Color(0xFFD6453B);
+  static const newGreen = softForest;
+  static const newGreenAlt = softForest;
+  static const dangerRed = Color(0xFFC0392B);
+  static const inStockGreen = softForest;
 
-  // Surfaces
-  static const background = Color(0xFFFFFFFF);
-  static const surface = Color(0xFFF5F5F5); // input/quick-action fon
-  static const surfaceAlt = Color(0xFFF2F2F2);
-  static const imagePlaceholder = Color(0xFFE0E0E0);
-  static const imagePlaceholderAlt = Color(0xFFDEDEDE);
+  // Sirtlar
+  static const background = cream; // kanvas — issiq krem
+  static const surface = Color(0xFFFFFFFF); // kartalar / inputlar
+  static const surfaceAlt = creamDeep;
+  static const imagePlaceholder = Color(0xFFE6E0CC);
+  static const imagePlaceholderAlt = Color(0xFFE6E0CC);
 
-  // Text
-  static const textPrimary = Color(0xFF1A1A1A);
-  static const textPrimaryAlt = Color(0xFF212121);
-  static const textSecondary = Color(0xFF757575);
-  static const textSecondaryAlt = Color(0xFF888888);
-  static const strikethrough = Color(0xFF9E9E9E);
+  // Matn
+  static const textPrimary = ink;
+  static const textPrimaryAlt = ink;
+  static const textSecondary = muted;
+  static const textSecondaryAlt = muted;
+  static const strikethrough = muted;
 
-  // Border
-  static const border = Color(0xFFE0E0E0);
+  // Chegara
+  static const border = rule;
+
+  // ── Gradientlar (yumshoq, shaffof uslub) ───────────────────
+  static const forestGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [forest, deepForest],
+  );
+  static const sunGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFF6D43A), sun],
+  );
 }

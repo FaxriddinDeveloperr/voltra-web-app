@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In uz, this message translates to:
-  /// **'Quyoshli'**
+  /// **'Voltra'**
   String get appName;
 
   /// No description provided for @navHome.

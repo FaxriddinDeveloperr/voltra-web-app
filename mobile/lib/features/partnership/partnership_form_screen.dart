@@ -113,7 +113,7 @@ class _PartnershipFormScreenState extends ConsumerState<PartnershipFormScreen> {
         children: [
           Text(_title, style: AppTypography.screenTitle),
           const SizedBox(height: AppSpacing.section),
-          const Text("Ma'lumot", style: AppTypography.sectionTitle),
+          Text("Ma'lumot", style: AppTypography.sectionTitle),
           const SizedBox(height: AppSpacing.md),
           regions.maybeWhen(
             data: (list) => CustomDropdown<Region>(

@@ -13,7 +13,7 @@ class QuyoshliApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     final locale = ref.watch(localeProvider);
     return MaterialApp.router(
-      title: 'Quyoshli',
+      title: 'Voltra',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       locale: locale,

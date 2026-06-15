@@ -13,20 +13,20 @@ class DiscountBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.discountRed,
+        gradient: AppColors.sunGradient,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.settings, size: 12, color: Colors.white),
+          const Icon(Icons.wb_sunny_rounded, size: 12, color: AppColors.ink),
           const SizedBox(width: 3),
           Text(
             withMinus ? '-$percent%' : '$percent %',
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.ink,
               fontSize: 12,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w800,
             ),
           ),
         ],

@@ -83,7 +83,7 @@ class _ServiceCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(Icons.cleaning_services_outlined,
-                        size: 36, color: AppColors.primaryAccent),
+                        size: 36, color: AppColors.forest),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       service.nameUz,

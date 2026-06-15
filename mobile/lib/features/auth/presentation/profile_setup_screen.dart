@@ -55,9 +55,9 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Ma'lumotlaringiz", style: AppTypography.screenTitle),
+              Text("Ma'lumotlaringiz", style: AppTypography.screenTitle),
               const SizedBox(height: AppSpacing.sm),
-              const Text(
+              Text(
                 "Buyurtma va arizalar uchun ismingizni kiriting",
                 style: AppTypography.hint,
               ),

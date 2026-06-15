@@ -9,7 +9,7 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
-  String get appName => 'Quyoshli';
+  String get appName => 'Voltra';
 
   @override
   String get navHome => 'Главная';

@@ -70,7 +70,7 @@ void _sheet(BuildContext context, String title, List<_MenuItem> items) {
             ...items.map(
               (m) => ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: Icon(m.icon, color: AppColors.primaryAccent),
+                leading: Icon(m.icon, color: AppColors.forest),
                 title: Text(m.label),
                 trailing: const Icon(Icons.chevron_right,
                     color: AppColors.textSecondary),

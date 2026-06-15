@@ -144,7 +144,7 @@ class _Body extends StatelessWidget {
                           padding: EdgeInsets.only(top: 6, right: 8),
                           child: CircleAvatar(
                               radius: 2.5,
-                              backgroundColor: AppColors.primaryAccent),
+                              backgroundColor: AppColors.forest),
                         ),
                         Expanded(
                             child: Text(f,
@@ -163,7 +163,7 @@ class _Body extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size.fromHeight(48),
                     foregroundColor: AppColors.tealText,
-                    side: const BorderSide(color: AppColors.primaryAccent),
+                    side: const BorderSide(color: AppColors.forest),
                     shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.circular(AppSpacing.buttonRadius)),
@@ -316,7 +316,7 @@ class _SpecsBlock extends StatelessWidget {
             child: Row(
               children: [
                 Icon(_iconFor(s.icon),
-                    size: 20, color: AppColors.primaryAccent),
+                    size: 20, color: AppColors.forest),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(

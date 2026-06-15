@@ -1,70 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
-/// Spec 1.2 — Tipografiya. System sans-serif (Roboto-ga o'xshash).
+/// Voltra Brand Book (06 — Typography).
+/// Display = Playfair Display (serif), Text = Inter (sans).
 abstract class AppTypography {
-  static const _family = null; // system default
+  static TextStyle _serif({
+    double size = 24,
+    FontWeight weight = FontWeight.w700,
+    Color color = AppColors.textPrimary,
+    double height = 1.1,
+  }) =>
+      GoogleFonts.playfairDisplay(
+        fontSize: size,
+        fontWeight: weight,
+        color: color,
+        height: height,
+      );
 
-  static const screenTitle = TextStyle(
-    fontFamily: _family,
-    fontSize: 25,
-    fontWeight: FontWeight.w700,
-    color: AppColors.textPrimary,
-  );
+  static TextStyle _sans({
+    double size = 14,
+    FontWeight weight = FontWeight.w400,
+    Color color = AppColors.textPrimary,
+    double height = 1.3,
+    double spacing = 0,
+  }) =>
+      GoogleFonts.inter(
+        fontSize: size,
+        fontWeight: weight,
+        color: color,
+        height: height,
+        letterSpacing: spacing,
+      );
 
-  static const appBarTitle = TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.w700,
-    color: AppColors.textPrimary,
-  );
+  // Display / sarlavhalar — serif
+  static TextStyle get screenTitle =>
+      _serif(size: 26, weight: FontWeight.w700);
+  static TextStyle get appBarTitle =>
+      _serif(size: 20, weight: FontWeight.w700);
+  static TextStyle get sectionTitle =>
+      _serif(size: 19, weight: FontWeight.w700);
 
-  static const sectionTitle = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w700,
-    color: AppColors.textPrimary,
-  );
-
-  static const productName = TextStyle(
-    fontSize: 15,
-    fontWeight: FontWeight.w500,
-    color: AppColors.textPrimary,
-    height: 1.25,
-  );
-
-  static const price = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w700,
-    color: AppColors.textPrimary,
-  );
-
-  static const priceLarge = TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.w700,
-    color: AppColors.tealText,
-  );
-
-  static const oldPrice = TextStyle(
-    fontSize: 13,
-    fontWeight: FontWeight.w400,
-    color: AppColors.strikethrough,
-    decoration: TextDecoration.lineThrough,
-  );
-
-  static const button = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    color: Colors.white,
-  );
-
-  static const hint = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: AppColors.textSecondary,
-  );
-
-  static const link = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    color: AppColors.tealText,
-  );
+  // Matn — sans
+  static TextStyle get productName =>
+      _sans(size: 14, weight: FontWeight.w500, height: 1.25);
+  static TextStyle get price =>
+      _sans(size: 17, weight: FontWeight.w700, color: AppColors.ink);
+  static TextStyle get priceLarge =>
+      _serif(size: 24, weight: FontWeight.w700, color: AppColors.forest);
+  static TextStyle get oldPrice => _sans(
+        size: 13,
+        weight: FontWeight.w400,
+        color: AppColors.strikethrough,
+      ).copyWith(decoration: TextDecoration.lineThrough);
+  static TextStyle get button =>
+      _sans(size: 16, weight: FontWeight.w600, color: Colors.white);
+  static TextStyle get hint =>
+      _sans(size: 14, weight: FontWeight.w400, color: AppColors.textSecondary);
+  static TextStyle get link =>
+      _sans(size: 14, weight: FontWeight.w600, color: AppColors.tealText);
+  static TextStyle get caption => _sans(
+        size: 11,
+        weight: FontWeight.w700,
+        color: AppColors.muted,
+        spacing: 1.2,
+      );
 }

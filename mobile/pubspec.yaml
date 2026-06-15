@@ -35,6 +35,9 @@ dependencies:
   # Datasheet/PDF ochish
   url_launcher: ^6.3.1
 
+  # Brend shriftlari (Playfair Display + Inter)
+  google_fonts: ^6.2.1
+
   # i18n
   intl: any
 

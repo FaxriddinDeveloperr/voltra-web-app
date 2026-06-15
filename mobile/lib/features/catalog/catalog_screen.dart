@@ -89,7 +89,7 @@ class _CategoryTile extends StatelessWidget {
             ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
-              title: const Text('Barchasi', style: AppTypography.link),
+              title: Text('Barchasi', style: AppTypography.link),
               onTap: openProducts,
             ),
             ...category.children.map(
