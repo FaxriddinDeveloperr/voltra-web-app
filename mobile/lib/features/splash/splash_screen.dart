@@ -4,6 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/widgets/app_logo.dart';
 import '../auth/auth_providers.dart';
 import '../cart/cart_providers.dart';
+import '../favorites/favorites_providers.dart';
 
 /// Spec 1.5 / 2.1 — Splash: logo, token tekshirish -> Home yoki Login.
 class SplashScreen extends ConsumerStatefulWidget {
@@ -26,6 +27,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     // Auth bo'lsa savatni yuklab qo'yamiz.
     if (ref.read(authProvider).status == AuthStatus.authenticated) {
       ref.read(cartProvider.notifier).load();
+      ref.read(favoritesProvider.notifier).load();
     }
   }
 

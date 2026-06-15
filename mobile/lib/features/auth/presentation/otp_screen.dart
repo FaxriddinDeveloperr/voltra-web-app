@@ -7,6 +7,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../../cart/cart_providers.dart';
+import '../../favorites/favorites_providers.dart';
 import '../auth_providers.dart';
 
 /// Spec 2.17 — OTP kodni kiritish (4-6 katak).
@@ -50,6 +51,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
           .verifyOtp(widget.phone, _controller.text);
       // Auth holatiga qarab router avtomatik yo'naltiradi.
       ref.read(cartProvider.notifier).load();
+      ref.read(favoritesProvider.notifier).load();
     } catch (_) {
       setState(() => _error = "Kod noto'g'ri yoki muddati tugagan");
     } finally {
