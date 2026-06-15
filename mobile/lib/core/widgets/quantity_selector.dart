@@ -28,9 +28,18 @@ class QuantitySelector extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Text(
-            '$quantity',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 180),
+            switchInCurve: Curves.easeOut,
+            transitionBuilder: (child, anim) => FadeTransition(
+              opacity: anim,
+              child: ScaleTransition(scale: anim, child: child),
+            ),
+            child: Text(
+              '$quantity',
+              key: ValueKey(quantity),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
           ),
         ),
         _circle(

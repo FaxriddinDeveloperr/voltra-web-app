@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
+import 'pressable.dart';
 
 /// Spec 1.4.7 — PrimaryButton (to'q yashil, oq matn, full width).
 class PrimaryButton extends StatelessWidget {
@@ -44,19 +45,28 @@ class PrimaryButton extends StatelessWidget {
             ],
           );
 
-    final button = ElevatedButton(
-      onPressed: loading ? null : onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
-        disabledBackgroundColor: AppColors.primaryTintSoft,
-        disabledForegroundColor: AppColors.textTertiary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
-        ),
+    final enabled = !loading && onPressed != null;
+    final button = DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
+        boxShadow: enabled ? AppColors.softShadow : null,
       ),
-      child: child,
+      child: ElevatedButton(
+        onPressed: loading ? null : onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          disabledBackgroundColor: AppColors.primaryTintSoft,
+          disabledForegroundColor: AppColors.textTertiary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
+          ),
+        ),
+        child: child,
+      ),
     );
 
-    return expanded ? SizedBox(width: double.infinity, child: button) : button;
+    final sized =
+        expanded ? SizedBox(width: double.infinity, child: button) : button;
+    return Pressable(child: sized);
   }
 }

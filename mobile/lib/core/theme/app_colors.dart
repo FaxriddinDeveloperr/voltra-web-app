@@ -31,12 +31,18 @@ abstract class AppColors {
   static const warn = Color(0xFFC98A00);
   static const warnTint = Color(0xFFFBF1D6);
 
-  // ── Soyalar (yengil chuqurlik — border o'rniga) ────────────
+  // ── Soyalar (ko'p qatlamli, teal-tinted — border o'rniga) ──
+  // Skill: soya rangi fonga moslangan (sof qora emas, deep teal toni).
   static const List<BoxShadow> cardShadow = [
-    BoxShadow(color: Color(0x0F000000), blurRadius: 20, offset: Offset(0, 8)),
+    BoxShadow(color: Color(0x0A0E3B3B), blurRadius: 24, offset: Offset(0, 12)),
+    BoxShadow(color: Color(0x0F0E3B3B), blurRadius: 6, offset: Offset(0, 2)),
   ];
   static const List<BoxShadow> softShadow = [
-    BoxShadow(color: Color(0x0A000000), blurRadius: 12, offset: Offset(0, 4)),
+    BoxShadow(color: Color(0x0A0E3B3B), blurRadius: 16, offset: Offset(0, 6)),
+  ];
+  // Mahsulot rasmi "suzib turishi" uchun (signature)
+  static const List<BoxShadow> floatShadow = [
+    BoxShadow(color: Color(0x140E3B3B), blurRadius: 20, offset: Offset(0, 10)),
   ];
 
   // ── Nozik gradientlar (faqat banner/CTA/logo) ──────────────

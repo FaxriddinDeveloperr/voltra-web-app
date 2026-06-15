@@ -10,6 +10,7 @@ import '../../core/widgets/app_logo.dart';
 import '../../core/widgets/network_img.dart';
 import '../../core/widgets/quick_action_button.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/widgets/soft_icon_button.dart';
 import '../../core/widgets/skeleton_loader.dart';
 import '../products/widgets/fav_product_card.dart';
 import 'home_providers.dart';
@@ -34,15 +35,16 @@ class HomeScreen extends ConsumerWidget {
           child: AppLogo(size: 32, showWordmark: true),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () => context.push('/search'),
-          ),
-          IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () => context.push('/favorites'),
+          SoftIconButton(
+            icon: Icons.search,
+            onTap: () => context.push('/search'),
           ),
           const SizedBox(width: AppSpacing.sm),
+          SoftIconButton(
+            icon: Icons.favorite_border,
+            onTap: () => context.push('/favorites'),
+          ),
+          const SizedBox(width: AppSpacing.screen),
         ],
       ),
       body: isLoading

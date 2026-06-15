@@ -1,13 +1,14 @@
 /// Spacing va radius tokenlari. Havodor, izchil.
 abstract class AppSpacing {
   static const double screen = 16; // ekran chekkasi padding
-  static const double section = 28; // section'lar orasidagi vertikal masofa
+  static const double section = 32; // section'lar orasidagi vertikal masofa (8-pt)
 
   static const double xs = 4;
   static const double sm = 8;
   static const double md = 12;
   static const double lg = 16;
   static const double xl = 24;
+  static const double xxl = 32;
 
   // Radius — biroz oshirilgan, izchil
   static const double cardRadius = 20;

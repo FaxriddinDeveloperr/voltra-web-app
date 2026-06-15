@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import 'xit_badge.dart';
+import 'pressable.dart';
 
 /// Spec 1.4.5 — QuickActionButton (och kulrang karta, turkuaz ikonka, nom).
 class QuickActionButton extends StatelessWidget {
@@ -20,9 +21,8 @@ class QuickActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Pressable(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -33,10 +33,10 @@ class QuickActionButton extends StatelessWidget {
                 width: AppSpacing.quickAction,
                 height: AppSpacing.quickAction,
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: AppColors.primaryTintSoft,
                   borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
                 ),
-                child: Icon(icon, size: 32, color: AppColors.forest),
+                child: Icon(icon, size: 30, color: AppColors.primary),
               ),
               if (badge != null)
                 Positioned(
