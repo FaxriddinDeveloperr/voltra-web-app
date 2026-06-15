@@ -1,0 +1,296 @@
+// Quyoshli — Solar e-commerce. Prisma schema (spec 4-bo'lim).
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Foydalanuvchi
+model User {
+  id           String        @id @default(uuid())
+  phone        String        @unique // +998940196141
+  firstName    String?
+  lastName     String?
+  middleName   String? // Sharif
+  isVerified   Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  orders       Order[]
+  applications Application[]
+  favorites    Favorite[]
+  cart         CartItem[]
+}
+
+// OTP kodlar
+model OtpCode {
+  id        String   @id @default(uuid())
+  phone     String
+  code      String // hashlangan
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+}
+
+// Refresh token (rotation)
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Kategoriya (accordion, parent-child)
+model Category {
+  id        String     @id @default(uuid())
+  nameUz    String
+  nameRu    String?
+  nameEn    String?
+  imageUrl  String?
+  parentId  String?
+  parent    Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryTree")
+  sortOrder Int        @default(0)
+  products  Product[]
+}
+
+// Brend
+model Brand {
+  id        String    @id @default(uuid())
+  name      String // Jinko, SUNGROW, TTN, Get-Green Energy
+  logoUrl   String?
+  sortOrder Int       @default(0)
+  products  Product[]
+}
+
+// Mahsulot
+model Product {
+  id            String         @id @default(uuid())
+  nameUz        String
+  nameRu        String?
+  nameEn        String?
+  slug          String         @unique
+  descriptionUz String?        @db.Text // To'liq tavsif
+  descriptionRu String?        @db.Text
+  shortFeatures String[] // qisqa xususiyatlar ro'yxati (qator-qator)
+  price         Decimal        @db.Decimal(14, 2) // so'mda
+  oldPrice      Decimal?       @db.Decimal(14, 2) // chegirmadan oldingi
+  priceUsd      Decimal?       @db.Decimal(10, 2) // y.e. (340 y.e.)
+  discountPct   Int? // 3, 15, 56
+  currency      String         @default("UZS")
+  stock         Int            @default(0) // Sotuvda mavjud: 100 dona
+  vatIncluded   Boolean        @default(true) // QQS bilan
+  datasheetUrl  String? // PDF datasheet
+  isHot         Boolean        @default(false) // Qaynoq narxlar
+  isNew         Boolean        @default(false) // Yangi mahsulotlar
+  isBestSeller  Boolean        @default(false) // Ko'p sotilgan
+  isXit         Boolean        @default(false) // Xit badge
+  specs         Json? // texnik xususiyatlar: [{icon, label, value}]
+  categoryId    String?
+  category      Category?      @relation(fields: [categoryId], references: [id])
+  brandId       String?
+  brand         Brand?         @relation(fields: [brandId], references: [id])
+  images        ProductImage[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([categoryId])
+  @@index([brandId])
+}
+
+model ProductImage {
+  id        String  @id @default(uuid())
+  url       String
+  sortOrder Int     @default(0)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+// Banner (asosiy ekran karusel)
+model Banner {
+  id        String   @id @default(uuid())
+  imageUrl  String
+  title     String?
+  link      String? // mahsulot/kategoriya/url
+  type      String? // "diler", "sotuvchi", "usta" segmentlari uchun ham
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+}
+
+// Savat elementi
+model CartItem {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+// Sevimlilar
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+// Buyurtma
+model Order {
+  id            String           @id @default(uuid())
+  orderNumber   String           @unique
+  userId        String
+  user          User             @relation(fields: [userId], references: [id])
+  deliveryType  DeliveryType // DELIVERY | PICKUP
+  customerType  CustomerType // INDIVIDUAL | LEGAL
+  // Jismoniy shaxs
+  fullName      String?
+  phone         String
+  // Yuridik shaxs
+  orgName       String?
+  inn           String? // STIR
+  directorName  String?
+  bank          String?
+  mfo           String?
+  oked          String?
+  legalAddress  String?
+  // Yetkazib berish
+  region        String? // Viloyat
+  city          String? // Shahar/Tuman
+  address       String?
+  house         String? // Uy
+  landmark      String? // Mo'ljal
+  pickupPointId String? // olib ketish punkti
+  installation  InstallationType // SELF | WITH_INSTALL
+  itemsTotal    Decimal          @db.Decimal(14, 2)
+  discountTotal Decimal          @db.Decimal(14, 2)
+  deliveryFee   Decimal          @default(0) @db.Decimal(14, 2)
+  grandTotal    Decimal          @db.Decimal(14, 2)
+  status        OrderStatus      @default(NEW)
+  items         OrderItem[]
+  createdAt     DateTime         @default(now())
+
+  @@index([userId])
+}
+
+model OrderItem {
+  id          String  @id @default(uuid())
+  orderId     String
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  productName String
+  price       Decimal @db.Decimal(14, 2)
+  quantity    Int
+}
+
+// Olib ketish punktlari
+model PickupPoint {
+  id   String @id @default(uuid())
+  name String // "Toshkent shahri, Iftixor ko'chasi 1-uy"
+  city String // "Toshkent shahri"
+  lat  Float?
+  lng  Float?
+}
+
+// Xizmat turlari
+model Service {
+  id            String  @id @default(uuid())
+  nameUz        String // Quyosh panelini tozalash
+  nameRu        String?
+  isActive      Boolean @default(true) // false = "Tez kunda"
+  comingSoon    Boolean @default(false)
+  hasPowerField Boolean @default(false) // Quvvat dropdown kerakmi
+  sortOrder     Int     @default(0)
+}
+
+// Ariza (xizmat va hamkorlik)
+model Application {
+  id           String   @id @default(uuid())
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id])
+  type         AppType // SERVICE | DEALER | SELLER | MASTER
+  serviceId    String? // SERVICE bo'lsa
+  power        String? // Quvvat
+  region       String? // Viloyat
+  city         String? // Shahar/Tuman
+  fullName     String?
+  phone        String
+  servicePrice String? // Ustalar uchun: 1 kVt narxi
+  comment      String?  @db.Text // Izoh
+  status       String   @default("NEW")
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Statik kontent
+model AppContent {
+  id      String  @id @default(uuid())
+  key     String  @unique // "about", "offer"
+  titleUz String?
+  bodyUz  String? @db.Text
+  bodyRu  String? @db.Text
+  bodyEn  String? @db.Text
+}
+
+// Viloyat / Shahar (regions)
+model Region {
+  id     String @id @default(uuid())
+  nameUz String
+  nameRu String?
+  cities City[]
+}
+
+model City {
+  id       String @id @default(uuid())
+  nameUz   String
+  nameRu   String?
+  regionId String
+  region   Region @relation(fields: [regionId], references: [id], onDelete: Cascade)
+
+  @@index([regionId])
+}
+
+enum DeliveryType {
+  DELIVERY
+  PICKUP
+}
+
+enum CustomerType {
+  INDIVIDUAL
+  LEGAL
+}
+
+enum InstallationType {
+  SELF
+  WITH_INSTALL
+}
+
+enum OrderStatus {
+  NEW
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum AppType {
+  SERVICE
+  DEALER
+  SELLER
+  MASTER
+}
