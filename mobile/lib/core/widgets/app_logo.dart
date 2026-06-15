@@ -44,11 +44,11 @@ class AppLogo extends StatelessWidget {
         SizedBox(width: size * 0.28),
         Text(
           'VOLTRA',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: size * 0.52,
             fontWeight: FontWeight.w800,
-            letterSpacing: size * 0.02,
-            color: onDark ? AppColors.cream : AppColors.forest,
+            letterSpacing: size * 0.01,
+            color: onDark ? AppColors.cream : AppColors.primaryDark,
           ),
         ),
       ],
