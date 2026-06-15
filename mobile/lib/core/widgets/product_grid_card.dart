@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 import '../utils/formatters.dart';
 import 'discount_badge.dart';
 import 'xit_badge.dart';
 import 'network_img.dart';
+import 'heart_button.dart';
 
 /// Spec 1.4.2 — ProductGridCard (2-ustun grid).
 class ProductGridCard extends StatelessWidget {
@@ -51,22 +51,9 @@ class ProductGridCard extends StatelessWidget {
                 Positioned(
                   top: 6,
                   right: 6,
-                  child: GestureDetector(
+                  child: HeartButton(
+                    isFavorite: isFavorite,
                     onTap: onFavorite,
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        size: 18,
-                        color: isFavorite
-                            ? AppColors.discountRed
-                            : AppColors.textSecondary,
-                      ),
-                    ),
                   ),
                 ),
               ],
