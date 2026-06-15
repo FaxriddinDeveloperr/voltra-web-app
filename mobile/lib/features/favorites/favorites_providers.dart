@@ -22,6 +22,8 @@ class FavoritesNotifier extends StateNotifier<Set<String>> {
 
   bool isFavorite(String id) => state.contains(id);
 
+  void clear() => state = {};
+
   Future<void> toggle(String productId) async {
     final api = _ref.read(apiServiceProvider);
     if (state.contains(productId)) {
