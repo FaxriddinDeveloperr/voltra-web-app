@@ -3,82 +3,91 @@ import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 import 'app_spacing.dart';
 
-/// Voltra tema — krem kanvas, forest primary, sun akssent, yumshoq sirtlar.
+/// Markazlashtirilgan tema — barcha ranglar/radiuslar tokenlardan.
 abstract class AppTheme {
   static ThemeData get light {
     final base = ThemeData.light(useMaterial3: true);
     final textTheme = GoogleFonts.interTextTheme(base.textTheme).apply(
-      bodyColor: AppColors.ink,
-      displayColor: AppColors.ink,
+      bodyColor: AppColors.textPrimary,
+      displayColor: AppColors.textPrimary,
     );
 
     return base.copyWith(
       scaffoldBackgroundColor: AppColors.background,
       textTheme: textTheme,
       colorScheme: base.colorScheme.copyWith(
-        primary: AppColors.forest,
-        secondary: AppColors.sun,
+        primary: AppColors.primary,
+        secondary: AppColors.primary,
         surface: AppColors.background,
-        error: AppColors.dangerRed,
+        error: AppColors.danger,
         onPrimary: Colors.white,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,
-        foregroundColor: AppColors.ink,
+        foregroundColor: AppColors.textPrimary,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: GoogleFonts.playfairDisplay(
           fontSize: 20,
           fontWeight: FontWeight.w700,
-          color: AppColors.ink,
+          color: AppColors.textPrimary,
         ),
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.forest,
+          backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
-          disabledBackgroundColor: AppColors.creamDeep,
-          disabledForegroundColor: AppColors.muted,
+          disabledBackgroundColor: AppColors.primaryTintSoft,
+          disabledForegroundColor: AppColors.textTertiary,
           elevation: 0,
           minimumSize: const Size.fromHeight(54),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
           ),
-          textStyle: GoogleFonts.inter(
-              fontSize: 16, fontWeight: FontWeight.w600),
+          textStyle:
+              GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.surface,
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-        hintStyle: GoogleFonts.inter(color: AppColors.muted, fontSize: 14),
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        hintStyle:
+            GoogleFonts.inter(color: AppColors.textTertiary, fontSize: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.inputRadius),
-          borderSide: const BorderSide(color: AppColors.rule),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.inputRadius),
-          borderSide: const BorderSide(color: AppColors.rule),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.inputRadius),
-          borderSide: const BorderSide(color: AppColors.forest, width: 1.6),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
       ),
       dividerTheme: const DividerThemeData(
-        color: AppColors.rule,
+        color: AppColors.border,
         thickness: 1,
         space: 1,
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: AppColors.forest,
+        backgroundColor: AppColors.primaryDark,
         contentTextStyle: GoogleFonts.inter(color: Colors.white),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
+        ),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
         ),
       ),
     );

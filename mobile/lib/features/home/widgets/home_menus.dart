@@ -39,7 +39,7 @@ class _MenuItem {
 void _sheet(BuildContext context, String title, List<_MenuItem> items) {
   showModalBottomSheet<void>(
     context: context,
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.background,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),

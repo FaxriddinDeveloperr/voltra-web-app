@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_spacing.dart';
 
-/// Spec 1.4.3 — DiscountBadge (qizil pill, ⚙/quyosh ikonka + foiz).
+/// DiscountBadge — yumshoq tinted chip (ochiq qizil fon + to'q qizil matn).
 class DiscountBadge extends StatelessWidget {
   const DiscountBadge({super.key, required this.percent, this.withMinus = false});
 
@@ -11,22 +12,22 @@ class DiscountBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(
-        gradient: AppColors.sunGradient,
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.dangerTint,
+        borderRadius: BorderRadius.circular(AppSpacing.pillRadius),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.wb_sunny_rounded, size: 12, color: AppColors.ink),
+          const Icon(Icons.sell_outlined, size: 12, color: AppColors.danger),
           const SizedBox(width: 3),
           Text(
             withMinus ? '-$percent%' : '$percent %',
             style: const TextStyle(
-              color: AppColors.ink,
+              color: AppColors.danger,
               fontSize: 12,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],

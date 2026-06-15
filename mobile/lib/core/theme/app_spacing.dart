@@ -1,7 +1,7 @@
-/// Spec 1.3 — Spacing va o'lchamlar.
+/// Spacing va radius tokenlari. Havodor, izchil.
 abstract class AppSpacing {
   static const double screen = 16; // ekran chekkasi padding
-  static const double section = 24; // section'lar orasidagi vertikal masofa
+  static const double section = 28; // section'lar orasidagi vertikal masofa
 
   static const double xs = 4;
   static const double sm = 8;
@@ -9,12 +9,12 @@ abstract class AppSpacing {
   static const double lg = 16;
   static const double xl = 24;
 
-  // Radius
-  static const double cardRadius = 14; // 12-16
-  static const double buttonRadius = 12;
-  static const double pillRadius = 26; // 24-28
-  static const double inputRadius = 12;
-  static const double smallImageRadius = 8;
+  // Radius — biroz oshirilgan, izchil
+  static const double cardRadius = 20;
+  static const double buttonRadius = 16;
+  static const double pillRadius = 100; // to'liq yumaloq (badge/chip)
+  static const double inputRadius = 14;
+  static const double smallImageRadius = 12;
 
   // O'lchamlar
   static const double quickAction = 80;

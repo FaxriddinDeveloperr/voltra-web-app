@@ -1,60 +1,89 @@
 import 'package:flutter/material.dart';
 
-/// Voltra Brand Book (05 — Color). Forest + Sun + Cream.
+/// Markazlashtirilgan rang tizimi (teal). Hech qayerda hardcode rang yo'q —
+/// barcha widgetlar shu tokenlardan o'qiydi.
 abstract class AppColors {
-  // ── Voltra asosiy palitrasi ────────────────────────────────
-  static const forest = Color(0xFF155233); // Voltra Forest — asosiy
-  static const deepForest = Color(0xFF0E3A24);
-  static const softForest = Color(0xFF1F6F46);
-  static const sun = Color(0xFFF0C71D); // Voltra Sun — akssent
-  static const cream = Color(0xFFF9F3D9); // Voltra Cream — kanvas
-  static const creamDeep = Color(0xFFEFE7C4);
-  static const ink = Color(0xFF0B1D13);
-  static const muted = Color(0xFF6B7A70);
-  static const rule = Color(0xFFD8D2B8);
+  // ── Brend teal ─────────────────────────────────────────────
+  static const primary = Color(0xFF0EA5A5);
+  static const primaryDark = Color(0xFF0E3B3B); // chuqur teal
 
-  // ── Eski semantik nomlar (Voltra qiymatlariga ko'chirilgan) ─
-  static const primary = forest; // asosiy tugmalar, interaktiv
-  static const primaryAccent = sun; // akssent (badge, nuqta, narx highlight)
-  static const primaryAccentAlt = softForest;
-  static const primaryLight = Color(0xFFE4EFE8); // och forest tint (selected)
-  static const primaryLightAlt = creamDeep;
-  static const tealText = softForest; // havola va narx matni (yashil)
+  // Tinted (yumshoq, shaffof) variantlar
+  static const primaryTintSoft = Color(0x140EA5A5); // ~8%
+  static const primaryTint = Color(0x1A0EA5A5); // ~10%
+  static const primaryTintStrong = Color(0x240EA5A5); // ~14%
 
-  // Status
-  static const discountRed = Color(0xFFD6453B);
-  static const discountRedAlt = Color(0xFFD6453B);
-  static const newGreen = softForest;
-  static const newGreenAlt = softForest;
-  static const dangerRed = Color(0xFFC0392B);
-  static const inStockGreen = softForest;
+  // ── Neytral shkala (teal'ga biroz moyil, yumshoq o'tishlar) ─
+  static const background = Color(0xFFFFFFFF); // asosiy kanvas — toza oq
+  static const surface = Color(0xFFF7F9F9); // kartalar/inputlar yengil foni
+  static const surfaceVariant = Color(0xFFEFF3F3); // biroz chuqurroq
+  static const border = Color(0xFFE3EAEA); // nozik chegara
 
-  // Sirtlar — asosiy fon TOZA OQ; to'ldirilgan bloklar yengil neytral
-  static const background = Color(0xFFFFFFFF); // kanvas — toza oq
-  static const surface = Color(0xFFF4F6F4); // inputlar, quick-action, xulosa
-  static const surfaceAlt = Color(0xFFEDF0ED);
-  static const imagePlaceholder = Color(0xFFE9ECE9);
-  static const imagePlaceholderAlt = Color(0xFFE9ECE9);
+  // ── Matn ierarxiyasi ───────────────────────────────────────
+  static const textPrimary = Color(0xFF0F2121);
+  static const textSecondary = Color(0xFF5C6B6B);
+  static const textTertiary = Color(0xFF93A1A1);
 
-  // Matn
-  static const textPrimary = ink;
-  static const textPrimaryAlt = ink;
-  static const textSecondary = muted;
-  static const textSecondaryAlt = muted;
-  static const strikethrough = muted;
+  // ── Status (yumshoq, zamonaviy ton + tinted fon) ───────────
+  static const danger = Color(0xFFE15C54);
+  static const dangerTint = Color(0xFFFCECEA);
+  static const success = Color(0xFF1FA07A);
+  static const successTint = Color(0xFFE6F4EF);
+  static const warn = Color(0xFFC98A00);
+  static const warnTint = Color(0xFFFBF1D6);
 
-  // Chegara
-  static const border = rule;
+  // ── Soyalar (yengil chuqurlik — border o'rniga) ────────────
+  static const List<BoxShadow> cardShadow = [
+    BoxShadow(color: Color(0x0F000000), blurRadius: 20, offset: Offset(0, 8)),
+  ];
+  static const List<BoxShadow> softShadow = [
+    BoxShadow(color: Color(0x0A000000), blurRadius: 12, offset: Offset(0, 4)),
+  ];
 
-  // ── Gradientlar (yumshoq, shaffof uslub) ───────────────────
-  static const forestGradient = LinearGradient(
+  // ── Nozik gradientlar (faqat banner/CTA/logo) ──────────────
+  static const tealGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [forest, deepForest],
+    colors: [primary, primaryDark],
   );
-  static const sunGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [Color(0xFFF6D43A), sun],
-  );
+
+  // ── Logo akssenti (faqat logo belgisida) ───────────────────
+  static const sun = Color(0xFFF2B705);
+
+  // ════════════════════════════════════════════════════════════
+  // Eski semantik nomlar — yangi tokenlarga ko'chirilgan
+  // (widgetlar o'zgarmasdan ishlashi uchun)
+  // ════════════════════════════════════════════════════════════
+  static const primaryAccent = primary;
+  static const primaryAccentAlt = primaryDark;
+  static const primaryLight = primaryTint; // tanlangan tinted fon
+  static const primaryLightAlt = surfaceVariant;
+  static const tealText = primary; // havola / narx akssent matni
+
+  static const forest = primary; // ikonkalar -> primary
+  static const deepForest = primaryDark;
+  static const softForest = primary;
+  static const cream = Color(0xFFFFFFFF);
+  static const creamDeep = surfaceVariant;
+  static const ink = textPrimary;
+  static const muted = textSecondary;
+  static const rule = border;
+
+  static const discountRed = danger;
+  static const discountRedAlt = danger;
+  static const newGreen = success;
+  static const newGreenAlt = success;
+  static const dangerRed = danger;
+  static const inStockGreen = success;
+
+  static const surfaceAlt = surfaceVariant;
+  static const imagePlaceholder = Color(0xFFE9EEEE);
+  static const imagePlaceholderAlt = Color(0xFFE9EEEE);
+
+  static const textPrimaryAlt = textPrimary;
+  static const textSecondaryAlt = textSecondary;
+  static const strikethrough = textTertiary;
+
+  // Eski gradient nomlari -> teal gradient
+  static const forestGradient = tealGradient;
+  static const sunGradient = tealGradient;
 }

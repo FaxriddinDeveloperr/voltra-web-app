@@ -250,7 +250,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         child: Container(
           padding: const EdgeInsets.all(AppSpacing.screen),
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: AppColors.background,
             border: Border(top: BorderSide(color: AppColors.border)),
           ),
           child: Row(

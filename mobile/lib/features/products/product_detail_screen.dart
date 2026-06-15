@@ -199,7 +199,7 @@ class _Body extends StatelessWidget {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -406,7 +406,7 @@ class _BottomBarState extends ConsumerState<_BottomBar> {
         padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screen, vertical: AppSpacing.md),
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: AppColors.background,
           border: Border(top: BorderSide(color: AppColors.border)),
         ),
         child: Row(

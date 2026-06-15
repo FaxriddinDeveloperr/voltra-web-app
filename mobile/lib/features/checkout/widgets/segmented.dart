@@ -36,17 +36,9 @@ class Segmented<T> extends StatelessWidget {
                 curve: Curves.easeOut,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: active ? Colors.white : Colors.transparent,
-                  borderRadius: BorderRadius.circular(AppSpacing.sm),
-                  boxShadow: active
-                      ? [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.06),
-                            blurRadius: 4,
-                            offset: const Offset(0, 1),
-                          ),
-                        ]
-                      : null,
+                  color: active ? AppColors.background : Colors.transparent,
+                  borderRadius: BorderRadius.circular(AppSpacing.md),
+                  boxShadow: active ? AppColors.softShadow : null,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

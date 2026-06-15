@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_spacing.dart';
 import '../l10n_ext.dart';
 import '../../features/cart/cart_providers.dart';
 
@@ -42,7 +43,7 @@ class MainShell extends ConsumerWidget {
           height: 64,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: AppColors.background,
             border: Border(top: BorderSide(color: AppColors.border)),
           ),
           child: Row(
@@ -91,7 +92,7 @@ class _NavItem extends StatelessWidget {
     final iconWidget = Icon(
       active ? spec.activeIcon : spec.icon,
       size: 22,
-      color: active ? AppColors.cream : AppColors.muted,
+      color: active ? AppColors.primary : AppColors.textSecondary,
     );
 
     return GestureDetector(
@@ -102,8 +103,8 @@ class _NavItem extends StatelessWidget {
         curve: Curves.easeOut,
         padding: EdgeInsets.symmetric(horizontal: active ? 16 : 12, vertical: 8),
         decoration: BoxDecoration(
-          color: active ? AppColors.forest : Colors.transparent,
-          borderRadius: BorderRadius.circular(24),
+          color: active ? AppColors.primaryTint : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppSpacing.pillRadius),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -141,7 +142,7 @@ class _NavItem extends StatelessWidget {
               Text(
                 label,
                 style: const TextStyle(
-                  color: AppColors.cream,
+                  color: AppColors.primary,
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),

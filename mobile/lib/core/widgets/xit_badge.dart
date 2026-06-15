@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_spacing.dart';
 
-/// Spec 1.4.4 — XitBadge (olov ikonka + "Xit", turkuaz/ko'k gradient).
+/// XitBadge — tinted teal chip (yumshoq fon + primary matn).
 class XitBadge extends StatelessWidget {
   const XitBadge({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(
-        gradient: AppColors.forestGradient,
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.primaryTintStrong,
+        borderRadius: BorderRadius.circular(AppSpacing.pillRadius),
       ),
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.bolt, size: 13, color: AppColors.sun),
+          Icon(Icons.bolt, size: 13, color: AppColors.primary),
           SizedBox(width: 3),
           Text(
             'Xit',
             style: TextStyle(
-              color: AppColors.sun,
+              color: AppColors.primary,
               fontSize: 12,
               fontWeight: FontWeight.w700,
             ),
@@ -32,7 +33,7 @@ class XitBadge extends StatelessWidget {
   }
 }
 
-/// Yashil "Yangi"/"Tez kunda" pill (spec 8.9).
+/// "Yangi" / "Tez kunda" — yumshoq tinted success chip.
 class StatusPill extends StatelessWidget {
   const StatusPill({super.key, required this.label});
   final String label;
@@ -40,17 +41,17 @@ class StatusPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
       decoration: BoxDecoration(
-        color: AppColors.newGreen,
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.successTint,
+        borderRadius: BorderRadius.circular(AppSpacing.pillRadius),
       ),
       child: Text(
         label,
         style: const TextStyle(
-          color: Colors.white,
+          color: AppColors.success,
           fontSize: 11,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
