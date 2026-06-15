@@ -1,0 +1,48 @@
+name: quyoshli
+description: "Quyoshli — Solar e-commerce mobile app."
+publish_to: "none"
+version: 2.0.9+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # Networking
+  dio: ^5.7.0
+
+  # Routing
+  go_router: ^14.6.2
+
+  # Local storage
+  flutter_secure_storage: ^9.2.2
+  shared_preferences: ^2.3.3
+
+  # Image / loading
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+
+  # Carousel
+  carousel_slider: ^5.0.0
+
+  # i18n
+  intl: any
+
+  # Utils
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
