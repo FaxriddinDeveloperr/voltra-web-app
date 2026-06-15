@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_colors.dart';
 
-/// Voltra logo — geometrik "V" (checkmark + chaqmoq), Sun sariq.
-/// Brend kitobi 02 — Logo System.
+/// Voltra logo — toza geometrik "V" (cream), teal gradient plitkada, yumshoq nur.
 class AppLogo extends StatelessWidget {
   const AppLogo({
     super.key,
@@ -14,7 +13,7 @@ class AppLogo extends StatelessWidget {
 
   final double size;
   final bool showWordmark;
-  final bool onDark; // to'q fonda — V to'g'ridan-to'g'ri (plitkasiz)
+  final bool onDark;
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +21,48 @@ class AppLogo extends StatelessWidget {
         ? SizedBox(
             width: size,
             height: size,
-            child: CustomPaint(painter: _VMarkPainter(AppColors.sun)),
+            child: CustomPaint(painter: _VMarkPainter(Colors.white)),
           )
         : Container(
             width: size,
             height: size,
-            padding: EdgeInsets.all(size * 0.2),
             decoration: BoxDecoration(
-              gradient: AppColors.forestGradient,
-              borderRadius: BorderRadius.circular(size * 0.26),
+              gradient: AppColors.tealGradient,
+              borderRadius: BorderRadius.circular(size * 0.28),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.30),
+                  blurRadius: size * 0.28,
+                  offset: Offset(0, size * 0.12),
+                ),
+              ],
             ),
-            child: CustomPaint(painter: _VMarkPainter(AppColors.sun)),
+            child: Stack(
+              children: [
+                // yumshoq ichki nur (yuqori-chap)
+                Positioned(
+                  left: -size * 0.1,
+                  top: -size * 0.1,
+                  child: Container(
+                    width: size * 0.7,
+                    height: size * 0.7,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          Colors.white.withValues(alpha: 0.22),
+                          Colors.white.withValues(alpha: 0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(size * 0.24),
+                  child: CustomPaint(painter: _VMarkPainter(Colors.white)),
+                ),
+              ],
+            ),
           );
 
     if (!showWordmark) return mark;
@@ -41,14 +71,14 @@ class AppLogo extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         mark,
-        SizedBox(width: size * 0.28),
+        SizedBox(width: size * 0.3),
         Text(
           'VOLTRA',
           style: GoogleFonts.plusJakartaSans(
-            fontSize: size * 0.52,
+            fontSize: size * 0.5,
             fontWeight: FontWeight.w800,
-            letterSpacing: size * 0.01,
-            color: onDark ? AppColors.cream : AppColors.primaryDark,
+            letterSpacing: size * 0.012,
+            color: onDark ? Colors.white : AppColors.primaryDark,
           ),
         ),
       ],
@@ -56,7 +86,7 @@ class AppLogo extends StatelessWidget {
   }
 }
 
-/// V belgisi: chap qalin diagonal + o'ngda ikki ofset uchburchak (bolt).
+/// Toza, qalin "V" — chap va o'ng diagonal pastda tutashadi (checkmark/bolt).
 class _VMarkPainter extends CustomPainter {
   _VMarkPainter(this.color);
   final Color color;
@@ -70,30 +100,31 @@ class _VMarkPainter extends CustomPainter {
       ..style = PaintingStyle.fill
       ..isAntiAlias = true;
 
-    // Chap qalin diagonal limb (yuqori-chapdan past-markazga)
+    // Chap qalin diagonal (yuqori-chapdan past-markazga)
     final left = Path()
-      ..moveTo(w * 0.04, h * 0.06)
-      ..lineTo(w * 0.34, h * 0.06)
-      ..lineTo(w * 0.66, h * 0.98)
-      ..lineTo(w * 0.40, h * 0.98)
+      ..moveTo(w * 0.06, h * 0.06)
+      ..lineTo(w * 0.30, h * 0.06)
+      ..lineTo(w * 0.58, h * 0.94)
+      ..lineTo(w * 0.40, h * 0.94)
       ..close();
     canvas.drawPath(left, p);
 
-    // O'ng yuqori uchburchak (katta — checkmark)
-    final topRight = Path()
-      ..moveTo(w * 0.58, h * 0.06)
-      ..lineTo(w * 0.98, h * 0.06)
-      ..lineTo(w * 0.62, h * 0.56)
+    // O'ng diagonal — yuqori qism (checkmark uchi)
+    final rightTop = Path()
+      ..moveTo(w * 0.94, h * 0.06)
+      ..lineTo(w * 0.70, h * 0.06)
+      ..lineTo(w * 0.52, h * 0.62)
+      ..lineTo(w * 0.66, h * 0.62)
       ..close();
-    canvas.drawPath(topRight, p);
+    canvas.drawPath(rightTop, p);
 
     // O'ng past ofset uchburchak (chaqmoq — harakat)
-    final bottomRight = Path()
-      ..moveTo(w * 0.66, h * 0.50)
-      ..lineTo(w * 0.98, h * 0.50)
-      ..lineTo(w * 0.74, h * 0.92)
+    final rightBolt = Path()
+      ..moveTo(w * 0.60, h * 0.58)
+      ..lineTo(w * 0.78, h * 0.58)
+      ..lineTo(w * 0.56, h * 0.96)
       ..close();
-    canvas.drawPath(bottomRight, p);
+    canvas.drawPath(rightBolt, p);
   }
 
   @override

@@ -51,58 +51,102 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.screen),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 40),
-              const Center(child: AppLogo(size: 80)),
-              const SizedBox(height: 40),
-              Text('Xush kelibsiz', style: AppTypography.screenTitle),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                'Davom etish uchun telefon raqamingizni kiriting',
-                style: AppTypography.hint,
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              TextField(
-                controller: _controller,
-                keyboardType: TextInputType.phone,
-                onChanged: (_) => setState(() {}),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(9),
-                  _PhoneMaskFormatter(),
-                ],
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                decoration: const InputDecoration(
-                  prefixText: '+998  ',
-                  prefixStyle: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+      body: Column(
+        children: [
+          // ── Teal hero: logo + brend va'dasi ──
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(
+                AppSpacing.xl, media.padding.top + 56, AppSpacing.xl, 48),
+            decoration: const BoxDecoration(
+              gradient: AppColors.tealGradient,
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(36)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const AppLogo(size: 52, showWordmark: true, onDark: true),
+                const SizedBox(height: AppSpacing.xxl),
+                Text(
+                  'Quyosh allaqachon\nishlayapti.',
+                  style: AppTypography.screenTitle.copyWith(
+                    color: Colors.white,
+                    fontSize: 30,
+                    height: 1.2,
                   ),
-                  hintText: '90 123 45 67',
                 ),
-              ),
-              if (_error != null) ...[
-                const SizedBox(height: AppSpacing.sm),
-                Text(_error!,
-                    style: const TextStyle(color: AppColors.dangerRed)),
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  'Quyosh energiyasi yechimlari — tomingiz aktivga aylansin.',
+                  style: AppTypography.hint.copyWith(
+                    color: Colors.white.withValues(alpha: 0.85),
+                    height: 1.45,
+                  ),
+                ),
               ],
-              const Spacer(),
-              PrimaryButton(
-                label: 'Davom etish',
-                loading: _loading,
-                onPressed: _valid ? _submit : null,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-            ],
+            ),
           ),
-        ),
+
+          // ── Pastki oq qism: input + tugma ──
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.xl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: AppSpacing.sm),
+                  Text('Telefon raqamingiz', style: AppTypography.sectionTitle),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text('Tasdiqlash kodi SMS orqali yuboriladi',
+                      style: AppTypography.hint),
+                  const SizedBox(height: AppSpacing.lg),
+                  TextField(
+                    controller: _controller,
+                    keyboardType: TextInputType.phone,
+                    onChanged: (_) => setState(() {}),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(9),
+                      _PhoneMaskFormatter(),
+                    ],
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w600),
+                    decoration: const InputDecoration(
+                      prefixText: '+998  ',
+                      prefixStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary,
+                      ),
+                      hintText: '90 123 45 67',
+                    ),
+                  ),
+                  if (_error != null) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(_error!,
+                        style: const TextStyle(color: AppColors.dangerRed)),
+                  ],
+                  const Spacer(),
+                  PrimaryButton(
+                    label: 'Davom etish',
+                    loading: _loading,
+                    onPressed: _valid ? _submit : null,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Center(
+                    child: Text(
+                      'Davom etish orqali shartlarga rozilik bildirasiz',
+                      style: AppTypography.hint.copyWith(fontSize: 12),
+                    ),
+                  ),
+                  SizedBox(height: media.padding.bottom + AppSpacing.sm),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
