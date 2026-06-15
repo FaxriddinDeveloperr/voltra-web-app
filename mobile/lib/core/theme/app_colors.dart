@@ -29,12 +29,12 @@ abstract class AppColors {
   static const dangerRed = Color(0xFFC0392B);
   static const inStockGreen = softForest;
 
-  // Sirtlar
-  static const background = cream; // kanvas — issiq krem
-  static const surface = Color(0xFFFFFFFF); // kartalar / inputlar
-  static const surfaceAlt = creamDeep;
-  static const imagePlaceholder = Color(0xFFE6E0CC);
-  static const imagePlaceholderAlt = Color(0xFFE6E0CC);
+  // Sirtlar — asosiy fon TOZA OQ; to'ldirilgan bloklar yengil neytral
+  static const background = Color(0xFFFFFFFF); // kanvas — toza oq
+  static const surface = Color(0xFFF4F6F4); // inputlar, quick-action, xulosa
+  static const surfaceAlt = Color(0xFFEDF0ED);
+  static const imagePlaceholder = Color(0xFFE9ECE9);
+  static const imagePlaceholderAlt = Color(0xFFE9ECE9);
 
   // Matn
   static const textPrimary = ink;
