@@ -25,12 +25,12 @@ export function HeartBtn({ id }: { id: string }) {
     <button
       onClick={(e) => { e.stopPropagation(); if (!fav) { setPop(true); setTimeout(() => setPop(false), 240); } toggle(id); }}
       style={{
-        width: 30, height: 30, borderRadius: '50%', background: '#fff',
-        display: 'grid', placeItems: 'center', boxShadow: '0 2px 6px rgba(0,0,0,.15)',
+        width: 30, height: 30, borderRadius: '50%', background: 'var(--card)',
+        display: 'grid', placeItems: 'center', boxShadow: '0 2px 6px rgba(0,0,0,.25)',
         transform: pop ? 'scale(1.3)' : 'scale(1)', transition: 'transform .2s ease-out',
       }}
     >
-      <Heart size={17} fill={fav ? 'var(--danger)' : 'none'} color={fav ? 'var(--danger)' : '#888'} />
+      <Heart size={17} fill={fav ? 'var(--danger)' : 'none'} color={fav ? 'var(--danger)' : 'var(--text-3)'} />
     </button>
   );
 }

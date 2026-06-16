@@ -7,7 +7,7 @@ export function Logo({ size = 40, wordmark, onDark }: { size?: number; wordmark?
     <div
       style={{
         width: size, height: size, borderRadius: size * 0.28, flex: '0 0 auto',
-        background: onDark ? 'rgba(255,255,255,.10)' : '#fff',
+        background: onDark ? 'rgba(255,255,255,.10)' : 'var(--card)',
         border: `1.4px solid ${onDark ? 'rgba(255,255,255,.25)' : 'var(--accent-border)'}`,
         boxShadow: onDark ? 'none' : 'var(--shadow-soft)',
         display: 'grid', placeItems: 'center',
