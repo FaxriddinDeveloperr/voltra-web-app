@@ -92,7 +92,7 @@ class _NavItem extends StatelessWidget {
     final iconWidget = Icon(
       active ? spec.activeIcon : spec.icon,
       size: 22,
-      color: active ? AppColors.primary : AppColors.textSecondary,
+      color: active ? AppColors.ink : AppColors.textSecondary,
     );
 
     return GestureDetector(
@@ -142,8 +142,8 @@ class _NavItem extends StatelessWidget {
               Text(
                 label,
                 style: const TextStyle(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w600,
+                  color: AppColors.ink,
+                  fontWeight: FontWeight.w700,
                   fontSize: 13,
                 ),
               ),

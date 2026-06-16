@@ -1,76 +1,91 @@
 import 'package:flutter/material.dart';
 
-/// Markazlashtirilgan rang tizimi (teal). Hech qayerda hardcode rang yo'q —
-/// barcha widgetlar shu tokenlardan o'qiydi.
+/// Energiya brendi — electric yellow (tok sariq) + chaqmoq + qorong'i hero.
+/// Markazlashtirilgan: barcha widgetlar shu tokenlardan o'qiydi.
 abstract class AppColors {
-  // ── Brend teal ─────────────────────────────────────────────
-  static const primary = Color(0xFF0EA5A5);
-  static const primaryDark = Color(0xFF0E3B3B); // chuqur teal
+  // ── Energiya palitrasi ─────────────────────────────────────
+  static const accent = Color(0xFFFFD60A); // electric yellow — asosiy aksent
+  static const accentDeep = Color(0xFFF2B600); // gradient/pressed
+  static const accentBright = Color(0xFFFFE24D); // gradient yuqori (glossy)
+  static const ink = Color(0xFF17170E); // near-black (qorong'i hero + matn)
+  static const inkDeep = Color(0xFF0E0E08); // gradient tubi
 
-  // Tinted (yumshoq, shaffof) variantlar
-  static const primaryTintSoft = Color(0x140EA5A5); // ~8%
-  static const primaryTint = Color(0x1A0EA5A5); // ~10%
-  static const primaryTintStrong = Color(0x240EA5A5); // ~14%
+  // Sariq tinted variantlar
+  static const accentTintSoft = Color(0x1FFFD60A); // ~12%
+  static const accentTint = Color(0x29FFD60A); // ~16%
+  static const accentTintStrong = Color(0x3DFFD60A); // ~24%
+  static const accentBorder = Color(0x4DFFD60A); // ~30% — sariq border
 
-  // ── Neytral shkala (teal'ga biroz moyil, yumshoq o'tishlar) ─
-  static const background = Color(0xFFFFFFFF); // asosiy kanvas — toza oq
-  static const surface = Color(0xFFF7F9F9); // kartalar/inputlar yengil foni
-  static const surfaceVariant = Color(0xFFEFF3F3); // biroz chuqurroq
-  static const border = Color(0xFFE3EAEA); // nozik chegara
+  // ── Neytral ────────────────────────────────────────────────
+  static const background = Color(0xFFFFFFFF); // toza oq kontent foni
+  static const surface = Color(0xFFF7F7F2); // iliq yengil sirt
+  static const surfaceVariant = Color(0xFFEFEFE6);
+  static const border = Color(0xFFE9E9DD);
 
-  // ── Matn ierarxiyasi ───────────────────────────────────────
-  static const textPrimary = Color(0xFF0F2121);
-  static const textSecondary = Color(0xFF5C6B6B);
-  static const textTertiary = Color(0xFF93A1A1);
+  // ── Matn ───────────────────────────────────────────────────
+  static const textPrimary = ink;
+  static const textSecondary = Color(0xFF6B6B5C);
+  static const textTertiary = Color(0xFF9C9C8C);
 
-  // ── Status (yumshoq, zamonaviy ton + tinted fon) ───────────
-  static const danger = Color(0xFFE15C54);
-  static const dangerTint = Color(0xFFFCECEA);
-  static const success = Color(0xFF1FA07A);
-  static const successTint = Color(0xFFE6F4EF);
-  static const warn = Color(0xFFC98A00);
-  static const warnTint = Color(0xFFFBF1D6);
+  // ── Status ─────────────────────────────────────────────────
+  static const danger = Color(0xFFE5484D);
+  static const dangerTint = Color(0xFFFDEBEC);
+  static const success = Color(0xFF2BA24C);
+  static const successTint = Color(0xFFE7F6EC);
+  static const warn = accentDeep;
+  static const warnTint = accentTintSoft;
 
-  // ── Soyalar (ko'p qatlamli, teal-tinted — border o'rniga) ──
-  // Skill: soya rangi fonga moslangan (sof qora emas, deep teal toni).
+  // ── Soyalar + electric glow ────────────────────────────────
   static const List<BoxShadow> cardShadow = [
-    BoxShadow(color: Color(0x0A0E3B3B), blurRadius: 24, offset: Offset(0, 12)),
-    BoxShadow(color: Color(0x0F0E3B3B), blurRadius: 6, offset: Offset(0, 2)),
+    BoxShadow(color: Color(0x14000000), blurRadius: 20, offset: Offset(0, 10)),
+    BoxShadow(color: Color(0x0A000000), blurRadius: 4, offset: Offset(0, 1)),
   ];
   static const List<BoxShadow> softShadow = [
-    BoxShadow(color: Color(0x0A0E3B3B), blurRadius: 16, offset: Offset(0, 6)),
+    BoxShadow(color: Color(0x12000000), blurRadius: 14, offset: Offset(0, 6)),
   ];
-  // Mahsulot rasmi "suzib turishi" uchun (signature)
   static const List<BoxShadow> floatShadow = [
-    BoxShadow(color: Color(0x140E3B3B), blurRadius: 20, offset: Offset(0, 10)),
+    BoxShadow(color: Color(0x1A000000), blurRadius: 18, offset: Offset(0, 10)),
+  ];
+  // Sariq electric glow (tugma/logo)
+  static const List<BoxShadow> glow = [
+    BoxShadow(color: Color(0x66FFD60A), blurRadius: 24, offset: Offset(0, 8)),
   ];
 
-  // ── Nozik gradientlar (faqat banner/CTA/logo) ──────────────
-  static const tealGradient = LinearGradient(
+  // ── Gradientlar ────────────────────────────────────────────
+  static const accentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [primary, primaryDark],
+    colors: [accentBright, accent],
+  );
+  static const darkGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF24241A), inkDeep],
   );
 
-  // ── Logo akssenti (faqat logo belgisida) ───────────────────
-  static const sun = Color(0xFFF2B705);
+  // Logo akssenti
+  static const sun = accent;
 
   // ════════════════════════════════════════════════════════════
-  // Eski semantik nomlar — yangi tokenlarga ko'chirilgan
-  // (widgetlar o'zgarmasdan ishlashi uchun)
+  // Eski semantik nomlar -> energiya tokenlariga
+  // FILL'lar (tugma/aktiv/indikator) = sariq; MATN/IKONKA = ink
   // ════════════════════════════════════════════════════════════
-  static const primaryAccent = primary;
-  static const primaryAccentAlt = primaryDark;
-  static const primaryLight = primaryTint; // tanlangan tinted fon
+  static const primary = accent; // tugma/aktiv FILL = sariq
+  static const primaryDark = ink;
+  static const primaryAccent = accent;
+  static const primaryAccentAlt = ink;
+  static const primaryLight = accentTint; // tinted aktiv fon = sariq tint
   static const primaryLightAlt = surfaceVariant;
-  static const tealText = primary; // havola / narx akssent matni
+  static const primaryTint = accentTint;
+  static const primaryTintSoft = accentTintSoft;
+  static const primaryTintStrong = accentTintStrong;
+  static const tealText = ink; // havola/narx matni = ink (oqilmaydigan sariq emas)
 
-  static const forest = primary; // ikonkalar -> primary
-  static const deepForest = primaryDark;
-  static const softForest = primary;
+  static const forest = ink; // ikonkalar = ink (oq fonda o'qiladi)
+  static const deepForest = ink;
+  static const softForest = ink;
   static const cream = Color(0xFFFFFFFF);
   static const creamDeep = surfaceVariant;
-  static const ink = textPrimary;
   static const muted = textSecondary;
   static const rule = border;
 
@@ -82,14 +97,15 @@ abstract class AppColors {
   static const inStockGreen = success;
 
   static const surfaceAlt = surfaceVariant;
-  static const imagePlaceholder = Color(0xFFE9EEEE);
-  static const imagePlaceholderAlt = Color(0xFFE9EEEE);
+  static const imagePlaceholder = Color(0xFFECECE2);
+  static const imagePlaceholderAlt = Color(0xFFECECE2);
 
   static const textPrimaryAlt = textPrimary;
   static const textSecondaryAlt = textSecondary;
   static const strikethrough = textTertiary;
 
-  // Eski gradient nomlari -> teal gradient
-  static const forestGradient = tealGradient;
-  static const sunGradient = tealGradient;
+  // Eski gradient nomlari
+  static const tealGradient = darkGradient; // hero/logo plitka -> qorong'i
+  static const forestGradient = darkGradient;
+  static const sunGradient = accentGradient;
 }

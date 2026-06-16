@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/widgets/app_logo.dart';
 import '../auth/auth_providers.dart';
 import '../cart/cart_providers.dart';
 import '../favorites/favorites_providers.dart';
 
-/// Spec 1.5 / 2.1 — Splash: logo, token tekshirish -> Home yoki Login.
+/// Splash — qorong'i energiya kirishi: nurli sariq chaqmoq logo.
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -14,7 +15,13 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1400),
+  )..repeat(reverse: true);
+
   @override
   void initState() {
     super.initState();
@@ -22,9 +29,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _boot() async {
-    await Future<void>.delayed(const Duration(milliseconds: 1200));
+    await Future<void>.delayed(const Duration(milliseconds: 1300));
     await ref.read(authProvider.notifier).bootstrap();
-    // Auth bo'lsa savatni yuklab qo'yamiz.
     if (ref.read(authProvider).status == AuthStatus.authenticated) {
       ref.read(cartProvider.notifier).load();
       ref.read(favoritesProvider.notifier).load();
@@ -32,10 +38,67 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: AppColors.background,
-      body: Center(child: AppLogo(size: 96)),
+    final reduce = MediaQuery.of(context).disableAnimations;
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(gradient: AppColors.darkGradient),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedBuilder(
+                animation: _pulse,
+                builder: (context, child) {
+                  final t = reduce ? 0.5 : _pulse.value;
+                  return Container(
+                    padding: const EdgeInsets.all(28),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.accent
+                              .withValues(alpha: 0.25 + 0.35 * t),
+                          blurRadius: 40 + 30 * t,
+                          spreadRadius: 4 + 6 * t,
+                        ),
+                      ],
+                    ),
+                    child: child,
+                  );
+                },
+                child: const AppLogo(size: 92, onDark: true),
+              ),
+              const SizedBox(height: 28),
+              Text(
+                'VOLTRA',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 4,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'QUYOSH ENERGIYASI',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 3,
+                  color: AppColors.accent,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

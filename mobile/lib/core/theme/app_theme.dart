@@ -16,11 +16,11 @@ abstract class AppTheme {
       scaffoldBackgroundColor: AppColors.background,
       textTheme: textTheme,
       colorScheme: base.colorScheme.copyWith(
-        primary: AppColors.primary,
-        secondary: AppColors.primary,
+        primary: AppColors.accent,
+        secondary: AppColors.accent,
         surface: AppColors.background,
         error: AppColors.danger,
-        onPrimary: Colors.white,
+        onPrimary: AppColors.ink,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,
@@ -37,9 +37,9 @@ abstract class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
-          disabledBackgroundColor: AppColors.primaryTintSoft,
+          backgroundColor: AppColors.accent,
+          foregroundColor: AppColors.ink,
+          disabledBackgroundColor: AppColors.accentTintSoft,
           disabledForegroundColor: AppColors.textTertiary,
           elevation: 0,
           minimumSize: const Size.fromHeight(54),

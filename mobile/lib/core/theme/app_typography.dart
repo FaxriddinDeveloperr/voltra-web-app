@@ -44,7 +44,7 @@ abstract class AppTypography {
         color: AppColors.strikethrough,
       ).copyWith(decoration: TextDecoration.lineThrough);
   static TextStyle get button =>
-      _t(size: 16, weight: FontWeight.w600, color: Colors.white);
+      _t(size: 16, weight: FontWeight.w700, color: AppColors.ink);
   static TextStyle get hint =>
       _t(size: 14, weight: FontWeight.w400, color: AppColors.textSecondary);
   static TextStyle get link =>

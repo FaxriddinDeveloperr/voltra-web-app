@@ -11,20 +11,21 @@ class XitBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.primaryTintStrong,
+        gradient: AppColors.accentGradient,
         borderRadius: BorderRadius.circular(AppSpacing.pillRadius),
+        boxShadow: AppColors.glow,
       ),
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.bolt, size: 13, color: AppColors.primary),
+          Icon(Icons.bolt, size: 13, color: AppColors.ink),
           SizedBox(width: 3),
           Text(
             'Xit',
             style: TextStyle(
-              color: AppColors.primary,
+              color: AppColors.ink,
               fontSize: 12,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w800,
             ),
           ),
         ],

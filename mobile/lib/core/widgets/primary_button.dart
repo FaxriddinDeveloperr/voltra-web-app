@@ -3,7 +3,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import 'pressable.dart';
 
-/// Spec 1.4.7 — PrimaryButton (to'q yashil, oq matn, full width).
+/// PrimaryButton — glossy sariq gradient + electric glow, to'q matn (3D his).
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     super.key,
@@ -22,13 +22,15 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final child = loading
+    final enabled = !loading && onPressed != null;
+
+    final content = loading
         ? const SizedBox(
             height: 22,
             width: 22,
             child: CircularProgressIndicator(
               strokeWidth: 2.4,
-              valueColor: AlwaysStoppedAnimation(Colors.white),
+              valueColor: AlwaysStoppedAnimation(AppColors.ink),
             ),
           )
         : Row(
@@ -36,37 +38,52 @@ class PrimaryButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null) ...[
-                Icon(icon, size: 20),
+                Icon(icon, size: 20, color: AppColors.ink),
                 const SizedBox(width: AppSpacing.sm),
               ],
               Flexible(
-                child: Text(label, overflow: TextOverflow.ellipsis),
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.ink,
+                  ),
+                ),
               ),
             ],
           );
 
-    final enabled = !loading && onPressed != null;
-    final button = DecoratedBox(
+    final box = Container(
+      height: 54,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
+        gradient: enabled ? AppColors.accentGradient : null,
+        color: enabled ? null : AppColors.accentTintSoft,
         borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
-        boxShadow: enabled ? AppColors.softShadow : null,
+        boxShadow: enabled ? AppColors.glow : null,
+        // yuqori nozik yorug'lik (3D)
+        border: enabled
+            ? const Border(
+                top: BorderSide(color: Color(0x66FFFFFF), width: 1),
+              )
+            : null,
       ),
-      child: ElevatedButton(
-        onPressed: loading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          disabledBackgroundColor: AppColors.primaryTintSoft,
-          disabledForegroundColor: AppColors.textTertiary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
-          ),
+      child: DefaultTextStyle.merge(
+        style: TextStyle(
+          color: enabled ? AppColors.ink : AppColors.textTertiary,
         ),
-        child: child,
+        child: IconTheme.merge(
+          data: IconThemeData(
+            color: enabled ? AppColors.ink : AppColors.textTertiary,
+          ),
+          child: content,
+        ),
       ),
     );
 
-    final sized =
-        expanded ? SizedBox(width: double.infinity, child: button) : button;
-    return Pressable(child: sized);
+    final sized = expanded ? SizedBox(width: double.infinity, child: box) : box;
+    return Pressable(onTap: enabled ? onPressed : null, child: sized);
   }
 }

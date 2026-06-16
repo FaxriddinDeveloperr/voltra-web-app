@@ -21,7 +21,7 @@ class AppLogo extends StatelessWidget {
         ? SizedBox(
             width: size,
             height: size,
-            child: CustomPaint(painter: _VMarkPainter(Colors.white)),
+            child: CustomPaint(painter: _VMarkPainter(AppColors.accent)),
           )
         : Container(
             width: size,
@@ -59,7 +59,7 @@ class AppLogo extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.all(size * 0.24),
-                  child: CustomPaint(painter: _VMarkPainter(Colors.white)),
+                  child: CustomPaint(painter: _VMarkPainter(AppColors.accent)),
                 ),
               ],
             ),
