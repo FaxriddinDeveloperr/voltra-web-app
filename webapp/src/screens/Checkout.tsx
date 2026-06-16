@@ -4,6 +4,7 @@ import { Truck, Store, Check } from 'lucide-react';
 import { Api, type Region, type City, type PickupPoint } from '../api';
 import { priceUsd, priceUzs, toE164, phoneFmt, maskInput } from '../lib';
 import { TopBar } from '../shell';
+import { Select } from '../Select';
 import { useAuth, useCart } from '../store';
 
 type Seg = { v: string; label: string; icon?: React.ReactNode };
@@ -121,8 +122,8 @@ export default function Checkout() {
           <div>
             <h3 className="section-title" style={{ marginBottom: 12 }}>Yetkazib berish manzili</h3>
             <div style={{ display: 'grid', gap: 12 }}>
-              <Select label="Viloyat" v={region} on={setRegion} opts={regions.map((r) => ({ v: r.id, l: r.nameUz }))} />
-              {region && <Select label="Shahar/Tuman" v={city} on={setCity} opts={cities.map((c) => ({ v: c.id, l: c.nameUz }))} />}
+              <Select label="Viloyat" value={region} onChange={setRegion} options={regions.map((r) => ({ v: r.id, l: r.nameUz }))} />
+              {region && <Select label="Shahar/Tuman" value={city} onChange={setCity} options={cities.map((c) => ({ v: c.id, l: c.nameUz }))} />}
               <Field label="Manzil" v={f.address} on={(v) => set('address', v)} />
               <Field label="Uy" v={f.house} on={(v) => set('house', v)} />
               <Field label="Mo'ljal" v={f.landmark} on={(v) => set('landmark', v)} />
@@ -176,17 +177,6 @@ function Field({ label, v, on, prefix }: { label: string; v?: string; on: (v: st
         {prefix && <span style={{ fontWeight: 600, padding: '0 8px 0 2px' }}>{prefix}</span>}
         <input className="input" value={v ?? ''} onChange={(e) => on(e.target.value)} />
       </div>
-    </div>
-  );
-}
-function Select({ label, v, on, opts }: { label: string; v: string; on: (v: string) => void; opts: { v: string; l: string }[] }) {
-  return (
-    <div>
-      <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 6 }}>{label}</div>
-      <select className="input" value={v} onChange={(e) => on(e.target.value)}>
-        <option value="">Tanlang</option>
-        {opts.map((o) => <option key={o.v} value={o.v}>{o.l}</option>)}
-      </select>
     </div>
   );
 }

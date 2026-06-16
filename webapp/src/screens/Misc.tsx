@@ -4,6 +4,7 @@ import { ShoppingBag, FileText, Wrench, Check } from 'lucide-react';
 import { Api, type Order, type Region, type City, type ServiceItem } from '../api';
 import { priceUzs, toE164, maskInput, phoneFmt } from '../lib';
 import { TopBar } from '../shell';
+import { Select } from '../Select';
 import { GridSkeleton, Empty, Spinner } from '../components';
 import { useAuth } from '../store';
 
@@ -156,9 +157,9 @@ function AppForm({ title, type, serviceId, powerField, priceField }: { title: st
       <div style={{ padding: 16 }}>
         <h1 className="screen-title">{title}</h1>
         <div style={{ display: 'grid', gap: 12, marginTop: 20 }}>
-          {powerField && <Sel label="Quvvat" v={f.power || ''} on={(v) => set('power', v)} opts={['3 kW', '5 kW', '8 kW', '10 kW', '15 kW', 'Boshqa'].map((x) => ({ v: x, l: x }))} />}
-          <Sel label="Viloyat" v={region} on={setRegion} opts={regions.map((r) => ({ v: r.id, l: r.nameUz }))} />
-          {region && <Sel label="Shahar/Tuman" v={city} on={setCity} opts={cities.map((c) => ({ v: c.id, l: c.nameUz }))} />}
+          {powerField && <Select label="Quvvat" value={f.power || ''} onChange={(v) => set('power', v)} options={['3 kW', '5 kW', '8 kW', '10 kW', '15 kW', 'Boshqa'].map((x) => ({ v: x, l: x }))} />}
+          <Select label="Viloyat" value={region} onChange={setRegion} options={regions.map((r) => ({ v: r.id, l: r.nameUz }))} />
+          {region && <Select label="Shahar/Tuman" value={city} onChange={setCity} options={cities.map((c) => ({ v: c.id, l: c.nameUz }))} />}
           <Inp label="Telefon raqamingiz" v={f.phone} prefix="+998 " on={(v) => set('phone', maskInput(v))} />
           <Inp label="F.I.Sh." v={f.fullName} on={(v) => set('fullName', v)} />
           {priceField && <Inp label="Xizmat narxi (1 kVt uchun)" v={f.servicePrice || ''} on={(v) => set('servicePrice', v)} />}
@@ -234,14 +235,6 @@ function Inp({ label, v, on, prefix }: { label: string; v?: string; on: (v: stri
       <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 6 }}>{label}</div>
       <div style={{ display: 'flex', alignItems: 'center' }}>{prefix && <span style={{ fontWeight: 600, padding: '0 8px 0 2px' }}>{prefix}</span>}
         <input className="input" value={v ?? ''} onChange={(e) => on(e.target.value)} /></div>
-    </div>
-  );
-}
-function Sel({ label, v, on, opts }: { label: string; v: string; on: (v: string) => void; opts: { v: string; l: string }[] }) {
-  return (
-    <div>
-      <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 6 }}>{label}</div>
-      <select className="input" value={v} onChange={(e) => on(e.target.value)}><option value="">Tanlang</option>{opts.map((o) => <option key={o.v} value={o.v}>{o.l}</option>)}</select>
     </div>
   );
 }
