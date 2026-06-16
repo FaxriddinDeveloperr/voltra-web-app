@@ -26,8 +26,9 @@ async function bootstrap(): Promise<void> {
     { prefix: '/uploads/' },
   );
 
-  // Flutter web build'ni root'dan serving (Telegram Mini App — same-origin)
-  const webDir = join(process.cwd(), '..', 'mobile', 'build', 'web');
+  // Web build'ni root'dan serving (Telegram Mini App — same-origin).
+  // Yengil React Mini App: webapp/dist
+  const webDir = join(process.cwd(), '..', 'webapp', 'dist');
   if (existsSync(webDir)) {
     app.useStaticAssets(webDir);
     // SPA fallback: /api va /uploads dan tashqari barcha GET -> index.html

@@ -1,0 +1,145 @@
+/* Voltra — energiya brendi (electric yellow). Light + Dark. */
+:root {
+  --accent: #ffd60a;
+  --accent-deep: #f2b600;
+  --accent-bright: #ffe24d;
+  --on-accent: #17170e;
+  --accent-tint: rgba(255, 214, 10, 0.16);
+  --accent-tint-soft: rgba(255, 214, 10, 0.12);
+  --accent-border: rgba(255, 214, 10, 0.34);
+
+  --danger: #e5484d;
+  --danger-tint: #fdebec;
+  --success: #2ba24c;
+  --success-tint: #e7f6ec;
+
+  --bg: #ffffff;
+  --card: #ffffff;
+  --surface: #f7f7f2;
+  --surface-2: #efefe6;
+  --border: #e9e9dd;
+  --text: #17170e;
+  --text-2: #6b6b5c;
+  --text-3: #9c9c8c;
+
+  --shadow-card: 0 10px 20px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+  --shadow-soft: 0 6px 14px rgba(0, 0, 0, 0.07);
+  --shadow-float: 0 10px 18px rgba(0, 0, 0, 0.1);
+  --glow: 0 8px 24px rgba(255, 214, 10, 0.4);
+
+  --r-card: 20px;
+  --r-btn: 16px;
+  --r-input: 14px;
+  --r-pill: 999px;
+
+  --hero: linear-gradient(180deg, #fff7d6 0%, #ffffff 100%);
+}
+
+:root[data-theme='dark'] {
+  --danger-tint: #3a1e1e;
+  --success-tint: #14301f;
+  --bg: #0f0f0a;
+  --card: #1b1b13;
+  --surface: #232319;
+  --surface-2: #2c2c20;
+  --border: #34342a;
+  --text: #f4f2e6;
+  --text-2: #aeaea0;
+  --text-3: #76766a;
+  --shadow-card: 0 12px 22px rgba(0, 0, 0, 0.5);
+  --shadow-soft: 0 8px 16px rgba(0, 0, 0, 0.4);
+  --shadow-float: 0 12px 20px rgba(0, 0, 0, 0.55);
+  --hero: linear-gradient(180deg, #26261a 0%, #0f0f0a 100%);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root { height: 100%; }
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto,
+    sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+img { display: block; }
+input, textarea, select { font-family: inherit; }
+
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  min-height: 100%;
+  background: var(--bg);
+  position: relative;
+}
+
+/* Tipografiya */
+h1, h2, h3 { letter-spacing: -0.4px; }
+.screen-title { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+.section-title { font-size: 19px; font-weight: 700; letter-spacing: -0.3px; }
+.muted { color: var(--text-2); }
+.price { font-weight: 700; letter-spacing: -0.2px; }
+.price-lg { font-size: 25px; font-weight: 800; letter-spacing: -0.6px; }
+
+/* Tugma */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  height: 54px; width: 100%; border-radius: var(--r-btn);
+  background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+  color: var(--on-accent); font-size: 16px; font-weight: 700;
+  box-shadow: var(--glow); border-top: 1px solid rgba(255, 255, 255, 0.4);
+  transition: transform 0.11s ease-out;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled {
+  background: var(--accent-tint-soft); color: var(--text-3);
+  box-shadow: none; border: none;
+}
+.btn-ghost {
+  height: 48px; border-radius: var(--r-btn); background: var(--surface);
+  color: var(--text); font-weight: 600; width: 100%;
+  border: 1px solid var(--border);
+}
+
+/* Karta */
+.card {
+  background: var(--card); border-radius: var(--r-card);
+  border: 1px solid var(--accent-border); box-shadow: var(--shadow-card);
+}
+
+/* Input */
+.input {
+  width: 100%; height: 52px; border-radius: var(--r-input);
+  background: var(--surface); color: var(--text); padding: 0 16px;
+  font-size: 16px; border: 1px solid transparent; outline: none;
+}
+.input:focus { border-color: var(--accent); }
+textarea.input { height: auto; padding: 14px 16px; min-height: 96px; }
+
+/* Badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 3px; padding: 4px 9px;
+  border-radius: var(--r-pill); font-size: 12px; font-weight: 800;
+}
+.badge-xit { background: linear-gradient(135deg, var(--accent-bright), var(--accent)); color: var(--on-accent); box-shadow: var(--glow); }
+.badge-status { background: var(--success-tint); color: var(--success); font-weight: 700; }
+
+.press { transition: transform 0.11s ease-out; }
+.press:active { transform: scale(0.97); }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 37%, var(--surface) 63%);
+  background-size: 400% 100%; animation: sh 1.3s infinite; border-radius: 12px;
+}
+@keyframes sh { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+.spinner {
+  width: 22px; height: 22px; border: 2.5px solid var(--accent-tint);
+  border-top-color: var(--accent); border-radius: 50%; animation: sp 0.7s linear infinite;
+}
+@keyframes sp { to { transform: rotate(360deg); } }
