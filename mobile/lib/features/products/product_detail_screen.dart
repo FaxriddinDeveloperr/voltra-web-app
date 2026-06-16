@@ -101,22 +101,21 @@ class _Body extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(Formatters.price(p.price),
+                  Text(Formatters.usdPrice(p.priceUsd),
                       style: AppTypography.priceLarge),
                   const SizedBox(width: 8),
                   if (p.vatIncluded)
                     Padding(
-                      padding: EdgeInsets.only(bottom: 3),
+                      padding: const EdgeInsets.only(bottom: 3),
                       child: Text('QQS bilan',
                           style: TextStyle(
                               color: AppColors.textSecondary, fontSize: 13)),
                     ),
                 ],
               ),
-              if (p.priceUsd != null)
-                Text(Formatters.usd(p.priceUsd!),
-                    style: TextStyle(
-                        color: AppColors.textSecondary, fontSize: 14)),
+              Text('≈ ${Formatters.price(p.price)}',
+                  style: TextStyle(
+                      color: AppColors.textSecondary, fontSize: 14)),
               const SizedBox(height: AppSpacing.md),
 
               // Mavjudlik
@@ -416,10 +415,11 @@ class _BottomBarState extends ConsumerState<_BottomBar> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (p.hasDiscount)
-                    Text(Formatters.price(p.oldPrice!),
-                        style: AppTypography.oldPrice),
-                  Text(Formatters.price(p.price), style: AppTypography.price),
+                  Text(Formatters.usdPrice(p.priceUsd),
+                      style: AppTypography.price),
+                  Text('≈ ${Formatters.price(p.price)}',
+                      style: TextStyle(
+                          color: AppColors.textSecondary, fontSize: 11)),
                 ],
               ),
             ),

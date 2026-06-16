@@ -79,15 +79,9 @@ class ProductGridCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
-          Text(Formatters.price(product.price), style: AppTypography.price),
-          // Eski narx — doim joy ajratiladi (chegirma bo'lmasa ham)
-          SizedBox(
-            height: 16,
-            child: product.hasDiscount
-                ? Text(Formatters.price(product.oldPrice!),
-                    style: AppTypography.oldPrice)
-                : null,
-          ),
+          // Narx — USD (Google Sheets'dan)
+          Text(Formatters.usdPrice(product.priceUsd),
+              style: AppTypography.price),
         ],
       ),
     );

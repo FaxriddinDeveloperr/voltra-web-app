@@ -100,10 +100,7 @@ class _CartItemCard extends ConsumerWidget {
                         overflow: TextOverflow.ellipsis,
                         style: AppTypography.productName),
                     const SizedBox(height: 4),
-                    if (p.hasDiscount)
-                      Text(Formatters.price(p.oldPrice!),
-                          style: AppTypography.oldPrice),
-                    Text(Formatters.price(p.price),
+                    Text(Formatters.usdPrice(p.priceUsd),
                         style: AppTypography.price.copyWith(fontSize: 16)),
                     const SizedBox(height: 2),
                     Text('Sotuvda mavjud: ${p.stock} dona',
@@ -128,7 +125,7 @@ class _CartItemCard extends ConsumerWidget {
                 max: p.stock,
                 onChanged: (q) => notifier.updateQty(line.id, q),
               ),
-              Text(Formatters.price(line.lineTotal),
+              Text(Formatters.usdPrice((p.priceUsd ?? 0) * line.quantity),
                   style: AppTypography.price.copyWith(fontSize: 16)),
             ],
           ),
@@ -141,6 +138,9 @@ class _CartItemCard extends ConsumerWidget {
 class _Summary extends StatelessWidget {
   const _Summary({required this.cart});
   final Cart cart;
+
+  double get _usdTotal => cart.items
+      .fold(0.0, (s, l) => s + (l.product.priceUsd ?? 0) * l.quantity);
 
   @override
   Widget build(BuildContext context) {
@@ -155,16 +155,18 @@ class _Summary extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
           ),
           const SizedBox(height: AppSpacing.md),
-          _row('${cart.count} ta maxsulot', Formatters.price(cart.itemsTotal)),
-          if (cart.discountTotal > 0)
-            _row('Maxsulotlarga chegirma',
-                '-${Formatters.price(cart.discountTotal)}',
-                valueColor: AppColors.discountRed),
+          _row('${cart.count} ta maxsulot', Formatters.usdPrice(_usdTotal)),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
             child: Divider(),
           ),
-          _row('Jami:', Formatters.price(cart.grandTotal), bold: true),
+          _row('Jami:', Formatters.usdPrice(_usdTotal), bold: true),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text('≈ ${Formatters.price(cart.grandTotal)}',
+                style: TextStyle(
+                    color: AppColors.textSecondary, fontSize: 12)),
+          ),
         ],
       ),
     );

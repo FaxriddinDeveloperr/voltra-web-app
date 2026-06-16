@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/di/providers.dart';
 import '../../core/models/catalog.dart';
+import '../../core/models/cart.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
@@ -243,7 +244,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           const SizedBox(height: AppSpacing.section),
 
           // Xulosa
-          _summary(cart.grandTotal, cart.count),
+          _summary(cart, cart.count),
         ],
       ),
       bottomNavigationBar: SafeArea(
@@ -261,7 +262,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text('Jami', style: AppTypography.hint),
-                    Text(Formatters.price(cart.grandTotal),
+                    Text(Formatters.usdPrice(_usdTotal(cart)),
                         style: AppTypography.price),
                   ],
                 ),
@@ -398,7 +399,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Widget _summary(double total, int count) {
+  double _usdTotal(Cart cart) => cart.items
+      .fold(0.0, (s, l) => s + (l.product.priceUsd ?? 0) * l.quantity);
+
+  Widget _summary(Cart cart, int count) {
+    final usd = _usdTotal(cart);
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
@@ -413,13 +418,19 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
           ),
           const SizedBox(height: AppSpacing.md),
-          _sumRow('$count ta mahsulot', Formatters.price(total)),
-          _sumRow('Yetkazib berish', '0 so\'m'),
+          _sumRow('$count ta mahsulot', Formatters.usdPrice(usd)),
+          _sumRow('Yetkazib berish', '\$0'),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
             child: Divider(),
           ),
-          _sumRow('Jami:', Formatters.price(total), bold: true),
+          _sumRow('Jami:', Formatters.usdPrice(usd), bold: true),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text('≈ ${Formatters.price(cart.grandTotal)}',
+                style: TextStyle(
+                    color: AppColors.textSecondary, fontSize: 12)),
+          ),
         ],
       ),
     );

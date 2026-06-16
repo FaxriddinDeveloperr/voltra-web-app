@@ -82,11 +82,9 @@ class ProductCard extends StatelessWidget {
               style: AppTypography.productName,
             ),
             const SizedBox(height: AppSpacing.xs),
-            // Narx ierarxiyasi: yangi narx ustun, eski narx kichik/muted
-            Text(Formatters.price(product.price), style: AppTypography.price),
-            if (product.hasDiscount)
-              Text(Formatters.price(product.oldPrice!),
-                  style: AppTypography.oldPrice),
+            // Narx — USD (Google Sheets'dan)
+            Text(Formatters.usdPrice(product.priceUsd),
+                style: AppTypography.price),
           ],
         ),
       ),

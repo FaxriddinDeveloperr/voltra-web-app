@@ -11,6 +11,17 @@ abstract class Formatters {
   /// 340 -> "340 y.e."
   static String usd(num value) => '${_group(value.round())}${_nbsp}y.e.';
 
+  /// USD shakli: 3000 -> "$3 000", 82.14 -> "$82.14"
+  static String usdPrice(num? value) {
+    if (value == null) return '';
+    final d = value.toDouble();
+    if (d == d.roundToDouble()) return '\$${_group(d.round())}';
+    final cents = (d * 100).round();
+    final intPart = cents ~/ 100;
+    final frac = (cents % 100).toString().padLeft(2, '0');
+    return '\$${_group(intPart)}.$frac';
+  }
+
   static String _group(int value) {
     final neg = value < 0;
     final digits = value.abs().toString();

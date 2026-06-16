@@ -15,6 +15,7 @@ import { ServicesModule } from './services/services.module';
 import { ApplicationsModule } from './applications/applications.module';
 import { ContentModule } from './content/content.module';
 import { RegionsModule } from './regions/regions.module';
+import { PriceSyncModule } from './price-sync/price-sync.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { RegionsModule } from './regions/regions.module';
     ApplicationsModule,
     ContentModule,
     RegionsModule,
+    PriceSyncModule,
   ],
 })
 export class AppModule {}
