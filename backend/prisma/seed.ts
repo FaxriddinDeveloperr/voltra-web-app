@@ -1,6 +1,7 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { REGIONS } from './regions';
 
 const prisma = new PrismaClient();
 
@@ -310,16 +311,8 @@ async function main() {
     },
   });
 
-  // ── Viloyatlar ───────────────────────────────────────────
-  const regionsData: Record<string, string[]> = {
-    'Toshkent shahri': ['Yunusobod', 'Chilonzor', 'Mirzo Ulug\'bek', 'Yashnobod'],
-    'Toshkent viloyati': ['Angren', 'Chirchiq', 'Bekobod', 'Olmaliq'],
-    Samarqand: ['Samarqand shahri', 'Kattaqo\'rg\'on', 'Urgut'],
-    'Farg\'ona': ['Farg\'ona shahri', 'Qo\'qon', 'Marg\'ilon'],
-    Andijon: ['Andijon shahri', 'Asaka', 'Xonobod'],
-    Buxoro: ['Buxoro shahri', 'Kogon', 'G\'ijduvon'],
-  };
-  for (const [regionName, cities] of Object.entries(regionsData)) {
+  // ── Viloyatlar (to'liq O'zbekiston — regions.ts) ──────────
+  for (const [regionName, cities] of Object.entries(REGIONS)) {
     await prisma.region.create({
       data: {
         nameUz: regionName,
