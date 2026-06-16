@@ -59,6 +59,10 @@ interface TG {
   setHeaderColor?(c: string): void; setBackgroundColor?(c: string): void;
   onEvent?(e: string, cb: () => void): void;
   themeParams?: Record<string, string>;
+  BackButton?: {
+    show(): void; hide(): void;
+    onClick(cb: () => void): void; offClick(cb: () => void): void;
+  };
 }
 export function telegram(): TG | undefined {
   return (window as unknown as { Telegram?: { WebApp?: TG } }).Telegram?.WebApp;

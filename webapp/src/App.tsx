@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { telegram } from './lib';
 import { useAuth, useCart, useFav, useTheme } from './store';
 import { Logo, BottomNav } from './shell';
 import Auth from './screens/Auth';
@@ -24,6 +25,18 @@ export default function App() {
   const bootstrap = useAuth((s) => s.bootstrap);
   const applyTheme = useTheme((s) => s.apply);
   const loc = useLocation();
+  const navigate = useNavigate();
+
+  // Telegram native "Orqaga" tugmasi — /home dan tashqari hamma joyda
+  useEffect(() => {
+    const bb = telegram()?.BackButton;
+    if (!bb) return;
+    const handler = () => navigate(-1);
+    if (loc.pathname === '/home' || status !== 'authed') bb.hide();
+    else bb.show();
+    bb.onClick(handler);
+    return () => bb.offClick(handler);
+  }, [loc.pathname, status, navigate]);
 
   useEffect(() => {
     applyTheme();

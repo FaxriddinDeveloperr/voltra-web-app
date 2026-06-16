@@ -20,7 +20,7 @@ export default function Cart() {
   if (!items.length) {
     return (
       <div>
-        <TopBar title="Savat" />
+        <TopBar title="Savat" back />
         <Empty icon={<ShoppingCart size={64} />} title="Savatingiz bo'sh"
           subtitle="Asosiy sahifadan kerakli mahsulotni toping"
           action={<button className="btn" style={{ width: 200 }} onClick={() => nav('/home')}>Bosh sahifa</button>} />
@@ -30,7 +30,7 @@ export default function Cart() {
 
   return (
     <div style={{ paddingBottom: 90 }}>
-      <TopBar title="Savat" />
+      <TopBar title="Savat" back />
       <div style={{ padding: 16, display: 'grid', gap: 12 }}>
         {items.map((l) => (
           <div key={l.id} className="card" style={{ padding: 12 }}>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Heart, Zap, ShoppingCart, Download } from 'lucide-react';
 import { Api, type Product } from '../api';
 import { priceUsd, priceUzs } from '../lib';
@@ -9,10 +9,10 @@ import { useCart, useFav } from '../store';
 
 export default function ProductDetail() {
   const { id = '' } = useParams();
+  const nav = useNavigate();
   const [p, setP] = useState<Product | null>(null);
   const [gi, setGi] = useState(0);
   const [adding, setAdding] = useState(false);
-  const [toast, setToast] = useState('');
   const fav = useFav((s) => s.ids.has(id));
   const toggleFav = useFav((s) => s.toggle);
   const addCart = useCart((s) => s.add);
@@ -21,7 +21,7 @@ export default function ProductDetail() {
 
   async function add() {
     setAdding(true);
-    try { await addCart(id); setToast("Savatga qo'shildi"); setTimeout(() => setToast(''), 1800); }
+    try { await addCart(id); nav('/cart'); }
     finally { setAdding(false); }
   }
 
@@ -88,9 +88,6 @@ export default function ProductDetail() {
         )}
       </div>
 
-      {toast && <div style={{ position: 'fixed', bottom: 96, left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 30 }}>
-        <div style={{ background: '#2A2A1E', color: '#fff', padding: '10px 18px', borderRadius: 12, fontSize: 14 }}>{toast}</div>
-      </div>}
 
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 20, background: 'var(--bg)', borderTop: '1px solid var(--border)', padding: 12, display: 'flex', gap: 12, maxWidth: 520, margin: '0 auto' }}>
         <div style={{ flex: 1 }}>
