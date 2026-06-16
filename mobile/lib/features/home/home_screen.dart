@@ -62,14 +62,6 @@ class HomeScreen extends ConsumerWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
                 children: [
-                  // Signature hero — brend va'dasi + statistika
-                  const Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-                    child: _HeroCard(),
-                  ),
-                  const SizedBox(height: AppSpacing.section),
-
                   // Banner
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -110,98 +102,6 @@ class HomeScreen extends ConsumerWidget {
             ),
     );
   }
-}
-
-/// Signature hero — brend va'dasi + raqamlar (Voltra ovozi: raqamlar).
-class _HeroCard extends StatelessWidget {
-  const _HeroCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: BoxDecoration(
-        gradient: AppColors.tealGradient,
-        borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-        boxShadow: AppColors.softShadow,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Quyosh sizga ishlaydi',
-            style: AppTypography.sectionTitle.copyWith(
-              color: Colors.white,
-              fontSize: 22,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            'Quyosh panellari va to‘liq stansiyalar',
-            style: AppTypography.hint
-                .copyWith(color: Colors.white.withValues(alpha: 0.82)),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          const Row(
-            children: [
-              _Stat(value: '25 yil', label: 'Kafolat'),
-              _StatDivider(),
-              _Stat(value: '4.5 yil', label: 'To‘lov qaytadi'),
-              _StatDivider(),
-              _Stat(value: '500+', label: 'O‘rnatilgan'),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Stat extends StatelessWidget {
-  const _Stat({required this.value, required this.label});
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.4,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.75),
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatDivider extends StatelessWidget {
-  const _StatDivider();
-  @override
-  Widget build(BuildContext context) => Container(
-        width: 1,
-        height: 32,
-        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-        color: Colors.white.withValues(alpha: 0.20),
-      );
 }
 
 class _QuickActions extends StatelessWidget {
