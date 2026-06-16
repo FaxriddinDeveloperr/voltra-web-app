@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { SmsModule } from './common/sms/sms.module';
+import { TelegramModule } from './common/telegram/telegram.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CategoriesModule } from './categories/categories.module';
@@ -22,6 +23,7 @@ import { PriceSyncModule } from './price-sync/price-sync.module';
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     SmsModule,
+    TelegramModule,
     AuthModule,
     UsersModule,
     CategoriesModule,
