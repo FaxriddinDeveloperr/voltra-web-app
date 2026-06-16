@@ -68,17 +68,26 @@ class ProductGridCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          Text(
-            product.nameUz,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.productName,
+          // Nom — doim 2 qatorlik joy (bir xil balandlik)
+          SizedBox(
+            height: 38,
+            child: Text(
+              product.nameUz,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.productName,
+            ),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(Formatters.price(product.price), style: AppTypography.price),
-          if (product.hasDiscount)
-            Text(Formatters.price(product.oldPrice!),
-                style: AppTypography.oldPrice),
+          // Eski narx — doim joy ajratiladi (chegirma bo'lmasa ham)
+          SizedBox(
+            height: 16,
+            child: product.hasDiscount
+                ? Text(Formatters.price(product.oldPrice!),
+                    style: AppTypography.oldPrice)
+                : null,
+          ),
         ],
       ),
     );
