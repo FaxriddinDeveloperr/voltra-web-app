@@ -1,19 +1,29 @@
-# Quyoshli — Solar E-commerce (klon)
+# Voltra — Solar E-commerce (Telegram Mini App)
 
-Quyosh energiyasi jihozlari uchun B2B/B2C e-commerce ilovasi.
-**Backend:** NestJS + Prisma + PostgreSQL · **Mobile:** Flutter.
-
-Spetsifikatsiya: [`QUYOSHLI_CLONE_SPEC.md`](./QUYOSHLI_CLONE_SPEC.md).
+Quyosh energiyasi jihozlari uchun e-commerce.
+**Backend:** NestJS + Prisma + PostgreSQL · **Frontend:** React + Vite (Telegram Mini App).
 
 ## Struktura
 
 ```
 voltra-app/
-├── backend/            # NestJS REST API (/api/v1)
-├── mobile/             # Flutter ilova
+├── backend/            # NestJS REST API (/api/v1) + webapp/dist'ni serving
+├── webapp/             # React + Vite Telegram Mini App
 ├── docker-compose.yml  # PostgreSQL 16 (host port 5433)
-└── QUYOSHLI_CLONE_SPEC.md
+└── QUYOSHLI_CLONE_SPEC.md  # dastlabki spetsifikatsiya (tarixiy)
 ```
+
+## Web (Telegram Mini App) ishga tushirish
+
+```bash
+cd webapp
+npm install
+npm run build        # -> webapp/dist (backend shuni beradi)
+# dev: npm run dev   (Vite, /api backendga proxy)
+```
+
+Narxlar Google Sheets'dan jonli sinxronlanadi (`PRICE_SHEET_CSV_URL`),
+backend har ~60s yangilaydi. Qo'lda: `POST /api/v1/price-sync`.
 
 ## Backend ishga tushirish
 
@@ -43,16 +53,10 @@ curl -X POST $B/auth/verify-otp -H 'Content-Type: application/json' -d '{"phone"
 # -> { accessToken, refreshToken, user, isNewProfile }
 ```
 
-## Mobile ishga tushirish
+## Telegram bot
 
-```bash
-cd mobile
-flutter pub get
-flutter run            # qurilma/emulyator yoki -d chrome
-```
-
-`lib/core/network/api_endpoints.dart` ichidagi `baseUrl` backend manziliga moslangan
-(emulyatorda Android uchun `10.0.2.2:3000`).
+Bot menu tugmasi Mini App'ni public HTTPS manzilda ochadi (dev: cloudflared tunnel).
+Narx jadvalini tahrirlasangiz — ilovada ~1 daqiqada yangilanadi.
 
 ## Texnik stek
 
@@ -60,4 +64,5 @@ flutter run            # qurilma/emulyator yoki -d chrome
 |--------|-------------|
 | Backend | NestJS 11, Prisma 6, PostgreSQL 16, JWT (access+refresh), Swagger |
 | Auth | Telefon + OTP (Eskiz.uz placeholder), bcrypt hashing |
-| Mobile | Flutter, Riverpod, dio, go_router, freezed |
+| Frontend | React + Vite + TypeScript, zustand, Telegram Web App SDK |
+| Narx | Google Sheets CSV → jonli sync (PriceSyncService) |
