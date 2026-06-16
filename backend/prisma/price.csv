@@ -1,0 +1,148 @@
+key,type,label,priceUzs,priceUsd,priceUsdPerWatt,priceUzsFrom,priceUzsTo,lastUpdated
+exchange-rate,config,UZS per USD,12200,,,,,2026-04-23
+installation-per-kw,config,Installation per kW (USD),,35,,,,2026-04-23
+shit-avtomatlar-per-kw,product,Shit + avtomatlar (1 kW),,7,,,,
+konstruksiya-per-kw,product,Konstruksiya (1 kW),,35,,,,
+ornatish-per-kw,product,O'rnatish ishi (1 kW),,35,,,,
+ja-solar-555w-mono-bifacial,product,Quyosh paneli JA Solar 555W Mono Bifacial,1002108,82.14,0.148,,,2026-04-23
+jinko-tiger-neo-625w,product,Quyosh paneli Jinko Tiger Neo 625W N-Type,1204750,93.75,0.158,,,2026-04-23
+jinko-tiger-neo-725w-bifacial,product,Quyosh paneli Jinko Tiger Neo 725W Bifacial,1397510,114.55,0.158,,,2026-04-23
+longi-himo-x10-640w,product,Quyosh paneli LONGi Hi-MO X10 640W,1296128,106.24,0.166,,,2026-04-23
+trina-vertex-540w,product,Quyosh paneli Trina Vertex 540W,1021140,83.7,0.155,,,2026-04-23
+era-solar-625w-bifacial,product,Quyosh paneli ERA Solar 625W Bifacial,1037000,85,0.136,,,2026-04-23
+auxsol-ongrid-3kw-1f,product,Auxsol 3 kW — Ongrid inverter,2867000,235,,,,2026-04-22
+auxsol-ongrid-3.6kw-1f,product,Auxsol 3.6 kW — Ongrid inverter,3294000,270,,,,2026-04-22
+auxsol-ongrid-5kw-1f,product,Auxsol 5 kW — Ongrid inverter,4636000,380,,,,2026-04-22
+auxsol-ongrid-5kw-3f,product,Auxsol 5 kW — Ongrid inverter (3F),5490000,450,,,,2026-04-22
+auxsol-ongrid-10kw-1f,product,Auxsol 10 kW — Ongrid inverter - 1Faza,7930000,650,,,,2026-04-22
+auxsol-ongrid-10kw-3f-3f-v,product,Auxsol 10 kW — Ongrid inverter - 3Faza,6283000,515,,,,2026-04-22
+auxsol-ongrid-10kw-3f-lcd,product,Auxsol 10 kW — Ongrid inverter (LCD),7320000,600,,,,2026-04-22
+auxsol-ongrid-15kw-3f,product,Auxsol 15 kW — Ongrid inverter,7930000,650,,,,2026-04-22
+auxsol-ongrid-15kw-3f-lcd,product,Auxsol 15 kW — Ongrid inverter (LCD),8784000,720,,,,2026-04-22
+auxsol-ongrid-20kw-3f,product,Auxsol 20 kW — Ongrid inverter,10370000,850,,,,2026-04-22
+auxsol-ongrid-25kw-3f,product,Auxsol 25 kW — Ongrid inverter,11956000,980,,,,2026-04-22
+auxsol-ongrid-30kw-3f,product,Auxsol 30 kW — Ongrid inverter,13420000,1100,,,,2026-04-22
+auxsol-ongrid-40kw-3f,product,Auxsol 40 kW — Ongrid inverter,17690000,1450,,,,2026-04-22
+auxsol-ongrid-50kw-3f,product,Auxsol 50 kW — Ongrid inverter,21716000,1780,,,,2026-04-22
+auxsol-ongrid-60kw-3f,product,Auxsol 60 kW — Ongrid inverter,25376000,2080,,,,2026-04-22
+auxsol-ongrid-70kw-3f,product,Auxsol 70 kW — Ongrid inverter,27450000,2250,,,,2026-04-22
+auxsol-ongrid-80kw-3f,product,Auxsol 80 kW — Ongrid inverter,29280000,2400,,,,2026-04-22
+auxsol-ongrid-100kw-3f,product,Auxsol 100 kW — Ongrid inverter,37210000,3050,,,,2026-04-22
+auxsol-ongrid-110kw-3f,product,Auxsol 110 kW — Ongrid inverter,37820000,3100,,,,2026-04-22
+auxsol-ongrid-120kw-3f,product,Auxsol 120 kW — Ongrid inverter,33916000,2780,,,,2026-04-22
+deye-ongrid-3kw-1f,product,Deye 3 kW — Ongrid inverter,3050000,250,,,,2026-04-22
+deye-ongrid-5kw-1f,product,Deye 5 kW — Ongrid inverter,4270000,350,,,,2026-04-22
+deye-ongrid-5kw-3f,product,Deye 5 kW — Ongrid inverter (3F),4758000,390,,,,2026-04-22
+deye-ongrid-10kw-1f,product,Deye 10 kW — Ongrid inverter - 1Faza,7076000,580,,,,2026-04-22
+deye-ongrid-10kw-3f-3f-v,product,Deye 10 kW — Ongrid inverter - 3Faza,6710000,550,,,,2026-04-22
+deye-ongrid-15kw-3f,product,Deye 15 kW — Ongrid inverter,7930000,650,,,,2026-04-22
+deye-ongrid-20kw-3f,product,Deye 20 kW — Ongrid inverter,8540000,700,,,,2026-04-22
+deye-ongrid-25kw-3f,product,Deye 25 kW — Ongrid inverter,9150000,750,,,,2026-04-22
+deye-ongrid-30kw-3f,product,Deye 30 kW — Ongrid inverter,10980000,900,,,,2026-04-22
+deye-ongrid-40kw-3f,product,Deye 40 kW — Ongrid inverter,17690000,1450,,,,2026-04-22
+deye-ongrid-50kw-3f,product,Deye 50 kW — Ongrid inverter,18910000,1550,,,,2026-04-22
+deye-ongrid-60kw-3f,product,Deye 60 kW — Ongrid inverter,22936000,1880,,,,2026-04-22
+deye-ongrid-80kw-3f,product,Deye 80 kW — Ongrid inverter,25010000,2050,,,,2026-04-22
+deye-ongrid-100kw-3f,product,Deye 100 kW — Ongrid inverter,31110000,2550,,,,2026-04-22
+deye-ongrid-110kw-3f,product,Deye 110 kW — Ongrid inverter,31476000,2580,,,,2026-04-22
+deye-ongrid-120kw-3f,product,Deye 120 kW — Ongrid inverter,35990000,2950,,,,2026-04-22
+deye-ongrid-130kw-3f,product,Deye 130 kW — Ongrid inverter,40260000,3300,,,,2026-04-22
+solax-ongrid-3kw-1f,product,Solax 3 kW — Ongrid inverter,3538000,290,,,,2026-04-22
+solax-ongrid-5kw-1f,product,Solax 5 kW — Ongrid inverter,4636000,380,,,,2026-04-22
+solax-ongrid-6kw-1f,product,Solax 6 kW — Ongrid inverter,4758000,420,,,,2026-04-22
+solax-ongrid-10kw-1f,product,Solax 10 kW — Ongrid inverter - 1Faza,6954000,700,,,,2026-04-22
+solax-ongrid-10kw-3f-3f-v,product,Solax 10 kW — Ongrid inverter - 3Faza,7625000,625,,,,2026-04-22
+solax-ongrid-15kw-3f,product,Solax 15 kW — Ongrid inverter,10980000,900,,,,2026-04-22
+solax-ongrid-20kw-3f,product,Solax 20 kW — Ongrid inverter,12444000,1020,,,,2026-04-22
+solax-ongrid-25kw-3f,product,Solax 25 kW — Ongrid inverter,14274000,1170,,,,2026-04-22
+solax-ongrid-30kw-3f,product,Solax 30 kW — Ongrid inverter,15860000,1300,,,,2026-04-22
+solax-ongrid-40kw-3f,product,Solax 40 kW — Ongrid inverter,20008000,1640,,,,2026-04-22
+solax-ongrid-50kw-3f,product,Solax 50 kW — Ongrid inverter,25010000,2050,,,,2026-04-22
+solax-ongrid-60kw-3f,product,Solax 60 kW — Ongrid inverter,26108000,2300,,,,2026-04-22
+solax-ongrid-80kw-3f,product,Solax 80 kW — Ongrid inverter,35380000,2900,,,,2026-04-22
+solax-ongrid-100kw-3f,product,Solax 100 kW — Ongrid inverter,39040000,3200,,,,2026-04-22
+solax-ongrid-110kw-3f,product,Solax 110 kW — Ongrid inverter,40260000,3300,,,,2026-04-22
+solax-ongrid-120kw-3f,product,Solax 120 kW — Ongrid inverter,43920000,3600,,,,2026-04-22
+solax-ongrid-125kw-3f,product,Solax 125 kW — Ongrid inverter,45750000,3750,,,,2026-04-22
+sungrow-ongrid-3kw-1f,product,Sungrow 3 kW — Ongrid inverter,3965000,325,,,,2026-04-22
+sungrow-ongrid-5kw-1f,product,Sungrow 5 kW — Ongrid inverter,5185000,425,,,,2026-04-22
+sungrow-ongrid-10kw-1f,product,Sungrow 10 kW — Ongrid inverter - 1Faza,7320000,600,,,,2026-04-22
+sungrow-ongrid-10kw-3f,product,Sungrow 10 kW — Ongrid inverter,10004000,820,,,,2026-04-22
+sungrow-ongrid-10kw-3f-3f-v,product,Sungrow 10 kW — Ongrid inverter - 3Faza,8052000,660,,,,2026-04-22
+sungrow-ongrid-12kw-3f,product,Sungrow 12 kW — Ongrid inverter,10126000,830,,,,2026-04-22
+sungrow-ongrid-15kw-3f,product,Sungrow 15 kW — Ongrid inverter,10736000,880,,,,2026-04-22
+sungrow-ongrid-20kw-3f,product,Sungrow 20 kW — Ongrid inverter,12810000,1050,,,,2026-04-22
+sungrow-ongrid-30kw-3f,product,Sungrow 30 kW — Ongrid inverter,17568000,1440,,,,2026-04-22
+sungrow-ongrid-40kw-3f,product,Sungrow 40 kW — Ongrid inverter,21228000,1740,,,,2026-04-22
+sungrow-ongrid-50kw-3f,product,Sungrow 50 kW — Ongrid inverter,27450000,2250,,,,2026-04-22
+sungrow-ongrid-60kw-3f,product,Sungrow 60 kW — Ongrid inverter,27572000,2260,,,,2026-04-22
+sungrow-ongrid-80kw-3f,product,Sungrow 80 kW — Ongrid inverter,30012000,2460,,,,2026-04-22
+sungrow-ongrid-100kw-3f,product,Sungrow 100 kW — Ongrid inverter,37332000,3060,,,,2026-04-22
+sungrow-ongrid-110kw-3f,product,Sungrow 110 kW — Ongrid inverter,40870000,3350,,,,2026-04-22
+sungrow-ongrid-120kw-3f,product,Sungrow 120 kW — Ongrid inverter,43188000,3540,,,,2026-04-22
+sungrow-ongrid-125kw-3f,product,Sungrow 125 kW — Ongrid inverter,51850000,4250,,,,2026-04-22
+sungrow-ongrid-150kw-3f,product,Sungrow 150 kW — Ongrid inverter,62830000,5150,,,,2026-04-22
+deye-hybrid-5kw-lv,product,Gibrid inverter 5 kVt — Deye SUN-5K,11590000,950,,,,2026-04-22
+deye-hybrid-6kw-lv,product,Gibrid inverter 6 kVt — Deye SUN-6K,12810000,1050,,,,2026-04-22
+deye-sun-8k,product,Gibrid inverter 8 kVt — Deye SUN-8K,18300000,1500,,,,2026-04-22
+deye-hybrid-10kw-lv,product,Gibrid inverter 10 kVt — Deye SUN-10K-LV,23790000,1950,,,,2026-04-22
+deye-hybrid-10kw-hv,product,Gibrid inverter 10 kVt — Deye SUN-10K-HV,25620000,2100,,,,2026-04-22
+deye-hybrid-12kw-hv,product,Gibrid inverter 12 kVt — Deye SUN-12K-HV,26230000,2150,,,,2026-04-22
+deye-sun-12k-sg04lp3,product,Gibrid quyosh inverteri 12 kVt — Deye SUN-12K-SG04LP3,26230000,2150,,,,2026-04-22
+deye-sun-15k,product,Gibrid inverter 15 kVt — Deye SUN-15K,26840000,2200,,,,2026-04-22
+deye-hybrid-16kw-lv,product,Gibrid inverter 16 kVt — Deye SUN-16K,30500000,2500,,,,2026-04-22
+deye-hybrid-18kw-lv,product,Gibrid inverter 18 kVt — Deye SUN-18K,32940000,2700,,,,2026-04-22
+deye-hybrid-20kw-hv,product,Gibrid inverter 20 kVt — Deye SUN-20K-HV,37210000,3050,,,,2026-04-22
+deye-hybrid-20kw-high-voltage,product,Gibrid inverter 20 kVt — Deye SUN-20K High Voltage,25010000,2050,,,,2026-04-22
+deye-sun-30k-sg01hp3-eu,product,Gibrid quyosh inverteri 30 kVt — Deye SUN-30K-SG01HP3-EU,25620000,2100,,,,2026-04-22
+deye-sun-40k,product,Gibrid quyosh inverteri 40 kVt — Deye SUN-40K,32940000,2700,,,,2026-04-22
+deye-sun-50k-sg01hp3-eu-bm4,product,Gibrid quyosh inverteri 50 kVt — Deye SUN-50K-SG01HP3-EU-BM4,39040000,3200,,,,2026-04-22
+auxsol-hybrid-10kw-lv,product,Gibrid inverter 10 kVt — Auxsol Low Voltage,19520000,1600,,,,2026-04-22
+auxsol-hybrid-10kw-hv,product,Gibrid inverter 10 kVt — Auxsol High Voltage,19520000,1600,,,,2026-04-22
+auxsol-hybrid-12kw-hv,product,Gibrid inverter 12 kVt — Auxsol High Voltage,20130000,1650,,,,2026-04-22
+auxsol-hybrid-15kw-lv,product,Gibrid inverter 15 kVt — Auxsol Low Voltage,26840000,2200,,,,2026-04-22
+auxsol-hybrid-20kw-hv,product,Gibrid inverter 20 kVt — Auxsol High Voltage,23180000,1900,,,,2026-04-22
+sungrow-sh10rt,product,Gibrid quyosh inverteri 10 kVt — SunGrow SH10RT,20130000,1650,,,,2026-04-22
+huawei-sun2000-20ktl,product,Quyosh uch fazali inverteri Huawei SUN2000-20KTL,22570000,1850,,,,2026-04-22
+pylontech-us5000,product,LiFePO4 akkumulyator Pylontech US5000 4.8 kVt·s,17690000,1450,,,,2026-04-22
+deye-se-g5-1-pro,product,LiFePO4 akkumulyator Deye SE-G5.1 Pro 10 kVt·s,34160000,2800,,,,2026-04-22
+byd-battery-box-premium-hvs-5-1,product,LiFePO4 akkumulyator BYD Battery-Box Premium HVS,41480000,3400,,,,2026-04-22
+huawei-luna2000,product,LiFePO4 akkumulyator Huawei LUNA2000 15 kVt·s,51240000,4200,,,,2026-04-22
+solax-lithium-5kwh-lv,product,Solax Lithium LiFePO4 5 kWh — Low Voltage,10370000,850,,,,2026-04-22
+solax-lithium-16kwh-lv,product,Solax Lithium LiFePO4 16 kWh — Low Voltage,23180000,1900,,,,2026-04-22
+deltron-lithium-5kwh,product,Deltron Lithium LiFePO4 5 kWh,10004000,820,,,,2026-04-22
+deltron-lithium-16kwh,product,Deltron Lithium LiFePO4 16 kWh,23180000,1900,,,,2026-04-22
+bess-30kwh,product,BESS energiya saqlash tizimi 30 kVt·s,115900000,9500,,,,2026-04-22
+bess-50kwh,product,BESS energiya saqlash tizimi 50 kVt·s,192760000,15800,,,,2026-04-22
+bess-100kwh,product,BESS sanoat tizimi 100 kVt·s,347700000,28500,,,,2026-04-22
+abb-s804pv-s,product,Doimiy tok avtomatik o'chirgichi ABB S804PV-S,1037000,85,,,,2026-04-22
+apc-back-ups-pro-1500,product,UPS APC Back-UPS Pro 1500VA — uy uchun,2684000,220,,,,2026-04-22
+dehn-dc-spd-type-2,product,Kuchlanish oshib ketishidan himoya — DEHN DC SPD Type 2,1464000,120,,,,2026-04-22
+eaton-9sx-3000,product,UPS Eaton 9SX 3000VA Online,7564000,620,,,,2026-04-22
+energy-classic-10000,product,Kuchlanish stabilizatori Energy Classic 10000 — 10 kVt,5124000,420,,,,2026-04-22
+k2-systems-aluminium,product,K2 Systems alyuminiy panel ushlagichlari,549000,45,,,,2026-04-22
+lapp-solar-6mm,product,Quyosh kabeli 6 mm² Lapp ÖLFLEX SOLAR (metr),24400,2,,,,2026-04-22
+lider-ps15000,product,Kuchlanish stabilizatori Lider PS15000W-30 — 15 kVt,8296000,680,,,,2026-04-22
+powercom-raptor-1500,product,UPS Powercom Raptor 1500VA,2196000,180,,,,2026-04-22
+resanta-asn-10000,product,Kuchlanish stabilizatori Resanta АСН-10000 — 10 kVt,4636000,380,,,,2026-04-22
+schneider-pv-1000v-fuse,product,PV 1000V saqlagichi — Schneider Electric,427000,35,,,,2026-04-22
+staubli-mc4,product,MC4 Original Stäubli ulagichlari (juft),97600,8,,,,2026-04-22
+qiya-tom-komplekti,product,Qiya tom uchun ushlagichlar komplekti (10 panel),3416000,280,,,,2026-04-22
+stansiya-3kw-kalit,product,Quyosh elektr stansiyasi «kalit topshirish» 3 kVt,15128000,1240,,,,2026-04-22
+stansiya-5kw-kalit,product,Quyosh elektr stansiyasi «kalit topshirish» 5 kVt,23668000,1940,,,,2026-04-22
+stansiya-10kw-kalit,product,Quyosh elektr stansiyasi «kalit topshirish» 10 kVt,45262000,3710,,,,2026-04-22
+stansiya-15kw-kalit,product,Quyosh elektr stansiyasi «kalit topshirish» 15 kVt,67954000,5570,,,,2026-04-22
+3kw-ongrid,system,3 kVt on-grid tizim,,,,11000000,14000000,2026-04-20
+5kw-ongrid,system,5 kVt on-grid tizim,,,,17000000,20000000,2026-04-20
+10kw-ongrid,system,10 kVt on-grid tizim,,,,30000000,38000000,2026-04-20
+10kw-hybrid,system,10 kVt gibrid tizim,,,,35000000,52000000,2026-04-20
+15kw-hybrid,system,15 kVt gibrid tizim,,,,55000000,75000000,2026-04-20
+growatt-50-kwt,product,Growatt 50 kwt,,1300,,,,2026-05-28
+growatt-100-kwt,product,Growatt 100 kwt,,2600,,,,2026-05-28
+growatt-110-kwt,product,Growatt 110 kwt,,2650,,,,2026-05-28
+growatt-15-kwt,product,Growatt 15 kwt,,600,,,,2026-05-28
+growatt-25-kwt,product,Growatt 25 kwt,,750,,,,2026-05-28
+growatt-20-kwt,product,Growatt 20 kwt,,650,,,,2026-05-28
+growatt-60-kwt,product,Growatt 60 kwt,,1600,,,,2026-05-28
+growatt-30-kwt,product,Growatt 30 kwt,,850,,,,2026-05-28
+growatt-125-kwt,product,Growatt 125 kwt,,3000,,,,2026-05-28

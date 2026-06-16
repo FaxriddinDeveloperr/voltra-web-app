@@ -1,15 +1,152 @@
 import { PrismaClient, Prisma } from '@prisma/client';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 const prisma = new PrismaClient();
 
-// Placeholder rasm generatori (brendlangan aktivlar yo'q — spec yakuniy eslatmasi)
 const img = (seed: string, w = 600, h = 600) =>
   `https://picsum.photos/seed/${encodeURIComponent(seed)}/${w}/${h}`;
 
-async function main() {
-  console.log('🌱 Seed boshlandi...');
+// ── CSV o'qish (env URL yoki mahalliy fayl) ──────────────────
+async function loadCsv(): Promise<string> {
+  const url = process.env.PRICE_SHEET_CSV_URL;
+  if (url) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        const text = await res.text();
+        if (text.includes(',') && text.length > 100) return text;
+      }
+    } catch {
+      // mahalliy faylga tushamiz
+    }
+  }
+  return readFileSync(join(__dirname, 'price.csv'), 'utf8');
+}
 
-  // Tozalash (idempotent dev seed)
+interface Row {
+  key: string;
+  type: string;
+  label: string;
+  priceUzs?: number;
+  priceUsd?: number;
+  priceUzsFrom?: number;
+  priceUzsTo?: number;
+}
+
+function num(v: string): number | undefined {
+  const s = (v || '').trim();
+  if (!s) return undefined;
+  const n = Number(s.replace(/\s/g, ''));
+  return Number.isFinite(n) ? n : undefined;
+}
+
+function parseCsv(text: string): Row[] {
+  const lines = text.split(/\r?\n/).filter((l) => l.trim().length);
+  const rows: Row[] = [];
+  for (let i = 1; i < lines.length; i++) {
+    const c = lines[i].split(',');
+    rows.push({
+      key: c[0]?.trim(),
+      type: c[1]?.trim(),
+      label: c[2]?.trim(),
+      priceUzs: num(c[3]),
+      priceUsd: num(c[4]),
+      priceUzsFrom: num(c[6]),
+      priceUzsTo: num(c[7]),
+    });
+  }
+  return rows;
+}
+
+// ── Kategoriya / brend / quvvat ajratish ─────────────────────
+function inferCategory(label: string): string {
+  const l = label.toLowerCase();
+  if (l.includes('quyosh paneli')) return 'Quyosh panellari';
+  if (l.includes('kalit topshirish') || l.includes('tizim'))
+    return 'Tayyor stansiyalar';
+  if (l.includes('gibrid')) return 'Gibrid inverterlar';
+  if (
+    l.includes('akkumulyator') ||
+    l.includes('lifepo4') ||
+    l.includes('lithium') ||
+    l.includes('battery') ||
+    l.includes('bess')
+  )
+    return 'Akkumulyatorlar';
+  if (
+    l.includes('inverter') ||
+    l.includes('growatt') ||
+    l.includes('sun2000')
+  )
+    return 'Tarmoq inverterlar';
+  if (
+    l.includes('ups') ||
+    l.includes('stabilizator') ||
+    l.includes('spd') ||
+    l.includes('avtomat') ||
+    l.includes('saqlagich') ||
+    l.includes('kabel') ||
+    l.includes('mc4') ||
+    l.includes("o'chirgich") ||
+    l.includes('1000v') ||
+    l.includes('himoya')
+  )
+    return 'Himoya va kabellar';
+  if (
+    l.includes('konstruksiya') ||
+    l.includes('ushlagich') ||
+    l.includes('k2') ||
+    l.includes("o'rnatish") ||
+    l.includes('shit')
+  )
+    return 'Konstruksiya va o\'rnatish';
+  return 'Himoya va kabellar';
+}
+
+const BRANDS = [
+  'JA Solar', 'Jinko', 'LONGi', 'Trina', 'ERA Solar', 'Auxsol', 'Deye',
+  'Solax', 'Sungrow', 'SunGrow', 'Huawei', 'Pylontech', 'BYD', 'Deltron',
+  'Growatt', 'ABB', 'APC', 'DEHN', 'Eaton', 'K2 Systems', 'Lapp', 'Lider',
+  'Powercom', 'Resanta', 'Schneider', 'Stäubli', 'Pylon',
+];
+function inferBrand(label: string): string | null {
+  const l = label.toLowerCase();
+  for (const b of BRANDS) {
+    if (l.includes(b.toLowerCase())) {
+      if (b === 'SunGrow') return 'Sungrow';
+      if (b === 'ERA Solar') return 'ERA Solar';
+      return b;
+    }
+  }
+  return null;
+}
+
+function inferPower(label: string): string | null {
+  const m = label.match(/(\d+(?:[.,]\d+)?)\s*(kVt·s|kWh|kVt|kW|kwt|W)\b/i);
+  return m ? `${m[1]} ${m[2]}` : null;
+}
+
+const catImg: Record<string, string> = {
+  'Quyosh panellari': 'panel',
+  'Tarmoq inverterlar': 'inverter',
+  'Gibrid inverterlar': 'hybrid',
+  Akkumulyatorlar: 'battery',
+  'Tayyor stansiyalar': 'station',
+  'Himoya va kabellar': 'cable',
+  "Konstruksiya va o'rnatish": 'mount',
+};
+
+async function main() {
+  console.log('🌱 Seed (Google Sheets narx jadvalidan)...');
+  const rows = parseCsv(await loadCsv());
+
+  const rate =
+    rows.find((r) => r.key === 'exchange-rate')?.priceUzs ?? 12200;
+  const items = rows.filter((r) => r.type === 'product' || r.type === 'system');
+  console.log(`  kurs: 1$ = ${rate} so'm | mahsulotlar: ${items.length}`);
+
+  // Tozalash
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
   await prisma.cartItem.deleteMany();
@@ -25,313 +162,100 @@ async function main() {
   await prisma.region.deleteMany();
   await prisma.appContent.deleteMany();
 
-  // ── Kategoriyalar (2.5) ───────────────────────────────────────────────
-  const categoryNames = [
-    'Inverter',
-    'Akkumulyator',
-    'Metall konstruktsiya',
-    'QS uchun materiallar',
-    'Quyosh ko\'cha yoritgichlari',
-    'Instrumentlar',
-    'Zaryadlash stansiyasi',
-    'Quyosh stansiyasi',
+  // Kategoriyalar
+  const catOrder = [
+    'Quyosh panellari',
+    'Tarmoq inverterlar',
+    'Gibrid inverterlar',
+    'Akkumulyatorlar',
+    'Tayyor stansiyalar',
+    'Himoya va kabellar',
+    "Konstruksiya va o'rnatish",
   ];
-  const categories = [];
-  for (let i = 0; i < categoryNames.length; i++) {
-    categories.push(
-      await prisma.category.create({
-        data: {
-          nameUz: categoryNames[i],
-          imageUrl: img(`cat-${i}`, 200, 200),
-          sortOrder: i,
-        },
-      }),
-    );
-  }
-  const catInverter = categories[0];
-  const catBattery = categories[1];
-  const catStation = categories[7];
-
-  // ── Brendlar ─────────────────────────────────────────────────────────
-  const brandNames = [
-    'Jinko Solar',
-    'SUNGROW',
-    'TTN',
-    'Get-Green Energy',
-    'LONGi',
-    'SOFAR',
-  ];
-  const brands = [];
-  for (let i = 0; i < brandNames.length; i++) {
-    brands.push(
-      await prisma.brand.create({
-        data: {
-          name: brandNames[i],
-          logoUrl: img(`brand-${brandNames[i]}`, 200, 120),
-          sortOrder: i,
-        },
-      }),
-    );
-  }
-  const [bJinko, bSungrow, bTtn, , bLongi, bSofar] = brands;
-
-  // ── Mahsulotlar (videodan) ───────────────────────────────────────────
-  type Spec = { icon: string; label: string; value: string };
-  interface ProductSeed {
-    nameUz: string;
-    slug: string;
-    price: number;
-    oldPrice?: number;
-    priceUsd?: number;
-    discountPct?: number;
-    stock: number;
-    descriptionUz: string;
-    shortFeatures: string[];
-    specs: Spec[];
-    datasheet?: boolean;
-    categoryId?: string;
-    brandId?: string;
-    flags?: Partial<{
-      isHot: boolean;
-      isNew: boolean;
-      isBestSeller: boolean;
-      isXit: boolean;
-    }>;
-    images: number;
-  }
-
-  const products: ProductSeed[] = [
-    {
-      nameUz: 'SOFAR 5KTLM-G3 1 fazalik invertor',
-      slug: 'sofar-5ktlm-g3',
-      price: 4114000,
-      oldPrice: 4240000,
-      priceUsd: 340,
-      discountPct: 3,
-      stock: 100,
-      descriptionUz:
-        'SOFAR 5KTLM-G3 — uy va kichik biznes uchun mo\'ljallangan ishonchli bir fazali tarmoq inverteri. Yuqori samaradorlik va keng kirish kuchlanish diapazoni.',
-      shortFeatures: [
-        'O\'rnatilgan nol eksport funksiyasi',
-        'Qo\'shimcha AFCI funksiyasi',
-        'Kompakt dizayn, yengil vazn',
-        'Maksimal samaradorlik 98,4%',
-      ],
-      specs: [
-        { icon: 'bolt', label: 'Quvvat', value: '5 kW' },
-        { icon: 'sine', label: 'Faza', value: '1' },
-        { icon: 'mppt', label: 'MPPT', value: '2 trekera' },
-        { icon: 'shield', label: 'Himoya', value: 'IP65' },
-        { icon: 'wifi', label: 'Monitoring', value: 'Wi-Fi/RS485' },
-      ],
-      datasheet: true,
-      categoryId: catInverter.id,
-      brandId: bSofar.id,
-      flags: { isHot: true, isBestSeller: true, isXit: true },
-      images: 4,
-    },
-    {
-      nameUz: 'Jinko Tiger Neo 655W N-type panel',
-      slug: 'jinko-tiger-neo-655w',
-      price: 1850000,
-      oldPrice: 2170000,
-      priceUsd: 153,
-      discountPct: 15,
-      stock: 250,
-      descriptionUz:
-        'Jinko Tiger Neo 655W — N-type TOPCon texnologiyasidagi yuqori unumdor monokristall quyosh paneli. Past haroratli koeffitsient va uzoq xizmat muddati.',
-      shortFeatures: [
-        'N-type TOPCon hujayralar',
-        'Yuqori samaradorlik 22,5%',
-        '30 yillik ishlab chiqarish kafolati',
-        'Past yorug\'likda yaxshi ishlash',
-      ],
-      specs: [
-        { icon: 'bolt', label: 'Quvvat', value: '655 Wp' },
-        { icon: 'efficiency', label: 'Samaradorlik', value: '22,5%' },
-        { icon: 'cells', label: 'Hujayra', value: 'N-type' },
-      ],
-      datasheet: true,
-      categoryId: categories[3].id,
-      brandId: bJinko.id,
-      flags: { isHot: true, isNew: true, isXit: true },
-      images: 3,
-    },
-    {
-      nameUz: 'SUNGROW SG5.0RS 1 fazalik invertor',
-      slug: 'sungrow-sg5-0rs',
-      price: 4980000,
-      oldPrice: 5100000,
-      priceUsd: 411,
-      discountPct: 3,
-      stock: 60,
-      descriptionUz:
-        'SUNGROW SG5.0RS — smart string inverter, integratsiyalashgan PID tiklash va Wi-Fi monitoring.',
-      shortFeatures: [
-        'Maksimal samaradorlik 98,4%',
-        'Integratsiyalashgan PID tiklash',
-        'Smart monitoring (iSolarCloud)',
-      ],
-      specs: [
-        { icon: 'bolt', label: 'Quvvat', value: '5 kW' },
-        { icon: 'sine', label: 'Faza', value: '1' },
-        { icon: 'mppt', label: 'MPPT', value: '2' },
-      ],
-      datasheet: true,
-      categoryId: catInverter.id,
-      brandId: bSungrow.id,
-      flags: { isNew: true, isBestSeller: true },
-      images: 3,
-    },
-    {
-      nameUz: 'LONGi Hi-MO X10 580W panel',
-      slug: 'longi-himo-x10-580w',
-      price: 1620000,
-      oldPrice: 1900000,
-      priceUsd: 134,
-      discountPct: 15,
-      stock: 180,
-      descriptionUz:
-        'LONGi Hi-MO X10 — HPBC 2.0 texnologiyasidagi yuqori unumli panel, estetik to\'liq qora dizayn.',
-      shortFeatures: [
-        'HPBC 2.0 hujayralar',
-        'To\'liq qora dizayn',
-        'Yuqori energiya hosildorligi',
-      ],
-      specs: [
-        { icon: 'bolt', label: 'Quvvat', value: '580 Wp' },
-        { icon: 'efficiency', label: 'Samaradorlik', value: '23,0%' },
-      ],
-      datasheet: true,
-      categoryId: categories[3].id,
-      brandId: bLongi.id,
-      flags: { isHot: true, isNew: true },
-      images: 3,
-    },
-    {
-      nameUz: 'Akkumulyator LiFePO4 5kWh 51.2V',
-      slug: 'lifepo4-5kwh',
-      price: 9800000,
-      oldPrice: 11200000,
-      priceUsd: 810,
-      discountPct: 12,
-      stock: 40,
-      descriptionUz:
-        'Devorga o\'rnatiladigan LiFePO4 akkumulyator bloki, 5 kWh sig\'im, 6000+ tsikl.',
-      shortFeatures: [
-        '6000+ zaryad tsikli',
-        'BMS himoyasi',
-        'Devorga o\'rnatish',
-      ],
-      specs: [
-        { icon: 'battery', label: 'Sig\'im', value: '5 kWh' },
-        { icon: 'bolt', label: 'Kuchlanish', value: '51.2 V' },
-      ],
-      datasheet: true,
-      categoryId: catBattery.id,
-      flags: { isBestSeller: true },
-      images: 2,
-    },
-    {
-      nameUz: 'DC Solar kabel 6mm² (qora, 100m)',
-      slug: 'dc-solar-kabel-6mm',
-      price: 1250000,
-      priceUsd: 103,
-      stock: 500,
-      descriptionUz:
-        'UV-bardosh ikki qatlamli izolyatsiyali quyosh DC kabeli, 6mm², 100 metrlik g\'altak.',
-      shortFeatures: ['UV-bardosh', 'Ikki qatlamli izolyatsiya', 'TUV sertifikati'],
-      specs: [
-        { icon: 'cable', label: 'Kesim', value: '6 mm²' },
-        { icon: 'length', label: 'Uzunlik', value: '100 m' },
-      ],
-      categoryId: categories[3].id,
-      flags: { isNew: true },
-      images: 2,
-    },
-    {
-      nameUz: 'TTN gibrid invertor 8kW 3 fazalik',
-      slug: 'ttn-gibrid-8kw',
-      price: 12400000,
-      oldPrice: 13100000,
-      priceUsd: 1025,
-      discountPct: 5,
-      stock: 25,
-      descriptionUz:
-        'TTN 8kW uch fazali gibrid invertor — akkumulyator ulash imkoniyati bilan.',
-      shortFeatures: [
-        'Gibrid (akkumulyator ulanadi)',
-        '3 fazali',
-        'Uy va biznes uchun',
-      ],
-      specs: [
-        { icon: 'bolt', label: 'Quvvat', value: '8 kW' },
-        { icon: 'sine', label: 'Faza', value: '3' },
-      ],
-      datasheet: true,
-      categoryId: catInverter.id,
-      brandId: bTtn.id,
-      flags: { isHot: true, isBestSeller: true },
-      images: 3,
-    },
-    {
-      nameUz: 'Quyosh ko\'cha chirog\'i 100W LED',
-      slug: 'quyosh-kocha-chiroq-100w',
-      price: 890000,
-      oldPrice: 1050000,
-      priceUsd: 73,
-      discountPct: 15,
-      stock: 300,
-      descriptionUz:
-        'Integratsiyalashgan quyosh ko\'cha chirog\'i, harakat sensori va masofadan boshqaruv bilan.',
-      shortFeatures: ['Harakat sensori', 'Masofadan boshqaruv', 'IP66 himoya'],
-      specs: [
-        { icon: 'bolt', label: 'Quvvat', value: '100 W' },
-        { icon: 'shield', label: 'Himoya', value: 'IP66' },
-      ],
-      categoryId: categories[4].id,
-      flags: { isNew: true },
-      images: 2,
-    },
-  ];
-
-  for (const p of products) {
-    const created = await prisma.product.create({
+  const catMap = new Map<string, string>();
+  for (let i = 0; i < catOrder.length; i++) {
+    const c = await prisma.category.create({
       data: {
-        nameUz: p.nameUz,
-        slug: p.slug,
-        descriptionUz: p.descriptionUz,
-        shortFeatures: p.shortFeatures,
-        price: new Prisma.Decimal(p.price),
-        oldPrice: p.oldPrice ? new Prisma.Decimal(p.oldPrice) : null,
-        priceUsd: p.priceUsd ? new Prisma.Decimal(p.priceUsd) : null,
-        discountPct: p.discountPct ?? null,
-        stock: p.stock,
-        vatIncluded: true,
-        datasheetUrl: p.datasheet ? '/uploads/datasheets/sample.pdf' : null,
-        specs: p.specs as unknown as Prisma.InputJsonValue,
-        categoryId: p.categoryId,
-        brandId: p.brandId,
-        isHot: p.flags?.isHot ?? false,
-        isNew: p.flags?.isNew ?? false,
-        isBestSeller: p.flags?.isBestSeller ?? false,
-        isXit: p.flags?.isXit ?? false,
-        images: {
-          create: Array.from({ length: p.images }, (_, idx) => ({
-            url: img(`${p.slug}-${idx}`),
-            sortOrder: idx,
-          })),
-        },
+        nameUz: catOrder[i],
+        imageUrl: img(`cat-${catImg[catOrder[i]] ?? i}`, 200, 200),
+        sortOrder: i,
       },
     });
-    console.log(`  + mahsulot: ${created.nameUz}`);
+    catMap.set(catOrder[i], c.id);
   }
 
-  // ── Bannerlar ────────────────────────────────────────────────────────
+  // Brendlar
+  const brandMap = new Map<string, string>();
+  const usedBrands = [
+    ...new Set(items.map((r) => inferBrand(r.label)).filter(Boolean)),
+  ] as string[];
+  for (let i = 0; i < usedBrands.length; i++) {
+    const b = await prisma.brand.create({
+      data: {
+        name: usedBrands[i],
+        logoUrl: img(`brand-${usedBrands[i]}`, 200, 120),
+        sortOrder: i,
+      },
+    });
+    brandMap.set(usedBrands[i], b.id);
+  }
+
+  // Mahsulotlar
+  let count = 0;
+  for (const r of items) {
+    if (!r.key || !r.label) continue;
+    const cat = inferCategory(r.label);
+    const brand = inferBrand(r.label);
+    const power = inferPower(r.label);
+
+    let priceUzs = r.priceUzs;
+    let priceUsd = r.priceUsd;
+    if (r.type === 'system') {
+      priceUzs = r.priceUzsFrom ?? r.priceUzs;
+    }
+    if (priceUzs == null && priceUsd != null) {
+      priceUzs = Math.round(priceUsd * rate);
+    }
+    if (priceUsd == null && priceUzs != null) {
+      priceUsd = Math.round((priceUzs / rate) * 100) / 100;
+    }
+    if (priceUzs == null) continue;
+
+    const isPanel = cat === 'Quyosh panellari';
+    const isStation = cat === 'Tayyor stansiyalar';
+    const isHybrid = cat === 'Gibrid inverterlar';
+
+    await prisma.product.create({
+      data: {
+        nameUz: r.label,
+        slug: r.key,
+        descriptionUz: `${r.label}. Voltra — quyosh energiyasi yechimlari.`,
+        shortFeatures: power ? [`Quvvat: ${power}`] : [],
+        price: new Prisma.Decimal(priceUzs),
+        priceUsd: priceUsd != null ? new Prisma.Decimal(priceUsd) : null,
+        currency: 'UZS',
+        stock: 100,
+        vatIncluded: true,
+        specs: power
+          ? ([{ icon: 'bolt', label: 'Quvvat', value: power }] as unknown as Prisma.InputJsonValue)
+          : Prisma.JsonNull,
+        categoryId: catMap.get(cat),
+        brandId: brand ? brandMap.get(brand) : null,
+        isBestSeller: isPanel,
+        isHot: isStation,
+        isNew: isHybrid,
+        isXit: isPanel && count % 9 === 0,
+      },
+    });
+    count++;
+  }
+  console.log(`  + ${count} mahsulot, ${usedBrands.length} brend, ${catOrder.length} kategoriya`);
+
+  // ── Bannerlar ────────────────────────────────────────────
   const banners = [
-    { title: 'TOPCON N-type panellar', seed: 'banner-topcon' },
-    { title: 'LONGi Hi-MO X10', seed: 'banner-longi' },
-    { title: 'DC Solar Kabel aksiyasi', seed: 'banner-cable' },
+    { title: 'Quyosh panellari', seed: 'b-panel' },
+    { title: 'Gibrid inverterlar', seed: 'b-hybrid' },
+    { title: 'Tayyor stansiyalar', seed: 'b-station' },
   ];
   for (let i = 0; i < banners.length; i++) {
     await prisma.banner.create({
@@ -344,7 +268,7 @@ async function main() {
     });
   }
 
-  // ── Xizmatlar (2.9) ──────────────────────────────────────────────────
+  // ── Xizmatlar ────────────────────────────────────────────
   const services = [
     { nameUz: 'Quyosh panelini tozalash', isActive: true, hasPowerField: true },
     { nameUz: 'Diagnostika', isActive: true, hasPowerField: false },
@@ -368,7 +292,7 @@ async function main() {
     });
   }
 
-  // ── Pickup punktlari ─────────────────────────────────────────────────
+  // ── Pickup punktlari ─────────────────────────────────────
   await prisma.pickupPoint.create({
     data: {
       name: 'Toshkent shahri, Iftixor ko\'chasi 1-uy',
@@ -386,7 +310,7 @@ async function main() {
     },
   });
 
-  // ── Viloyatlar / shaharlar ───────────────────────────────────────────
+  // ── Viloyatlar ───────────────────────────────────────────
   const regionsData: Record<string, string[]> = {
     'Toshkent shahri': ['Yunusobod', 'Chilonzor', 'Mirzo Ulug\'bek', 'Yashnobod'],
     'Toshkent viloyati': ['Angren', 'Chirchiq', 'Bekobod', 'Olmaliq'],
@@ -404,13 +328,13 @@ async function main() {
     });
   }
 
-  // ── Statik kontent ───────────────────────────────────────────────────
+  // ── Statik kontent ───────────────────────────────────────
   await prisma.appContent.create({
     data: {
       key: 'about',
       titleUz: 'Biz haqimizda',
       bodyUz:
-        'Quyoshli — O\'zbekistondagi quyosh energiyasi jihozlarining yetakchi yetkazib beruvchisi. Biz panellar, invertorlar, akkumulyatorlar va to\'liq quyosh stansiyalarini taklif etamiz.\n\nVersiya: 2.0.9',
+        'Voltra — quyosh energiyasi jihozlarining ishonchli yetkazib beruvchisi. Panellar, invertorlar, akkumulyatorlar va kalit topshirish stansiyalari.\n\nVersiya: 2.0.9',
     },
   });
   await prisma.appContent.create({
@@ -418,7 +342,7 @@ async function main() {
       key: 'offer',
       titleUz: 'Oferta va foydalanish shartlari',
       bodyUz:
-        'Ushbu ilovadan foydalanish orqali siz ommaviy oferta shartlariga rozilik bildirasiz. Barcha narxlar QQS bilan ko\'rsatilgan.',
+        'Ushbu ilovadan foydalanish orqali ommaviy oferta shartlariga rozilik bildirasiz. Barcha narxlar QQS bilan ko\'rsatilgan.',
     },
   });
 
