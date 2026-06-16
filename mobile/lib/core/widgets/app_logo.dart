@@ -17,9 +17,9 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final painter = onDark
-        ? _VMarkPainter(main: Colors.white, bolt: AppColors.accent)
-        : _VMarkPainter(main: AppColors.ink, bolt: AppColors.accent);
+    // To'liq sariq V
+    final painter =
+        _VMarkPainter(main: AppColors.accent, bolt: AppColors.accentDeep);
 
     final mark = Container(
       width: size,
