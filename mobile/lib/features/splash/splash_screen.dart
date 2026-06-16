@@ -48,7 +48,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final reduce = MediaQuery.of(context).disableAnimations;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(gradient: AppColors.darkGradient),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFFFF7D6), Color(0xFFFFFFFF)],
+          ),
+        ),
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -58,22 +64,22 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 builder: (context, child) {
                   final t = reduce ? 0.5 : _pulse.value;
                   return Container(
-                    padding: const EdgeInsets.all(28),
+                    padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.accent
-                              .withValues(alpha: 0.25 + 0.35 * t),
-                          blurRadius: 40 + 30 * t,
-                          spreadRadius: 4 + 6 * t,
+                              .withValues(alpha: 0.30 + 0.30 * t),
+                          blurRadius: 36 + 26 * t,
+                          spreadRadius: 2 + 5 * t,
                         ),
                       ],
                     ),
                     child: child,
                   );
                 },
-                child: const AppLogo(size: 92, onDark: true),
+                child: const AppLogo(size: 88),
               ),
               const SizedBox(height: 28),
               Text(
@@ -82,7 +88,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   fontSize: 26,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 4,
-                  color: Colors.white,
+                  color: AppColors.ink,
                 ),
               ),
               const SizedBox(height: 6),
@@ -92,7 +98,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 3,
-                  color: AppColors.accent,
+                  color: AppColors.accentDeep,
                 ),
               ),
             ],

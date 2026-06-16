@@ -59,20 +59,25 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
           Container(
             width: double.infinity,
             padding: EdgeInsets.fromLTRB(
-                AppSpacing.xl, media.padding.top + 56, AppSpacing.xl, 48),
+                AppSpacing.xl, media.padding.top + 56, AppSpacing.xl, 44),
             decoration: const BoxDecoration(
-              gradient: AppColors.tealGradient,
+              // oq, biroz iliq-sariq
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFFFFF7D6), Color(0xFFFFFFFF)],
+              ),
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(36)),
+              boxShadow: AppColors.softShadow,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AppLogo(size: 52, showWordmark: true, onDark: true),
+                const AppLogo(size: 52, showWordmark: true),
                 const SizedBox(height: AppSpacing.xxl),
                 Text(
                   'Quyosh allaqachon\nishlayapti.',
                   style: AppTypography.screenTitle.copyWith(
-                    color: Colors.white,
                     fontSize: 30,
                     height: 1.2,
                   ),
@@ -80,10 +85,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
                 const SizedBox(height: AppSpacing.md),
                 Text(
                   'Quyosh energiyasi yechimlari — tomingiz aktivga aylansin.',
-                  style: AppTypography.hint.copyWith(
-                    color: Colors.white.withValues(alpha: 0.85),
-                    height: 1.45,
-                  ),
+                  style: AppTypography.hint.copyWith(height: 1.45),
                 ),
               ],
             ),
