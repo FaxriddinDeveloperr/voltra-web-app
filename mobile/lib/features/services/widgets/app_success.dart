@@ -11,13 +11,13 @@ void showAppSuccess(BuildContext context) {
     barrierDismissible: false,
     builder: (_) => AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      content: const Column(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           CircleAvatar(
             radius: 32,
-            backgroundColor: AppColors.primaryLight,
-            child: Icon(Icons.check, color: AppColors.primary, size: 36),
+            backgroundColor: AppColors.accent,
+            child: Icon(Icons.check, color: AppColors.onAccent, size: 36),
           ),
           SizedBox(height: AppSpacing.lg),
           Text('Arizangiz qabul qilindi!',

@@ -91,7 +91,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                     style: const TextStyle(color: AppColors.dangerRed)),
               ],
               const SizedBox(height: AppSpacing.lg),
-              const Text(
+              Text(
                 'Dev rejimi: kod 123456',
                 style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
               ),

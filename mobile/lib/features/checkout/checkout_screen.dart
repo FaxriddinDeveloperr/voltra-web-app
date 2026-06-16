@@ -160,15 +160,15 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           children: [
             const CircleAvatar(
               radius: 32,
-              backgroundColor: AppColors.primaryLight,
-              child: Icon(Icons.check, color: AppColors.primary, size: 36),
+              backgroundColor: AppColors.accent,
+            child: Icon(Icons.check, color: AppColors.onAccent, size: 36),
             ),
             const SizedBox(height: AppSpacing.lg),
             const Text('Buyurtma qabul qilindi!',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.sm),
             Text('Raqam: $orderNumber',
-                style: const TextStyle(color: AppColors.textSecondary)),
+                style: TextStyle(color: AppColors.textSecondary)),
           ],
         ),
         actions: [
@@ -249,7 +249,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       bottomNavigationBar: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(AppSpacing.screen),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.background,
             border: Border(top: BorderSide(color: AppColors.border)),
           ),

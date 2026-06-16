@@ -127,12 +127,12 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   onPressed: () => Navigator.pop(context),
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size.fromHeight(52),
-                    side: const BorderSide(color: AppColors.border),
+                    side: BorderSide(color: AppColors.border),
                     shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.circular(AppSpacing.buttonRadius)),
                   ),
-                  child: const Text('Bekor qilish',
+                  child: Text('Bekor qilish',
                       style: TextStyle(color: AppColors.textPrimary)),
                 ),
               ),

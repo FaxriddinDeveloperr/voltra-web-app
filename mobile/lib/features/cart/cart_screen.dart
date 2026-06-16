@@ -107,13 +107,13 @@ class _CartItemCard extends ConsumerWidget {
                         style: AppTypography.price.copyWith(fontSize: 16)),
                     const SizedBox(height: 2),
                     Text('Sotuvda mavjud: ${p.stock} dona',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 12, color: AppColors.textSecondary)),
                   ],
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.delete_outline,
+                icon: Icon(Icons.delete_outline,
                     color: AppColors.forest),
                 onPressed: () => notifier.remove(line.id),
               ),

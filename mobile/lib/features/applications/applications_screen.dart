@@ -86,7 +86,7 @@ class _AppCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   '${app.createdAt.day}.${app.createdAt.month}.${app.createdAt.year}',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 12, color: AppColors.textSecondary),
                 ),
               ],

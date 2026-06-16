@@ -29,7 +29,7 @@ class CustomDropdown<T> extends StatelessWidget {
         if (label != null) ...[
           Text(
             label!,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: AppColors.textPrimary,
@@ -49,12 +49,12 @@ class CustomDropdown<T> extends StatelessWidget {
               isExpanded: true,
               hint: Text(
                 hint ?? 'Tanlang',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 14,
                 ),
               ),
-              icon: const Icon(Icons.keyboard_arrow_down,
+              icon: Icon(Icons.keyboard_arrow_down,
                   color: AppColors.textSecondary),
               items: items
                   .map((e) => DropdownMenuItem<T>(

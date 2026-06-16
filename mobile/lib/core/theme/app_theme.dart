@@ -3,10 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 import 'app_spacing.dart';
 
-/// Markazlashtirilgan tema — barcha ranglar/radiuslar tokenlardan.
+/// Markazlashtirilgan tema — joriy AppColors (light/dark) dan quriladi.
 abstract class AppTheme {
-  static ThemeData get light {
-    final base = ThemeData.light(useMaterial3: true);
+  static ThemeData get light => _build();
+
+  static ThemeData _build() {
+    final base = AppColors.dark
+        ? ThemeData.dark(useMaterial3: true)
+        : ThemeData.light(useMaterial3: true);
     final textTheme = GoogleFonts.plusJakartaSansTextTheme(base.textTheme).apply(
       bodyColor: AppColors.textPrimary,
       displayColor: AppColors.textPrimary,
@@ -20,7 +24,7 @@ abstract class AppTheme {
         secondary: AppColors.accent,
         surface: AppColors.background,
         error: AppColors.danger,
-        onPrimary: AppColors.ink,
+        onPrimary: AppColors.onAccent,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,
@@ -33,12 +37,12 @@ abstract class AppTheme {
           fontWeight: FontWeight.w700,
           color: AppColors.textPrimary,
         ),
-        iconTheme: const IconThemeData(color: AppColors.textPrimary),
+        iconTheme: IconThemeData(color: AppColors.textPrimary),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.accent,
-          foregroundColor: AppColors.ink,
+          foregroundColor: AppColors.onAccent,
           disabledBackgroundColor: AppColors.accentTintSoft,
           disabledForegroundColor: AppColors.textTertiary,
           elevation: 0,
@@ -46,8 +50,8 @@ abstract class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
           ),
-          textStyle:
-              GoogleFonts.plusJakartaSans(fontSize: 16, fontWeight: FontWeight.w600),
+          textStyle: GoogleFonts.plusJakartaSans(
+              fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -67,24 +71,24 @@ abstract class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.inputRadius),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.accent, width: 1.5),
         ),
       ),
-      dividerTheme: const DividerThemeData(
+      dividerTheme: DividerThemeData(
         color: AppColors.border,
         thickness: 1,
         space: 1,
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: AppColors.primaryDark,
+        backgroundColor: const Color(0xFF2A2A1E),
         contentTextStyle: GoogleFonts.plusJakartaSans(color: Colors.white),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
         ),
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.card,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.cardRadius),

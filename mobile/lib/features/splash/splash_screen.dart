@@ -48,13 +48,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final reduce = MediaQuery.of(context).disableAnimations;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFFFF7D6), Color(0xFFFFFFFF)],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: AppColors.heroGradient),
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,

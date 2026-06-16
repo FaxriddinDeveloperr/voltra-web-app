@@ -6,7 +6,12 @@ class Prefs {
   final SharedPreferences _p;
 
   static const _kLang = 'lang';
+  static const _kThemeMode = 'theme_mode';
 
   String get lang => _p.getString(_kLang) ?? 'uz';
   Future<void> setLang(String code) => _p.setString(_kLang, code);
+
+  // 'light' | 'dark' | 'system'
+  String get themeMode => _p.getString(_kThemeMode) ?? 'light';
+  Future<void> setThemeMode(String mode) => _p.setString(_kThemeMode, mode);
 }

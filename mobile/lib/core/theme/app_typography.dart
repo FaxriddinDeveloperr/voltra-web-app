@@ -8,14 +8,14 @@ abstract class AppTypography {
   static TextStyle _t({
     double size = 14,
     FontWeight weight = FontWeight.w400,
-    Color color = AppColors.textPrimary,
+    Color? color,
     double height = 1.35,
     double spacing = 0,
   }) =>
       GoogleFonts.plusJakartaSans(
         fontSize: size,
         fontWeight: weight,
-        color: color,
+        color: color ?? AppColors.textPrimary,
         height: height,
         letterSpacing: spacing,
       );
@@ -44,7 +44,7 @@ abstract class AppTypography {
         color: AppColors.strikethrough,
       ).copyWith(decoration: TextDecoration.lineThrough);
   static TextStyle get button =>
-      _t(size: 16, weight: FontWeight.w700, color: AppColors.ink);
+      _t(size: 16, weight: FontWeight.w700, color: AppColors.onAccent);
   static TextStyle get hint =>
       _t(size: 14, weight: FontWeight.w400, color: AppColors.textSecondary);
   static TextStyle get link =>

@@ -17,7 +17,7 @@ class SoftIconButton extends StatelessWidget {
         width: 40,
         height: 40,
         alignment: Alignment.center,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.surface,
           shape: BoxShape.circle,
         ),

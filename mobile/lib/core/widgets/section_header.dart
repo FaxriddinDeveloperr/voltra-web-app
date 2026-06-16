@@ -25,7 +25,7 @@ class SectionHeader extends StatelessWidget {
             child: Row(
               children: [
                 Text(context.l10n.seeAll, style: AppTypography.link),
-                const Icon(Icons.chevron_right,
+                Icon(Icons.chevron_right,
                     size: 18, color: AppColors.tealText),
               ],
             ),

@@ -105,7 +105,7 @@ class _Body extends StatelessWidget {
                       style: AppTypography.priceLarge),
                   const SizedBox(width: 8),
                   if (p.vatIncluded)
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(bottom: 3),
                       child: Text('QQS bilan',
                           style: TextStyle(
@@ -115,14 +115,14 @@ class _Body extends StatelessWidget {
               ),
               if (p.priceUsd != null)
                 Text(Formatters.usd(p.priceUsd!),
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: AppColors.textSecondary, fontSize: 14)),
               const SizedBox(height: AppSpacing.md),
 
               // Mavjudlik
               Row(
                 children: [
-                  const Text('Sotuvda mavjud: ',
+                  Text('Sotuvda mavjud: ',
                       style: TextStyle(color: AppColors.textSecondary)),
                   Text('${p.stock} dona',
                       style: const TextStyle(
@@ -140,7 +140,7 @@ class _Body extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(top: 6, right: 8),
                           child: CircleAvatar(
                               radius: 2.5,
@@ -163,7 +163,7 @@ class _Body extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size.fromHeight(48),
                     foregroundColor: AppColors.tealText,
-                    side: const BorderSide(color: AppColors.forest),
+                    side: BorderSide(color: AppColors.forest),
                     shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.circular(AppSpacing.buttonRadius)),
@@ -180,7 +180,7 @@ class _Body extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size.fromHeight(48),
                     foregroundColor: AppColors.textPrimary,
-                    side: const BorderSide(color: AppColors.border),
+                    side: BorderSide(color: AppColors.border),
                     shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.circular(AppSpacing.buttonRadius)),
@@ -323,7 +323,7 @@ class _SpecsBlock extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(s.label,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 11, color: AppColors.textSecondary)),
                       Text(s.value,
                           style: const TextStyle(
@@ -405,7 +405,7 @@ class _BottomBarState extends ConsumerState<_BottomBar> {
       child: Container(
         padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screen, vertical: AppSpacing.md),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.background,
           border: Border(top: BorderSide(color: AppColors.border)),
         ),

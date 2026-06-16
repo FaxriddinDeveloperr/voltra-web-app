@@ -32,7 +32,7 @@ class LanguageScreen extends ConsumerWidget {
                   style: const TextStyle(fontWeight: FontWeight.w500)),
               trailing: selected
                   ? const Icon(Icons.check_circle, color: AppColors.primary)
-                  : const Icon(Icons.radio_button_off,
+                  : Icon(Icons.radio_button_off,
                       color: AppColors.textSecondary),
               onTap: () => ref.read(localeProvider.notifier).setLocale(lang.$1),
             ),

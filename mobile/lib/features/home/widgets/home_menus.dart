@@ -72,7 +72,7 @@ void _sheet(BuildContext context, String title, List<_MenuItem> items) {
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(m.icon, color: AppColors.forest),
                 title: Text(m.label),
-                trailing: const Icon(Icons.chevron_right,
+                trailing: Icon(Icons.chevron_right,
                     color: AppColors.textSecondary),
                 onTap: () {
                   Navigator.pop(ctx);

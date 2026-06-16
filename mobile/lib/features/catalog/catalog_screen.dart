@@ -69,7 +69,7 @@ class _CategoryTile extends StatelessWidget {
           title: Text(category.nameUz,
               style: const TextStyle(fontWeight: FontWeight.w600)),
           trailing:
-              const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+              Icon(Icons.chevron_right, color: AppColors.textSecondary),
         ),
       );
     }
@@ -98,7 +98,7 @@ class _CategoryTile extends StatelessWidget {
                 dense: true,
                 contentPadding: EdgeInsets.zero,
                 title: Text(c.nameUz),
-                trailing: const Icon(Icons.chevron_right,
+                trailing: Icon(Icons.chevron_right,
                     size: 18, color: AppColors.textSecondary),
                 onTap: () => context.push(
                   '/products?category=${c.id}'

@@ -42,7 +42,7 @@ class MainShell extends ConsumerWidget {
         child: Container(
           height: 64,
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.background,
             border: Border(top: BorderSide(color: AppColors.border)),
           ),
@@ -141,7 +141,7 @@ class _NavItem extends StatelessWidget {
               const SizedBox(width: 6),
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.ink,
                   fontWeight: FontWeight.w700,
                   fontSize: 13,

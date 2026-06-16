@@ -4,9 +4,9 @@ import 'app_spacing.dart';
 
 /// Markazlashtirilgan konteyner dekoratsiyalari — yengil soya, border emas.
 abstract class AppDecorations {
-  /// Oq karta + nozik sariq border + yengil soya (electric uslub).
+  /// Karta + nozik sariq border + yengil soya (electric uslub).
   static BoxDecoration card({double? radius}) => BoxDecoration(
-        color: AppColors.background,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(radius ?? AppSpacing.cardRadius),
         border: Border.all(color: AppColors.accentBorder, width: 1),
         boxShadow: AppColors.cardShadow,

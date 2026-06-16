@@ -102,7 +102,7 @@ class _OrderCard extends StatelessWidget {
           Text(
             '${order.items.length} ta mahsulot • '
             '${order.createdAt.day}.${order.createdAt.month}.${order.createdAt.year}',
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 13, color: AppColors.textSecondary),
           ),
           const Padding(

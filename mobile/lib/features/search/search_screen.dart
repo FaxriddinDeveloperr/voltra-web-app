@@ -120,7 +120,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
           child: Text(
             '${_results.length} ta natija',
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
           ),
         ),
         Expanded(child: ProductGrid(products: _results)),

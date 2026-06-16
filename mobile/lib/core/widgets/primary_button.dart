@@ -30,7 +30,7 @@ class PrimaryButton extends StatelessWidget {
             width: 22,
             child: CircularProgressIndicator(
               strokeWidth: 2.4,
-              valueColor: AlwaysStoppedAnimation(AppColors.ink),
+              valueColor: AlwaysStoppedAnimation(AppColors.onAccent),
             ),
           )
         : Row(
@@ -38,7 +38,7 @@ class PrimaryButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null) ...[
-                Icon(icon, size: 20, color: AppColors.ink),
+                Icon(icon, size: 20, color: AppColors.onAccent),
                 const SizedBox(width: AppSpacing.sm),
               ],
               Flexible(
@@ -48,7 +48,7 @@ class PrimaryButton extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.ink,
+                    color: AppColors.onAccent,
                   ),
                 ),
               ),
@@ -72,11 +72,11 @@ class PrimaryButton extends StatelessWidget {
       ),
       child: DefaultTextStyle.merge(
         style: TextStyle(
-          color: enabled ? AppColors.ink : AppColors.textTertiary,
+          color: enabled ? AppColors.onAccent : AppColors.textTertiary,
         ),
         child: IconTheme.merge(
           data: IconThemeData(
-            color: enabled ? AppColors.ink : AppColors.textTertiary,
+            color: enabled ? AppColors.onAccent : AppColors.textTertiary,
           ),
           child: content,
         ),

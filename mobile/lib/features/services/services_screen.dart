@@ -73,7 +73,7 @@ class _ServiceCard extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.cleaning_services_outlined,
+                    Icon(Icons.cleaning_services_outlined,
                         size: 36, color: AppColors.forest),
                     const SizedBox(height: AppSpacing.sm),
                     Text(

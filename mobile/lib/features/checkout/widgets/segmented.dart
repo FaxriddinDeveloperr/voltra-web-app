@@ -118,7 +118,7 @@ class RadioRow extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.w500)),
                   if (subtitle != null)
                     Text(subtitle!,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 12, color: AppColors.textSecondary)),
                 ],
               ),

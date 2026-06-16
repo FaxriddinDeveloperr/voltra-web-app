@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/l10n_ext.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../core/theme_mode_provider.dart';
 import '../../core/utils/formatters.dart';
 import '../auth/auth_providers.dart';
 import '../cart/cart_providers.dart';
@@ -32,8 +33,8 @@ class ProfileScreen extends ConsumerWidget {
                 const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
             leading: const CircleAvatar(
               radius: 26,
-              backgroundColor: AppColors.primaryLight,
-              child: Icon(Icons.person, color: AppColors.primary, size: 28),
+              backgroundColor: AppColors.accent,
+              child: Icon(Icons.person, color: AppColors.onAccent, size: 28),
             ),
             title: Text(
               user == null ? '' : Formatters.phone(user.phone),
@@ -67,6 +68,11 @@ class ProfileScreen extends ConsumerWidget {
 
           _SectionLabel(context.l10n.settings),
           _MenuTile(
+            icon: Icons.dark_mode_outlined,
+            label: 'Ko\'rinish',
+            onTap: () => _showAppearance(context, ref),
+          ),
+          _MenuTile(
             icon: Icons.language,
             label: context.l10n.language,
             onTap: () => context.push('/profile/language'),
@@ -95,6 +101,57 @@ class ProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.xl),
         ],
+      ),
+    );
+  }
+
+  void _showAppearance(BuildContext context, WidgetRef ref) {
+    final current = ref.read(themeModeProvider);
+    const options = [
+      (ThemeMode.light, 'Yorug\'', Icons.light_mode_outlined),
+      (ThemeMode.dark, 'Tungi', Icons.dark_mode_outlined),
+      (ThemeMode.system, 'Tizim bo\'yicha', Icons.brightness_auto_outlined),
+    ];
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(bottom: AppSpacing.sm),
+                child: Text('Ko\'rinish',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+              ),
+              ...options.map((o) {
+                final selected = o.$1 == current;
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(o.$3,
+                      color: selected
+                          ? AppColors.accentDeep
+                          : AppColors.textSecondary),
+                  title: Text(o.$2),
+                  trailing: selected
+                      ? const Icon(Icons.check_circle, color: AppColors.accentDeep)
+                      : null,
+                  onTap: () {
+                    ref.read(themeModeProvider.notifier).set(o.$1);
+                    Navigator.pop(ctx);
+                  },
+                );
+              }),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -141,7 +198,7 @@ class _MenuTile extends StatelessWidget {
       leading: Icon(icon, color: AppColors.primary),
       title: Text(label),
       trailing:
-          const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+          Icon(Icons.chevron_right, color: AppColors.textSecondary),
       onTap: onTap,
     );
   }
@@ -157,7 +214,7 @@ class _SectionLabel extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(
           AppSpacing.screen, AppSpacing.lg, AppSpacing.screen, AppSpacing.sm),
       child: Text(label,
-          style: const TextStyle(
+          style: TextStyle(
               color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
     );
   }

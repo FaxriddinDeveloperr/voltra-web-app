@@ -60,14 +60,11 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
             width: double.infinity,
             padding: EdgeInsets.fromLTRB(
                 AppSpacing.xl, media.padding.top + 56, AppSpacing.xl, 44),
-            decoration: const BoxDecoration(
-              // oq, biroz iliq-sariq
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFFFFF7D6), Color(0xFFFFFFFF)],
-              ),
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(36)),
+            decoration: BoxDecoration(
+              // light: iliq-sariq oq · dark: to'q
+              gradient: AppColors.heroGradient,
+              borderRadius:
+                  const BorderRadius.vertical(bottom: Radius.circular(36)),
               boxShadow: AppColors.softShadow,
             ),
             child: Column(
@@ -115,7 +112,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
                     ],
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.w600),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       prefixText: '+998  ',
                       prefixStyle: TextStyle(
                         fontSize: 18,

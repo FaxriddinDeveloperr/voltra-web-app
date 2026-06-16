@@ -18,12 +18,12 @@ class XitBadge extends StatelessWidget {
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.bolt, size: 13, color: AppColors.ink),
+          Icon(Icons.bolt, size: 13, color: AppColors.onAccent),
           SizedBox(width: 3),
           Text(
             'Xit',
             style: TextStyle(
-              color: AppColors.ink,
+              color: AppColors.onAccent,
               fontSize: 12,
               fontWeight: FontWeight.w800,
             ),
