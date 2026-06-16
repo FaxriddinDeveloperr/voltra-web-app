@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
+import { existsSync } from 'fs';
+import type { Request, Response, NextFunction } from 'express';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 
@@ -23,6 +25,24 @@ async function bootstrap(): Promise<void> {
     join(process.cwd(), process.env.UPLOADS_DIR ?? 'uploads'),
     { prefix: '/uploads/' },
   );
+
+  // Flutter web build'ni root'dan serving (Telegram Mini App — same-origin)
+  const webDir = join(process.cwd(), '..', 'mobile', 'build', 'web');
+  if (existsSync(webDir)) {
+    app.useStaticAssets(webDir);
+    // SPA fallback: /api va /uploads dan tashqari barcha GET -> index.html
+    app.use((req: Request, res: Response, next: NextFunction) => {
+      if (
+        req.method !== 'GET' ||
+        req.path.startsWith('/api') ||
+        req.path.startsWith('/uploads') ||
+        req.path.includes('.')
+      ) {
+        return next();
+      }
+      res.sendFile(join(webDir, 'index.html'));
+    });
+  }
 
   const config = new DocumentBuilder()
     .setTitle('Quyoshli API')
