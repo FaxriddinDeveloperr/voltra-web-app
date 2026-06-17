@@ -46,9 +46,10 @@ export function BottomNav() {
   return (
     <nav
       style={{
-        position: 'sticky', bottom: 0, display: 'flex', justifyContent: 'space-around',
-        alignItems: 'center', height: 64, background: 'var(--bg)',
-        borderTop: '1px solid var(--border)', paddingBottom: 'env(safe-area-inset-bottom)',
+        position: 'sticky', bottom: 0, zIndex: 30, display: 'flex',
+        background: 'var(--card)', borderTop: '1px solid var(--border)',
+        boxShadow: '0 -8px 24px rgba(0,0,0,.07)',
+        paddingBottom: 'env(safe-area-inset-bottom)',
       }}
     >
       {TABS.map((t) => {
@@ -59,18 +60,36 @@ export function BottomNav() {
             key={t.path}
             onClick={() => nav(t.path)}
             style={{
-              display: 'flex', alignItems: 'center', gap: 6, padding: active ? '8px 16px' : '8px 12px',
-              borderRadius: 'var(--r-pill)', background: active ? 'var(--accent-tint)' : 'transparent',
-              transition: 'all .2s ease-out',
+              position: 'relative', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
+              justifyContent: 'center', gap: 4, paddingTop: 9, paddingBottom: 7,
             }}
           >
-            <span style={{ position: 'relative', display: 'grid', placeItems: 'center' }}>
-              <Ic size={22} color={active ? 'var(--text)' : 'var(--text-2)'} fill={active ? 'var(--accent)' : 'none'} strokeWidth={active ? 2 : 1.8} />
+            {/* yuqori indikator chizig'i */}
+            <span style={{
+              position: 'absolute', top: 0, width: 26, height: 3, borderRadius: 3,
+              background: 'var(--accent)',
+              opacity: active ? 1 : 0, transform: active ? 'scaleX(1)' : 'scaleX(0)',
+              transition: 'opacity .25s ease-out, transform .25s cubic-bezier(0.16,1,0.3,1)',
+            }} />
+            {/* ikonka chipi */}
+            <span style={{
+              position: 'relative', display: 'grid', placeItems: 'center',
+              width: 50, height: 30, borderRadius: 'var(--r-pill)',
+              background: active ? 'var(--accent-tint)' : 'transparent',
+              transform: active ? 'translateY(-1px)' : 'none',
+              transition: 'background .22s ease-out, transform .22s cubic-bezier(0.16,1,0.3,1)',
+            }}>
+              <Ic size={21} color={active ? 'var(--accent-deep)' : 'var(--text-3)'}
+                fill={active ? 'var(--accent)' : 'none'} strokeWidth={active ? 2 : 1.8} />
               {t.path === '/cart' && count > 0 && (
-                <span style={{ position: 'absolute', top: -7, right: -8, minWidth: 16, height: 16, padding: '0 4px', borderRadius: 8, background: 'var(--danger)', color: '#fff', fontSize: 9, fontWeight: 700, display: 'grid', placeItems: 'center' }}>{count}</span>
+                <span style={{ position: 'absolute', top: -5, right: 6, minWidth: 16, height: 16, padding: '0 4px', borderRadius: 8, background: 'var(--danger)', color: '#fff', fontSize: 9, fontWeight: 700, display: 'grid', placeItems: 'center', border: '1.5px solid var(--card)' }}>{count}</span>
               )}
             </span>
-            {active && <span style={{ fontSize: 13, fontWeight: 700 }}>{t.label}</span>}
+            <span style={{
+              fontSize: 11, fontWeight: active ? 700 : 500,
+              color: active ? 'var(--accent-deep)' : 'var(--text-3)',
+              transition: 'color .2s ease-out', letterSpacing: '-0.1px',
+            }}>{t.label}</span>
           </button>
         );
       })}
