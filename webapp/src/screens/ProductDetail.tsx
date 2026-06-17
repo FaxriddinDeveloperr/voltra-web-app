@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Heart, Zap, ShoppingCart, Download } from 'lucide-react';
 import { Api, type Product } from '../api';
@@ -12,6 +12,7 @@ export default function ProductDetail() {
   const nav = useNavigate();
   const [p, setP] = useState<Product | null>(null);
   const [gi, setGi] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
   const [adding, setAdding] = useState(false);
   const fav = useFav((s) => s.ids.has(id));
   const toggleFav = useFav((s) => s.toggle);
@@ -36,11 +37,37 @@ export default function ProductDetail() {
         </button>} />
 
       <div style={{ aspectRatio: 1, background: 'var(--surface)', position: 'relative' }}>
-        {imgs.length ? <Img url={imgs[gi]?.url} /> : <Img />}
-        {imgs.length > 1 && (
-          <div style={{ position: 'absolute', bottom: 10, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 6 }}>
-            {imgs.map((_, i) => <span key={i} onClick={() => setGi(i)} style={{ width: i === gi ? 18 : 7, height: 7, borderRadius: 4, background: i === gi ? 'var(--accent)' : 'rgba(255,255,255,.6)' }} />)}
-          </div>
+        {imgs.length > 1 ? (
+          <>
+            <div
+              ref={trackRef}
+              className="img-track"
+              onScroll={(e) => {
+                const el = e.currentTarget;
+                const i = Math.round(el.scrollLeft / el.clientWidth);
+                if (i !== gi) setGi(i);
+              }}
+              style={{ display: 'flex', height: '100%', overflowX: 'auto', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
+            >
+              {imgs.map((im, i) => (
+                <div key={i} style={{ flex: '0 0 100%', width: '100%', height: '100%', scrollSnapAlign: 'center' }}>
+                  <Img url={im?.url} />
+                </div>
+              ))}
+            </div>
+            <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(0,0,0,.55)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '3px 9px', borderRadius: 999 }}>
+              {gi + 1} / {imgs.length}
+            </div>
+            <div style={{ position: 'absolute', bottom: 10, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 6 }}>
+              {imgs.map((_, i) => (
+                <span key={i}
+                  onClick={() => trackRef.current?.scrollTo({ left: i * trackRef.current.clientWidth, behavior: 'smooth' })}
+                  style={{ width: i === gi ? 18 : 7, height: 7, borderRadius: 4, background: i === gi ? 'var(--accent)' : 'rgba(255,255,255,.7)', transition: 'width .2s', cursor: 'pointer' }} />
+              ))}
+            </div>
+          </>
+        ) : (
+          <Img url={imgs[0]?.url} />
         )}
       </div>
 
