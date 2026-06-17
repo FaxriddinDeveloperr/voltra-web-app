@@ -503,8 +503,18 @@ export function AdminBrands() {
 }
 function BrandModal({ brand, onClose, onSaved }: { brand: AdminBrand | null; onClose: () => void; onSaved: () => void }) {
   const [f, setF] = useState({ name: brand?.name ?? '', logoUrl: brand?.logoUrl ?? '', sortOrder: String(brand?.sortOrder ?? 0) });
-  const [saving, setSaving] = useState(false); const toast = useToast();
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const toast = useToast();
   const set = (k: string, v: string) => setF((s) => ({ ...s, [k]: v }));
+  const pickImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; e.target.value = '';
+    if (!file) return;
+    setUploading(true);
+    try { const url = await Admin.uploadImage(file); set('logoUrl', url); toast('Logo yuklandi'); }
+    catch { toast('Yuklashda xato', true); } finally { setUploading(false); }
+  };
   const save = async () => {
     if (!f.name) { toast('Nom majburiy', true); return; }
     setSaving(true); const body = { ...f, sortOrder: Number(f.sortOrder) || 0 };
@@ -512,8 +522,15 @@ function BrandModal({ brand, onClose, onSaved }: { brand: AdminBrand | null; onC
   };
   return (
     <Modal title={brand ? 'Brend' : 'Yangi brend'} onClose={onClose}>
+      <div className="adm-field">
+        <label>Logo</label>
+        {f.logoUrl && <img src={f.logoUrl} alt="" style={{ width: 90, height: 90, objectFit: 'contain', borderRadius: 12, marginBottom: 8, border: '1px solid var(--border)', background: 'var(--surface)', padding: 6 }} />}
+        <button className="adm-btn" style={{ width: '100%' }} onClick={() => fileRef.current?.click()} disabled={uploading}>
+          {uploading ? <span className="spinner" /> : <><ImagePlus size={16} /> {f.logoUrl ? 'Logoni almashtirish' : 'Logo yuklash'}</>}
+        </button>
+        <input ref={fileRef} type="file" accept="image/*" hidden onChange={pickImage} />
+      </div>
       <Field label="Nomi" value={f.name} onChange={(v) => set('name', v)} />
-      <Field label="Logo URL" value={f.logoUrl} onChange={(v) => set('logoUrl', v)} />
       <Field label="Tartib" type="number" value={f.sortOrder} onChange={(v) => set('sortOrder', v)} />
       <button className="adm-btn primary" style={{ width: '100%', height: 48 }} onClick={save} disabled={saving}>{saving ? 'Saqlanmoqda…' : 'Saqlash'}</button>
     </Modal>
