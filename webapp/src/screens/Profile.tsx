@@ -30,8 +30,8 @@ export default function Profile() {
           ? <img src={avatar} alt="" onClick={(e) => { e.stopPropagation(); setAvatarView(true); }} style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flex: '0 0 auto', cursor: 'zoom-in' }} />
           : <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--accent)', display: 'grid', placeItems: 'center', flex: '0 0 auto' }}><User size={28} color="var(--on-accent)" /></span>}
         <span style={{ flex: 1 }}>
-          <div style={{ fontWeight: 700, fontSize: 16 }}>{user?.phone ? phoneFmt(user.phone) : (user && (user.firstName || user.lastName) ? `${user.lastName ?? ''} ${user.firstName ?? ''}`.trim() : 'Profil')}</div>
-          <div className="muted" style={{ fontSize: 13 }}>{user?.phone ? (user.firstName || user.lastName ? `${user.lastName ?? ''} ${user.firstName ?? ''}`.trim() : "Profilni to'ldiring") : "Telefon: buyurtmada ulashiladi"}</div>
+          <div style={{ fontWeight: 700, fontSize: 16 }}>{(user ? `${user.lastName ?? ''} ${user.firstName ?? ''}`.trim() : '') || "Profilni to'ldiring"}</div>
+          <div className="muted" style={{ fontSize: 13 }}>{user?.phone ? phoneFmt(user.phone) : 'Telefon kiritilmagan'}</div>
         </span>
         <ChevronRight color="var(--text-2)" />
       </button>

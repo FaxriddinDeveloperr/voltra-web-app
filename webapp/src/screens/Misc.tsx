@@ -251,11 +251,21 @@ export function ProfileEdit() {
   const logout = useAuth((s) => s.logout);
   const [last, setLast] = useState(user?.lastName || '');
   const [first, setFirst] = useState(user?.firstName || '');
-  const [middle, setMiddle] = useState(user?.middleName || '');
+  const [phone, setPhone] = useState(user?.phone ? maskInput(user.phone) : '');
   const [busy, setBusy] = useState(false);
   const [viewer, setViewer] = useState(false);
   const avatar = user?.avatarUrl || telegram()?.initDataUnsafe?.user?.photo_url;
-  async function save() { setBusy(true); try { const u = await Api.updateMe({ firstName: first.trim(), lastName: last.trim(), middleName: middle.trim() }); setUser(u); nav(-1); } finally { setBusy(false); } }
+  async function save() {
+    setBusy(true);
+    try {
+      const body: Record<string, string> = { firstName: first.trim(), lastName: last.trim() };
+      if (phone.replace(/\D/g, '').length === 9) body.phone = toE164(phone);
+      const u = await Api.updateMe(body);
+      setUser(u);
+      nav(-1);
+    } catch { alert('Saqlanmadi. Bu telefon raqami band bo\'lishi mumkin.'); }
+    finally { setBusy(false); }
+  }
   async function del() { if (!confirm("Profil o'chirilsinmi?")) return; try { await Api.deleteMe(); } catch { /* */ } await logout(); nav('/'); }
   return (
     <div style={{ paddingBottom: 90 }}>
@@ -278,7 +288,7 @@ export function ProfileEdit() {
         <div style={{ display: 'grid', gap: 12 }}>
           <Inp label="Familiya" v={last} on={setLast} />
           <Inp label="Ism" v={first} on={setFirst} />
-          <Inp label="Sharif" v={middle} on={setMiddle} />
+          <Inp label="Telefon raqami" v={phone} prefix="+998 " on={(v) => setPhone(maskInput(v))} />
         </div>
         <button onClick={del} style={{ display: 'block', margin: '24px auto 0', color: 'var(--danger)', fontWeight: 600 }}>Profilni o'chirish</button>
       </div>
