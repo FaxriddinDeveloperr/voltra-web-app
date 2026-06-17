@@ -9,25 +9,59 @@ import { Select } from '../Select';
 import { GridSkeleton, Empty, Spinner } from '../components';
 import { useAuth } from '../store';
 
+// ── Status badge yordamchisi ────────────────────────────────
+function StatusBadge({ label, tone }: { label: string; tone: 'new' | 'progress' | 'done' | 'cancel' }) {
+  const map = {
+    new: { bg: '#e8f0fe', c: '#1a56db' },
+    progress: { bg: 'var(--accent-tint)', c: 'var(--accent-deep)' },
+    done: { bg: 'var(--success-tint)', c: 'var(--success)' },
+    cancel: { bg: 'var(--danger-tint)', c: 'var(--danger)' },
+  }[tone];
+  return <span className="badge" style={{ background: map.bg, color: map.c }}>{label}</span>;
+}
+const ORDER_ST: Record<string, { l: string; t: 'new' | 'progress' | 'done' | 'cancel' }> = {
+  NEW: { l: 'Yangi', t: 'new' }, CONFIRMED: { l: 'Tasdiqlangan', t: 'progress' },
+  PROCESSING: { l: 'Jarayonda', t: 'progress' }, SHIPPED: { l: "Yo'lda", t: 'progress' },
+  DELIVERED: { l: 'Yetkazilgan', t: 'done' }, CANCELLED: { l: 'Bekor qilingan', t: 'cancel' },
+};
+const APP_ST: Record<string, { l: string; t: 'new' | 'progress' | 'done' | 'cancel' }> = {
+  NEW: { l: 'Yangi', t: 'new' }, CONTACTED: { l: "Bog'lanildi", t: 'progress' },
+  DONE: { l: 'Bajarildi', t: 'done' }, REJECTED: { l: 'Rad etildi', t: 'cancel' },
+};
+
 // ── Buyurtmalar ─────────────────────────────────────────────
 export function Orders() {
   const { data: list } = useQuery('orders', Api.orders);
-  const labels: Record<string, string> = { NEW: 'Yangi', CONFIRMED: 'Tasdiqlangan', PROCESSING: 'Jarayonda', SHIPPED: "Yo'lda", DELIVERED: 'Yetkazilgan', CANCELLED: 'Bekor' };
+  const [open, setOpen] = useState<string | null>(null);
   return (
     <div><TopBar title="Buyurtmalarim" back />
       {!list ? <GridSkeleton /> : list.length === 0 ? <Empty icon={<ShoppingBag size={64} />} title="Buyurtmalar yo'q" /> : (
         <div style={{ padding: 16, display: 'grid', gap: 12 }}>
-          {list.map((o) => (
-            <div key={o.id} className="card" style={{ padding: 16 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <b>№ {o.orderNumber}</b>
-                <span className="badge" style={{ background: 'var(--accent-tint)', color: 'var(--accent-deep)' }}>{labels[o.status] ?? o.status}</span>
-              </div>
-              <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>{o.items.length} ta mahsulot • {new Date(o.createdAt).toLocaleDateString()}</div>
-              <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '10px 0' }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span className="muted">Jami:</span><b>{priceUzs(o.grandTotal)}</b></div>
-            </div>
-          ))}
+          {list.map((o) => {
+            const st = ORDER_ST[o.status] ?? { l: o.status, t: 'new' as const };
+            const exp = open === o.id;
+            return (
+              <button key={o.id} className="card press" onClick={() => setOpen(exp ? null : o.id)} style={{ padding: 16, textAlign: 'left', width: '100%', display: 'block' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                  <b>№ {o.orderNumber}</b>
+                  <StatusBadge label={st.l} tone={st.t} />
+                </div>
+                <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>{o.items.length} ta mahsulot • {new Date(o.createdAt).toLocaleString('uz', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
+                {exp && (
+                  <div style={{ marginTop: 10, borderTop: '1px solid var(--border)', paddingTop: 10, display: 'grid', gap: 6 }}>
+                    {o.items.map((it, i) => (
+                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, gap: 8 }}>
+                        <span style={{ flex: 1 }}>{it.productName} × {it.quantity}</span>
+                        <span style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{priceUzs(Number(it.price) * it.quantity)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '10px 0' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span className="muted">Jami:</span><b>{priceUzs(o.grandTotal)}</b></div>
+              </button>
+            );
+          })}
         </div>
       )}
     </div>
@@ -35,20 +69,34 @@ export function Orders() {
 }
 
 // ── Arizalar ────────────────────────────────────────────────
+interface AppRow { id: string; type: string; status: string; createdAt: string; region?: string; city?: string; power?: string; servicePrice?: string; comment?: string }
 export function Applications() {
-  const { data: list } = useQuery('applications', Api.applications as () => Promise<{ id: string; type: string; status: string; createdAt: string }[]>);
+  const { data: list } = useQuery('applications', Api.applications as () => Promise<AppRow[]>);
+  const [open, setOpen] = useState<string | null>(null);
   const t: Record<string, string> = { SERVICE: 'Xizmat arizasi', DEALER: 'Diler arizasi', SELLER: 'Savdo vakili', MASTER: 'Usta arizasi' };
   return (
     <div><TopBar title="Arizalarim" back />
       {!list ? <GridSkeleton /> : list.length === 0 ? <Empty icon={<FileText size={64} />} title="Arizalar yo'q :(" /> : (
         <div style={{ padding: 16, display: 'grid', gap: 12 }}>
-          {list.map((a) => (
-            <div key={a.id} className="card" style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--accent-tint)', display: 'grid', placeItems: 'center' }}><FileText size={20} color="var(--accent-deep)" /></span>
-              <div style={{ flex: 1 }}><b>{t[a.type] ?? 'Ariza'}</b><div className="muted" style={{ fontSize: 12 }}>{new Date(a.createdAt).toLocaleDateString()}</div></div>
-              <span className="badge" style={{ background: 'var(--accent-tint)', color: 'var(--accent-deep)' }}>Yangi</span>
-            </div>
-          ))}
+          {list.map((a) => {
+            const st = APP_ST[a.status] ?? { l: a.status, t: 'new' as const };
+            const exp = open === a.id;
+            const details = [a.region && `Hudud: ${[a.region, a.city].filter(Boolean).join(', ')}`, a.power && `Quvvat: ${a.power}`, a.servicePrice && `1 kVt narxi: ${a.servicePrice}`, a.comment && `Izoh: ${a.comment}`].filter(Boolean) as string[];
+            return (
+              <button key={a.id} className="card press" onClick={() => setOpen(exp ? null : a.id)} style={{ padding: 16, textAlign: 'left', width: '100%', display: 'block' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--accent-tint)', display: 'grid', placeItems: 'center', flex: '0 0 auto' }}><FileText size={20} color="var(--accent-deep)" /></span>
+                  <div style={{ flex: 1 }}><b>{t[a.type] ?? 'Ariza'}</b><div className="muted" style={{ fontSize: 12 }}>{new Date(a.createdAt).toLocaleString('uz', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })}</div></div>
+                  <StatusBadge label={st.l} tone={st.t} />
+                </div>
+                {exp && details.length > 0 && (
+                  <div style={{ marginTop: 10, borderTop: '1px solid var(--border)', paddingTop: 10, display: 'grid', gap: 4, fontSize: 14 }}>
+                    {details.map((d, i) => <div key={i} className="muted">{d}</div>)}
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

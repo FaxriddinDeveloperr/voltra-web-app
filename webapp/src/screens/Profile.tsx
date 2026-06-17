@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, ShoppingBag, FileText, Headphones, Moon, Info, ScrollText, LogOut, ChevronRight, Sun, SunMoon, Check, ShieldCheck } from 'lucide-react';
+import { User, ShoppingBag, FileText, Headphones, Moon, Info, ScrollText, LogOut, ChevronRight, Sun, SunMoon, Check, ShieldCheck, Phone, Send, AtSign, MapPin } from 'lucide-react';
 import { phoneFmt } from '../lib';
+import { Api } from '../api';
+import { useQuery } from '../useQuery';
 import { useAuth, useTheme } from '../store';
+
+interface Contacts { phone?: string; telegram?: string; instagram?: string; address?: string }
 
 export default function Profile() {
   const nav = useNavigate();
@@ -10,6 +14,10 @@ export default function Profile() {
   const isAdmin = useAuth((s) => s.isAdmin);
   const logout = useAuth((s) => s.logout);
   const [sheet, setSheet] = useState(false);
+  const [contactSheet, setContactSheet] = useState(false);
+  const { data: contactRaw } = useQuery('contacts', () => Api.content('contacts').catch(() => null) as Promise<{ bodyUz?: string } | null>);
+  let contacts: Contacts = {};
+  try { if (contactRaw?.bodyUz) contacts = JSON.parse(contactRaw.bodyUz); } catch { /* */ }
 
   return (
     <div style={{ paddingBottom: 24 }}>
@@ -37,7 +45,7 @@ export default function Profile() {
 
       <Item icon={<ShoppingBag size={22} color="var(--accent-deep)" />} label="Mening buyurtmalarim" onClick={() => nav('/orders')} />
       <Item icon={<FileText size={22} color="var(--accent-deep)" />} label="Mening arizalarim" onClick={() => nav('/applications')} />
-      <Item icon={<Headphones size={22} color="var(--accent-deep)" />} label="Biz bilan bog'lanish" onClick={() => { location.href = 'tel:+998940196141'; }} />
+      <Item icon={<Headphones size={22} color="var(--accent-deep)" />} label="Biz bilan bog'lanish" onClick={() => setContactSheet(true)} />
 
       <Label text="Sozlamalar" />
       <Item icon={<Moon size={22} color="var(--accent-deep)" />} label="Ko'rinish" onClick={() => setSheet(true)} />
@@ -49,6 +57,36 @@ export default function Profile() {
       </button>
 
       {sheet && <ThemeSheet onClose={() => setSheet(false)} />}
+      {contactSheet && <ContactSheet contacts={contacts} onClose={() => setContactSheet(false)} />}
+    </div>
+  );
+}
+
+function ContactSheet({ contacts, onClose }: { contacts: Contacts; onClose: () => void }) {
+  const phone = contacts.phone || '+998940196141';
+  const tg = contacts.telegram?.replace(/^@/, '').replace(/^https?:\/\/(t\.me\/)?/, '');
+  const ig = contacts.instagram?.replace(/^@/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '');
+  const rows: { icon: React.ReactNode; label: string; sub: string; href: string }[] = [
+    { icon: <Phone size={20} color="var(--accent-deep)" />, label: 'Telefon', sub: phoneFmt(phone), href: `tel:${phone}` },
+  ];
+  if (tg) rows.push({ icon: <Send size={20} color="var(--accent-deep)" />, label: 'Telegram', sub: `@${tg}`, href: `https://t.me/${tg}` });
+  if (ig) rows.push({ icon: <AtSign size={20} color="var(--accent-deep)" />, label: 'Instagram', sub: `@${ig}`, href: `https://instagram.com/${ig}` });
+  return (
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.4)', zIndex: 40, display: 'flex', alignItems: 'flex-end' }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ width: '100%', maxWidth: 520, margin: '0 auto', background: 'var(--card)', borderRadius: '20px 20px 0 0', padding: 20 }}>
+        <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Biz bilan bog'lanish</div>
+        {rows.map((r) => (
+          <a key={r.label} href={r.href} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0' }}>
+            {r.icon}<span style={{ flex: 1 }}><div style={{ fontWeight: 600 }}>{r.label}</div><div className="muted" style={{ fontSize: 13 }}>{r.sub}</div></span>
+            <ChevronRight size={20} color="var(--text-2)" />
+          </a>
+        ))}
+        {contacts.address && (
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 0', borderTop: '1px solid var(--border)' }}>
+            <MapPin size={20} color="var(--accent-deep)" /><span style={{ flex: 1 }}><div style={{ fontWeight: 600 }}>Manzil</div><div className="muted" style={{ fontSize: 13 }}>{contacts.address}</div></span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

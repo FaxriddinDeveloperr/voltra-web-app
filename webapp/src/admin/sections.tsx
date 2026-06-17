@@ -732,4 +732,43 @@ export function AdminUsers() {
   );
 }
 
+// ═══════════════ ALOQA MA'LUMOTLARI ═══════════════
+export function AdminContacts() {
+  const [f, setF] = useState({ phone: '', telegram: '', instagram: '', address: '' });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const toast = useToast();
+  useEffect(() => {
+    Admin.content().then((list) => {
+      const c = list.find((x) => x.key === 'contacts');
+      if (c?.bodyUz) { try { setF((s) => ({ ...s, ...JSON.parse(c.bodyUz!) })); } catch { /* */ } }
+    }).finally(() => setLoading(false));
+  }, []);
+  const set = (k: string, v: string) => setF((s) => ({ ...s, [k]: v }));
+  const save = async () => {
+    setSaving(true);
+    try { await Admin.saveContent('contacts', { titleUz: 'Aloqa', bodyUz: JSON.stringify(f) }); toast('Saqlandi'); }
+    catch { toast('Xato', true); } finally { setSaving(false); }
+  };
+  return (
+    <div className="adm">
+      <AdminHeader title="Aloqa ma'lumotlari" />
+      {loading ? <Loader /> : (
+        <>
+          <p style={{ fontSize: 13, color: 'var(--text-2)', margin: '0 0 14px' }}>
+            Bu ma'lumotlar foydalanuvchi profilidagi "Biz bilan bog'lanish"da ko'rinadi.
+          </p>
+          <Field label="Telefon raqami" value={f.phone} onChange={(v) => set('phone', v)} placeholder="+998 90 123 45 67" />
+          <Field label="Telegram (username yoki havola)" value={f.telegram} onChange={(v) => set('telegram', v)} placeholder="voltra_energy yoki https://t.me/..." />
+          <Field label="Instagram (username)" value={f.instagram} onChange={(v) => set('instagram', v)} placeholder="voltra.energy" />
+          <Field label="Manzil" area value={f.address} onChange={(v) => set('address', v)} placeholder="Toshkent sh, ..." />
+          <button className="adm-btn primary" style={{ width: '100%', height: 48 }} onClick={save} disabled={saving}>
+            {saving ? 'Saqlanmoqda…' : 'Saqlash'}
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
 export { RefreshCw };

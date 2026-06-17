@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import {
   Package, ShoppingCart, FileText, Image, FolderTree, Tag, Wrench,
-  MapPin, ScrollText, Users, RefreshCw, ChevronRight, TrendingUp, Layers,
+  MapPin, ScrollText, Users, RefreshCw, ChevronRight, TrendingUp, Layers, Phone,
 } from 'lucide-react';
 import { Admin, type AdminStats } from '../api';
 import { useAuth } from '../store';
 import { ToastHost, AdminHeader, Loader, useToast } from './ui';
 import {
   AdminProducts, AdminOrders, AdminApplications, AdminBanners, AdminCategories,
-  AdminBrands, AdminServices, AdminPickups, AdminContents, AdminUsers,
+  AdminBrands, AdminServices, AdminPickups, AdminContents, AdminUsers, AdminContacts,
 } from './sections';
 
 export default function AdminApp() {
@@ -36,6 +36,7 @@ export default function AdminApp() {
         <Route path="services" element={<AdminServices />} />
         <Route path="pickups" element={<AdminPickups />} />
         <Route path="content" element={<AdminContents />} />
+        <Route path="contacts" element={<AdminContacts />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Routes>
@@ -68,6 +69,7 @@ function Dashboard() {
     { to: 'services', icon: Wrench, label: 'Xizmatlar', count: stats?.counts.services },
     { to: 'pickups', icon: MapPin, label: 'Olib ketish punktlari' },
     { to: 'content', icon: ScrollText, label: 'Kontent sahifalari' },
+    { to: 'contacts', icon: Phone, label: 'Aloqa ma\'lumotlari' },
     { to: 'users', icon: Users, label: 'Foydalanuvchilar', count: stats?.counts.users },
   ];
 

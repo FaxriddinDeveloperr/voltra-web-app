@@ -141,8 +141,26 @@ export class PriceSyncService implements OnModuleInit, OnModuleDestroy {
   }
 
   private power(label: string): string | null {
-    const m = label.match(/(\d+(?:[.,]\d+)?)\s*(kVt·s|kWh|kVt|kW|kwt|W)\b/i);
-    return m ? `${m[1]} ${m[2]}` : null;
+    const m = label.match(/(\d+(?:[.,]\d+)?)\s*(kVt·s|kWh|kVt|kW|kwt|kwh|W)\b/i);
+    return m ? `${m[1]} ${this.unit(m[2])}` : null;
+  }
+
+  /** O'lchov birligini tartibga keltirish: kwt -> kVt, kwh -> kWh. */
+  private unit(u: string): string {
+    const l = u.toLowerCase();
+    if (l === 'kwt' || l === 'kvt') return 'kVt';
+    if (l === 'kwh') return 'kWh';
+    if (l === 'kw') return 'kW';
+    if (l === 'w') return 'W';
+    return u;
+  }
+
+  /** Mahsulot nomini tozalash: ortiqcha bo'sh joy, birliklar, bosh harf. */
+  private cleanName(s: string): string {
+    let n = (s || '').trim().replace(/\s+/g, ' ');
+    n = n.replace(/(\d)\s*(kwt|kvt|kwh|kw)\b/gi, (_m, d: string, u: string) => `${d} ${this.unit(u)}`);
+    if (n) n = n[0].toUpperCase() + n.slice(1);
+    return n;
   }
 
   // ── Asosiy sinxronizatsiya ─────────────────────────────────
@@ -193,7 +211,7 @@ export class PriceSyncService implements OnModuleInit, OnModuleDestroy {
 
         // Faqat jadvaldan keladigan maydonlar (har sinxronda yangilanadi).
         const syncData = {
-          nameUz: r.label,
+          nameUz: this.cleanName(r.label),
           price: new Prisma.Decimal(priceUzs),
           priceUsd: priceUsd != null ? new Prisma.Decimal(priceUsd) : null,
           vatIncluded: true,
