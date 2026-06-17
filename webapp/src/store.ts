@@ -6,6 +6,7 @@ type AuthStatus = 'unknown' | 'guest' | 'needsProfile' | 'authed';
 interface AuthState {
   status: AuthStatus;
   user?: AppUser;
+  isAdmin: boolean;
   bootstrap: () => Promise<void>;
   verify: (phone: string, code: string) => Promise<AuthStatus>;
   completeProfile: (firstName: string, lastName: string, middleName?: string) => Promise<void>;
@@ -17,11 +18,13 @@ function statusFor(u: AppUser): AuthStatus {
 }
 export const useAuth = create<AuthState>((set) => ({
   status: 'unknown',
+  isAdmin: false,
   bootstrap: async () => {
     if (!tokens.access) { set({ status: 'guest' }); return; }
     try {
       const u = await Api.me();
       set({ status: statusFor(u), user: u });
+      Api.adminCheck().then((isAdmin) => set({ isAdmin }));
     } catch { tokens.clear(); set({ status: 'guest' }); }
   },
   verify: async (phone, code) => {
@@ -29,6 +32,7 @@ export const useAuth = create<AuthState>((set) => ({
     tokens.set(res.accessToken, res.refreshToken);
     const st = res.isNewProfile ? 'needsProfile' : statusFor(res.user);
     set({ status: st, user: res.user });
+    Api.adminCheck().then((isAdmin) => set({ isAdmin }));
     return st;
   },
   completeProfile: async (firstName, lastName, middleName) => {
@@ -39,7 +43,7 @@ export const useAuth = create<AuthState>((set) => ({
   logout: async () => {
     try { await api.post('/auth/logout'); } catch { /* ignore */ }
     tokens.clear();
-    set({ status: 'guest', user: undefined });
+    set({ status: 'guest', user: undefined, isAdmin: false });
     useCart.getState().clear();
     useFav.getState().clear();
   },

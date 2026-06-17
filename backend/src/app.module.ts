@@ -17,6 +17,7 @@ import { ApplicationsModule } from './applications/applications.module';
 import { ContentModule } from './content/content.module';
 import { RegionsModule } from './regions/regions.module';
 import { PriceSyncModule } from './price-sync/price-sync.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PriceSyncModule } from './price-sync/price-sync.module';
     ContentModule,
     RegionsModule,
     PriceSyncModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

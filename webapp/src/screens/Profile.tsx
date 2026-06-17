@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, ShoppingBag, FileText, Headphones, Moon, Info, ScrollText, LogOut, ChevronRight, Sun, SunMoon, Check } from 'lucide-react';
+import { User, ShoppingBag, FileText, Headphones, Moon, Info, ScrollText, LogOut, ChevronRight, Sun, SunMoon, Check, ShieldCheck } from 'lucide-react';
 import { phoneFmt } from '../lib';
 import { useAuth, useTheme } from '../store';
 
 export default function Profile() {
   const nav = useNavigate();
   const user = useAuth((s) => s.user);
+  const isAdmin = useAuth((s) => s.isAdmin);
   const logout = useAuth((s) => s.logout);
   const [sheet, setSheet] = useState(false);
 
@@ -22,6 +23,17 @@ export default function Profile() {
         </span>
         <ChevronRight color="var(--text-2)" />
       </button>
+
+      {isAdmin && (
+        <button className="press" onClick={() => nav('/admin')} style={{ display: 'flex', alignItems: 'center', gap: 12, width: 'calc(100% - 32px)', margin: '0 16px 12px', padding: '14px 16px', borderRadius: 16, background: 'linear-gradient(135deg, var(--accent-bright), var(--accent))', color: 'var(--on-accent)', boxShadow: 'var(--glow)', textAlign: 'left' }}>
+          <ShieldCheck size={24} />
+          <span style={{ flex: 1 }}>
+            <div style={{ fontWeight: 800, fontSize: 15 }}>Admin panel</div>
+            <div style={{ fontSize: 12.5, opacity: .75 }}>To'liq boshqaruv</div>
+          </span>
+          <ChevronRight size={20} />
+        </button>
+      )}
 
       <Item icon={<ShoppingBag size={22} color="var(--accent-deep)" />} label="Mening buyurtmalarim" onClick={() => nav('/orders')} />
       <Item icon={<FileText size={22} color="var(--accent-deep)" />} label="Mening arizalarim" onClick={() => nav('/applications')} />

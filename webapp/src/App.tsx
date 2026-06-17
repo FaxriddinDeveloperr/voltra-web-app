@@ -17,6 +17,7 @@ import {
   Orders, Applications, Services, ServiceForm, PartnershipMenu,
   PartnershipForm, Content, ProfileEdit,
 } from './screens/Misc';
+import AdminApp from './admin/AdminApp';
 
 const TAB_PATHS = ['/home', '/catalog', '/cart', '/profile'];
 
@@ -85,6 +86,7 @@ export default function App() {
           <Route path="/applications" element={<Applications />} />
           <Route path="/content/:key" element={<Content />} />
           <Route path="/profile/edit" element={<ProfileEdit />} />
+          <Route path="/admin/*" element={<AdminApp />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </div>

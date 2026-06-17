@@ -93,6 +93,7 @@ model Product {
   isNew         Boolean        @default(false) // Yangi mahsulotlar
   isBestSeller  Boolean        @default(false) // Ko'p sotilgan
   isXit         Boolean        @default(false) // Xit badge
+  hidden        Boolean        @default(false) // Admin yashirgan — userga ko'rinmaydi
   specs         Json? // texnik xususiyatlar: [{icon, label, value}]
   categoryId    String?
   category      Category?      @relation(fields: [categoryId], references: [id])

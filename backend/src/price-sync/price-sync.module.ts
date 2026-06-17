@@ -18,5 +18,6 @@ export class PriceSyncController {
 @Module({
   controllers: [PriceSyncController],
   providers: [PriceSyncService],
+  exports: [PriceSyncService],
 })
 export class PriceSyncModule {}

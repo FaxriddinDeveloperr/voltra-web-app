@@ -11,7 +11,7 @@ export class ProductsService {
     const page = Math.max(1, Number(q.page) || 1);
     const limit = Math.min(100, Math.max(1, Number(q.limit) || 20));
 
-    const where: Prisma.ProductWhereInput = {};
+    const where: Prisma.ProductWhereInput = { hidden: false };
     if (q.category) where.categoryId = q.category;
     if (q.brand) where.brandId = q.brand;
     if (q.isHot === 'true') where.isHot = true;

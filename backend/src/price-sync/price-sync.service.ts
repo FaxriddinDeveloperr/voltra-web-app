@@ -191,11 +191,11 @@ export class PriceSyncService implements OnModuleInit, OnModuleDestroy {
         const power = this.power(r.label);
         const isPanel = cat === 'Quyosh panellari';
 
-        const data = {
+        // Faqat jadvaldan keladigan maydonlar (har sinxronda yangilanadi).
+        const syncData = {
           nameUz: r.label,
           price: new Prisma.Decimal(priceUzs),
           priceUsd: priceUsd != null ? new Prisma.Decimal(priceUsd) : null,
-          stock: 100,
           vatIncluded: true,
           shortFeatures: power ? [`Quvvat: ${power}`] : [],
           specs: power
@@ -203,6 +203,12 @@ export class PriceSyncService implements OnModuleInit, OnModuleDestroy {
             : Prisma.JsonNull,
           categoryId: catMap.get(cat) ?? null,
           brandId: brand ? brandMap.get(brand) ?? null : null,
+        };
+
+        // Admin nazoratidagi maydonlar — faqat mahsulot YARATILGANDA o'rnatiladi,
+        // keyin sinxron ularni tegmaydi (admin o'zgartirsa saqlanib qoladi).
+        const createDefaults = {
+          stock: 100,
           isBestSeller: isPanel,
           isHot: cat === 'Tayyor stansiyalar',
           isNew: cat === 'Gibrid inverterlar',
@@ -213,9 +219,10 @@ export class PriceSyncService implements OnModuleInit, OnModuleDestroy {
           create: {
             slug: r.key,
             descriptionUz: `${r.label}. Voltra — quyosh energiyasi yechimlari.`,
-            ...data,
+            ...syncData,
+            ...createDefaults,
           },
-          update: data,
+          update: syncData,
         });
         updated++;
       }
