@@ -211,7 +211,7 @@ model Service {
   id            String  @id @default(uuid())
   nameUz        String // Quyosh panelini tozalash
   nameRu        String?
-  imageUrl      String? // Xizmat rasmi/ikonkasi
+  images        String[] // Xizmat rasmlari (bir nechta)
   isActive      Boolean @default(true) // false = "Tez kunda"
   comingSoon    Boolean @default(false)
   hasPowerField Boolean @default(false) // Quvvat dropdown kerakmi

@@ -568,7 +568,8 @@ export function AdminServices() {
   );
 }
 function ServiceModal({ svc, onClose, onSaved }: { svc: AdminService | null; onClose: () => void; onSaved: () => void }) {
-  const [f, setF] = useState({ nameUz: svc?.nameUz ?? '', nameRu: svc?.nameRu ?? '', imageUrl: svc?.imageUrl ?? '', sortOrder: String(svc?.sortOrder ?? 0), isActive: svc?.isActive ?? true, comingSoon: svc?.comingSoon ?? false, hasPowerField: svc?.hasPowerField ?? false });
+  const [f, setF] = useState({ nameUz: svc?.nameUz ?? '', nameRu: svc?.nameRu ?? '', sortOrder: String(svc?.sortOrder ?? 0), isActive: svc?.isActive ?? true, comingSoon: svc?.comingSoon ?? false, hasPowerField: svc?.hasPowerField ?? false });
+  const [images, setImages] = useState<string[]>(svc?.images ?? []);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -578,23 +579,35 @@ function ServiceModal({ svc, onClose, onSaved }: { svc: AdminService | null; onC
     const file = e.target.files?.[0]; e.target.value = '';
     if (!file) return;
     setUploading(true);
-    try { const url = await Admin.uploadImage(file); set('imageUrl', url); toast('Rasm yuklandi'); }
+    try { const url = await Admin.uploadImage(file); setImages((s) => [...s, url]); toast('Rasm qo\'shildi'); }
     catch { toast('Yuklashda xato', true); } finally { setUploading(false); }
   };
+  const delImage = (url: string) => setImages((s) => s.filter((u) => u !== url));
   const save = async () => {
     if (!f.nameUz) { toast('Nom majburiy', true); return; }
-    setSaving(true); const body = { ...f, sortOrder: Number(f.sortOrder) || 0 };
+    setSaving(true); const body = { ...f, images, sortOrder: Number(f.sortOrder) || 0 };
     try { svc ? await Admin.updateService(svc.id, body) : await Admin.createService(body); onSaved(); } catch { toast('Xato', true); } finally { setSaving(false); }
   };
   return (
     <Modal title={svc ? 'Xizmat' : 'Yangi xizmat'} onClose={onClose}>
       <div className="adm-field">
-        <label>Rasm</label>
-        {f.imageUrl && <img src={f.imageUrl} alt="" style={{ width: 90, height: 90, objectFit: 'cover', borderRadius: 12, marginBottom: 8, border: '1px solid var(--border)' }} />}
-        <button className="adm-btn" style={{ width: '100%' }} onClick={() => fileRef.current?.click()} disabled={uploading}>
-          {uploading ? <span className="spinner" /> : <><ImagePlus size={16} /> {f.imageUrl ? 'Rasmni almashtirish' : 'Rasm yuklash'}</>}
-        </button>
-        <input ref={fileRef} type="file" accept="image/*" hidden onChange={pickImage} />
+        <label>Rasmlar</label>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {images.map((url) => (
+            <div key={url} style={{ position: 'relative', width: 76, height: 76 }}>
+              <img src={url} alt="" style={{ width: 76, height: 76, objectFit: 'cover', borderRadius: 12, border: '1px solid var(--border)' }} />
+              <button onClick={() => delImage(url)} aria-label="O'chirish"
+                style={{ position: 'absolute', top: -7, right: -7, width: 24, height: 24, borderRadius: '50%', background: 'var(--danger)', color: '#fff', display: 'grid', placeItems: 'center', boxShadow: '0 2px 6px rgba(0,0,0,.3)' }}>
+                <X size={14} />
+              </button>
+            </div>
+          ))}
+          <button onClick={() => fileRef.current?.click()} disabled={uploading}
+            style={{ width: 76, height: 76, borderRadius: 12, border: '1.5px dashed var(--accent-border)', background: 'var(--accent-tint-soft)', color: 'var(--accent-deep)', display: 'grid', placeItems: 'center', gap: 2 }}>
+            {uploading ? <span className="spinner" /> : <><ImagePlus size={22} /><span style={{ fontSize: 10, fontWeight: 700 }}>Qo'shish</span></>}
+          </button>
+          <input ref={fileRef} type="file" accept="image/*" hidden onChange={pickImage} />
+        </div>
       </div>
       <Field label="Nomi (UZ)" value={f.nameUz} onChange={(v) => set('nameUz', v)} />
       <Field label="Nomi (RU)" value={f.nameRu} onChange={(v) => set('nameRu', v)} />

@@ -69,7 +69,7 @@ export interface Product {
 }
 export interface Category { id: string; nameUz: string; imageUrl?: string; children: Category[] }
 export interface Banner { id: string; imageUrl: string; title?: string }
-export interface ServiceItem { id: string; nameUz: string; imageUrl?: string; isActive: boolean; comingSoon: boolean; hasPowerField: boolean }
+export interface ServiceItem { id: string; nameUz: string; images?: string[]; isActive: boolean; comingSoon: boolean; hasPowerField: boolean }
 export interface Region { id: string; nameUz: string }
 export interface City { id: string; nameUz: string }
 export interface PickupPoint { id: string; name: string; city: string }
@@ -154,7 +154,7 @@ export interface AdminApplication {
 export interface AdminBanner { id: string; imageUrl: string; title?: string; link?: string; type?: string; sortOrder: number; isActive: boolean }
 export interface AdminCategory { id: string; nameUz: string; nameRu?: string; imageUrl?: string; parentId?: string; sortOrder: number; _count?: { products: number } }
 export interface AdminBrand { id: string; name: string; logoUrl?: string; sortOrder: number; _count?: { products: number } }
-export interface AdminService { id: string; nameUz: string; nameRu?: string; imageUrl?: string; isActive: boolean; comingSoon: boolean; hasPowerField: boolean; sortOrder: number }
+export interface AdminService { id: string; nameUz: string; nameRu?: string; images?: string[]; isActive: boolean; comingSoon: boolean; hasPowerField: boolean; sortOrder: number }
 export interface AdminPickup { id: string; name: string; city: string; lat?: number; lng?: number }
 export interface AdminContent { id: string; key: string; titleUz?: string; bodyUz?: string }
 export interface AdminUser { id: string; phone: string; firstName?: string; lastName?: string; createdAt: string; _count?: { orders: number; applications: number } }
