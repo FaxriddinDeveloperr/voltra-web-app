@@ -3,7 +3,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ShoppingBag, FileText, Wrench, Check } from 'lucide-react';
 import { Api, type Region, type City } from '../api';
 import { useQuery, invalidate } from '../useQuery';
-import { priceUzs, toE164, maskInput, phoneFmt } from '../lib';
+import { priceUzs, toE164, maskInput, phoneFmt, telegram } from '../lib';
 import { TopBar } from '../shell';
 import { Select } from '../Select';
 import { GridSkeleton, Empty, Spinner } from '../components';
@@ -260,9 +260,16 @@ export function ProfileEdit() {
       <TopBar title="Profilni tahrirlash" back />
       <div style={{ padding: 16 }}>
         <div style={{ display: 'grid', placeItems: 'center', marginBottom: 24 }}>
-          <div style={{ width: 88, height: 88, borderRadius: '50%', background: 'var(--accent)', display: 'grid', placeItems: 'center' }}>
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="var(--on-accent)"><circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" /></svg>
-          </div>
+          {(() => {
+            const avatar = user?.avatarUrl || telegram()?.initDataUnsafe?.user?.photo_url;
+            return avatar
+              ? <img src={avatar} alt="" style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'cover' }} />
+              : (
+                <div style={{ width: 88, height: 88, borderRadius: '50%', background: 'var(--accent)', display: 'grid', placeItems: 'center' }}>
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="var(--on-accent)"><circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" /></svg>
+                </div>
+              );
+          })()}
         </div>
         <div style={{ display: 'grid', gap: 12 }}>
           <Inp label="Familiya" v={last} on={setLast} />
