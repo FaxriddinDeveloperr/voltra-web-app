@@ -437,8 +437,18 @@ export function AdminCategories() {
 }
 function CategoryModal({ cat, onClose, onSaved }: { cat: AdminCategory | null; onClose: () => void; onSaved: () => void }) {
   const [f, setF] = useState({ nameUz: cat?.nameUz ?? '', nameRu: cat?.nameRu ?? '', imageUrl: cat?.imageUrl ?? '', sortOrder: String(cat?.sortOrder ?? 0) });
-  const [saving, setSaving] = useState(false); const toast = useToast();
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const toast = useToast();
   const set = (k: string, v: string) => setF((s) => ({ ...s, [k]: v }));
+  const pickImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; e.target.value = '';
+    if (!file) return;
+    setUploading(true);
+    try { const url = await Admin.uploadImage(file); set('imageUrl', url); toast('Rasm yuklandi'); }
+    catch { toast('Yuklashda xato', true); } finally { setUploading(false); }
+  };
   const save = async () => {
     if (!f.nameUz) { toast('Nom majburiy', true); return; }
     setSaving(true); const body = { ...f, sortOrder: Number(f.sortOrder) || 0 };
@@ -446,9 +456,16 @@ function CategoryModal({ cat, onClose, onSaved }: { cat: AdminCategory | null; o
   };
   return (
     <Modal title={cat ? 'Kategoriya' : 'Yangi kategoriya'} onClose={onClose}>
+      <div className="adm-field">
+        <label>Rasm</label>
+        {f.imageUrl && <img src={f.imageUrl} alt="" style={{ width: '100%', height: 130, objectFit: 'cover', borderRadius: 12, marginBottom: 8, border: '1px solid var(--border)' }} />}
+        <button className="adm-btn" style={{ width: '100%' }} onClick={() => fileRef.current?.click()} disabled={uploading}>
+          {uploading ? <span className="spinner" /> : <><ImagePlus size={16} /> {f.imageUrl ? 'Rasmni almashtirish' : 'Rasm yuklash'}</>}
+        </button>
+        <input ref={fileRef} type="file" accept="image/*" hidden onChange={pickImage} />
+      </div>
       <Field label="Nomi (UZ)" value={f.nameUz} onChange={(v) => set('nameUz', v)} />
       <Field label="Nomi (RU)" value={f.nameRu} onChange={(v) => set('nameRu', v)} />
-      <Field label="Rasm URL" value={f.imageUrl} onChange={(v) => set('imageUrl', v)} />
       <Field label="Tartib" type="number" value={f.sortOrder} onChange={(v) => set('sortOrder', v)} />
       <button className="adm-btn primary" style={{ width: '100%', height: 48 }} onClick={save} disabled={saving}>{saving ? 'Saqlanmoqda…' : 'Saqlash'}</button>
     </Modal>
