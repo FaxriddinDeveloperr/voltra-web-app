@@ -15,6 +15,8 @@ export default function Profile() {
   const logout = useAuth((s) => s.logout);
   const [sheet, setSheet] = useState(false);
   const [contactSheet, setContactSheet] = useState(false);
+  const [avatarView, setAvatarView] = useState(false);
+  const avatar = user?.avatarUrl || telegram()?.initDataUnsafe?.user?.photo_url;
   const { data: contactRaw } = useQuery('contacts', () => Api.content('contacts').catch(() => null) as Promise<{ bodyUz?: string } | null>);
   let contacts: Contacts = {};
   try { if (contactRaw?.bodyUz) contacts = JSON.parse(contactRaw.bodyUz); } catch { /* */ }
@@ -24,12 +26,9 @@ export default function Profile() {
       <header style={{ padding: '16px', textAlign: 'center' }}><h2 style={{ fontSize: 18, fontWeight: 700 }}>Profil</h2></header>
 
       <button className="press" onClick={() => nav('/profile/edit')} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 16px 12px', width: '100%', textAlign: 'left' }}>
-        {(() => {
-          const avatar = user?.avatarUrl || telegram()?.initDataUnsafe?.user?.photo_url;
-          return avatar
-            ? <img src={avatar} alt="" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flex: '0 0 auto' }} />
-            : <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--accent)', display: 'grid', placeItems: 'center', flex: '0 0 auto' }}><User size={28} color="var(--on-accent)" /></span>;
-        })()}
+        {avatar
+          ? <img src={avatar} alt="" onClick={(e) => { e.stopPropagation(); setAvatarView(true); }} style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flex: '0 0 auto', cursor: 'zoom-in' }} />
+          : <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--accent)', display: 'grid', placeItems: 'center', flex: '0 0 auto' }}><User size={28} color="var(--on-accent)" /></span>}
         <span style={{ flex: 1 }}>
           <div style={{ fontWeight: 700, fontSize: 16 }}>{user?.phone ? phoneFmt(user.phone) : (user && (user.firstName || user.lastName) ? `${user.lastName ?? ''} ${user.firstName ?? ''}`.trim() : 'Profil')}</div>
           <div className="muted" style={{ fontSize: 13 }}>{user?.phone ? (user.firstName || user.lastName ? `${user.lastName ?? ''} ${user.firstName ?? ''}`.trim() : "Profilni to'ldiring") : "Telefon: buyurtmada ulashiladi"}</div>
@@ -65,6 +64,11 @@ export default function Profile() {
 
       {sheet && <ThemeSheet onClose={() => setSheet(false)} />}
       {contactSheet && <ContactSheet contacts={contacts} onClose={() => setContactSheet(false)} />}
+      {avatarView && avatar && (
+        <div onClick={() => setAvatarView(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.9)', zIndex: 60, display: 'grid', placeItems: 'center', padding: 24 }}>
+          <img src={avatar} alt="" style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: 16 }} />
+        </div>
+      )}
     </div>
   );
 }

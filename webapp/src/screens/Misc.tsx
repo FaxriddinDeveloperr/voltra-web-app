@@ -253,6 +253,8 @@ export function ProfileEdit() {
   const [first, setFirst] = useState(user?.firstName || '');
   const [middle, setMiddle] = useState(user?.middleName || '');
   const [busy, setBusy] = useState(false);
+  const [viewer, setViewer] = useState(false);
+  const avatar = user?.avatarUrl || telegram()?.initDataUnsafe?.user?.photo_url;
   async function save() { setBusy(true); try { const u = await Api.updateMe({ firstName: first.trim(), lastName: last.trim(), middleName: middle.trim() }); setUser(u); nav(-1); } finally { setBusy(false); } }
   async function del() { if (!confirm("Profil o'chirilsinmi?")) return; try { await Api.deleteMe(); } catch { /* */ } await logout(); nav('/'); }
   return (
@@ -260,17 +262,19 @@ export function ProfileEdit() {
       <TopBar title="Profilni tahrirlash" back />
       <div style={{ padding: 16 }}>
         <div style={{ display: 'grid', placeItems: 'center', marginBottom: 24 }}>
-          {(() => {
-            const avatar = user?.avatarUrl || telegram()?.initDataUnsafe?.user?.photo_url;
-            return avatar
-              ? <img src={avatar} alt="" style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'cover' }} />
-              : (
-                <div style={{ width: 88, height: 88, borderRadius: '50%', background: 'var(--accent)', display: 'grid', placeItems: 'center' }}>
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="var(--on-accent)"><circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" /></svg>
-                </div>
-              );
-          })()}
+          {avatar
+            ? <img src={avatar} alt="" onClick={() => setViewer(true)} className="press" style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'cover', cursor: 'zoom-in' }} />
+            : (
+              <div style={{ width: 88, height: 88, borderRadius: '50%', background: 'var(--accent)', display: 'grid', placeItems: 'center' }}>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="var(--on-accent)"><circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" /></svg>
+              </div>
+            )}
         </div>
+        {viewer && avatar && (
+          <div onClick={() => setViewer(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.9)', zIndex: 60, display: 'grid', placeItems: 'center', padding: 24, animation: 'admFade .2s ease-out' }}>
+            <img src={avatar} alt="" style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: 16 }} />
+          </div>
+        )}
         <div style={{ display: 'grid', gap: 12 }}>
           <Inp label="Familiya" v={last} on={setLast} />
           <Inp label="Ism" v={first} on={setFirst} />
