@@ -23,6 +23,12 @@ export class AuthController {
     return this.auth.verifyOtp(dto.phone, dto.code);
   }
 
+  // Telegram Mini App avtomatik kirish (OTP shart emas)
+  @Post('telegram')
+  telegram(@Body() dto: { initData: string }) {
+    return this.auth.telegramAuth(dto?.initData ?? '');
+  }
+
   @Post('refresh')
   refresh(@Body() dto: RefreshDto) {
     return this.auth.refresh(dto.refreshToken);

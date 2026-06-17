@@ -53,12 +53,19 @@ export function toE164(input: string): string {
 }
 
 // Telegram WebApp SDK
+interface TgContactResponse {
+  status?: string;
+  responseUnsafe?: { contact?: { phone_number?: string } };
+}
 interface TG {
   ready(): void; expand(): void;
   colorScheme?: 'light' | 'dark';
+  initData?: string;
+  initDataUnsafe?: { user?: { id?: number; first_name?: string } };
   setHeaderColor?(c: string): void; setBackgroundColor?(c: string): void;
   onEvent?(e: string, cb: () => void): void;
   themeParams?: Record<string, string>;
+  requestContact?(cb: (ok: boolean, res?: TgContactResponse) => void): void;
   BackButton?: {
     show(): void; hide(): void;
     onClick(cb: () => void): void; offClick(cb: () => void): void;
@@ -66,4 +73,24 @@ interface TG {
 }
 export function telegram(): TG | undefined {
   return (window as unknown as { Telegram?: { WebApp?: TG } }).Telegram?.WebApp;
+}
+
+/** Telegram ichida ochilganmi (initData mavjudmi)? */
+export function tgInitData(): string | null {
+  const d = telegram()?.initData;
+  return d && d.length > 0 ? d : null;
+}
+
+/** Telegram'ning "Raqamni ulashish" oynasi orqali telefon olish (1 bosish). */
+export function tgRequestPhone(): Promise<string | null> {
+  return new Promise((resolve) => {
+    const tg = telegram();
+    if (!tg?.requestContact) { resolve(null); return; }
+    try {
+      tg.requestContact((ok, res) => {
+        const raw = res?.responseUnsafe?.contact?.phone_number;
+        resolve(ok && raw ? raw : null);
+      });
+    } catch { resolve(null); }
+  });
 }

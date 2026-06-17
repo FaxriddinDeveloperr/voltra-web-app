@@ -6,6 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { SmsService } from '../common/sms/sms.service';
 import type { User } from '@prisma/client';
@@ -76,6 +77,75 @@ export class AuthService {
       user = await this.prisma.user.update({
         where: { id: user.id },
         data: { isVerified: true },
+      });
+    }
+
+    const tokens = await this.issueTokens(user);
+    return { ...tokens, user, isNewProfile };
+  }
+
+  /**
+   * Telegram Mini App avtomatik kirish: initData imzosini bot token bilan
+   * tekshiradi, telegramId bo'yicha userni topadi/yaratadi. OTP shart emas.
+   */
+  async telegramAuth(
+    initData: string,
+  ): Promise<Tokens & { user: User; isNewProfile: boolean }> {
+    const token = this.config.get<string>('TELEGRAM_BOT_TOKEN');
+    if (!token) throw new UnauthorizedException('Bot token sozlanmagan');
+
+    const params = new URLSearchParams(initData);
+    const hash = params.get('hash');
+    if (!hash) throw new UnauthorizedException('initData yaroqsiz');
+
+    // data-check-string: hash'dan tashqari hamma kalit=qiymat, alfavit bo'yicha
+    const pairs: string[] = [];
+    params.forEach((v, k) => {
+      if (k !== 'hash') pairs.push(`${k}=${v}`);
+    });
+    pairs.sort();
+    const dataCheckString = pairs.join('\n');
+
+    const secretKey = crypto
+      .createHmac('sha256', 'WebAppData')
+      .update(token)
+      .digest();
+    const computed = crypto
+      .createHmac('sha256', secretKey)
+      .update(dataCheckString)
+      .digest('hex');
+
+    if (computed !== hash) {
+      throw new UnauthorizedException('initData imzosi mos kelmadi');
+    }
+
+    // auth_date eskirgan emasligini tekshirish (24 soat)
+    const authDate = Number(params.get('auth_date') ?? 0);
+    if (authDate && Date.now() / 1000 - authDate > 86400) {
+      throw new UnauthorizedException('initData muddati tugagan');
+    }
+
+    const userJson = params.get('user');
+    if (!userJson) throw new UnauthorizedException('Telegram user topilmadi');
+    const tgUser = JSON.parse(userJson) as {
+      id: number;
+      first_name?: string;
+      last_name?: string;
+      username?: string;
+    };
+    const telegramId = String(tgUser.id);
+
+    let user = await this.prisma.user.findUnique({ where: { telegramId } });
+    const isNewProfile = !user;
+    if (!user) {
+      user = await this.prisma.user.create({
+        data: {
+          telegramId,
+          username: tgUser.username ?? null,
+          firstName: tgUser.first_name ?? null,
+          lastName: tgUser.last_name ?? null,
+          isVerified: true,
+        },
       });
     }
 

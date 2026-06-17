@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Api, api, tokens, type AppUser, type Cart } from './api';
+import { tgInitData } from './lib';
 
 // ── Auth ────────────────────────────────────────────────────
 type AuthStatus = 'unknown' | 'guest' | 'needsProfile' | 'authed';
@@ -20,7 +21,21 @@ export const useAuth = create<AuthState>((set) => ({
   status: 'unknown',
   isAdmin: false,
   bootstrap: async () => {
-    if (!tokens.access) { set({ status: 'guest' }); return; }
+    // Telegram ichida — avtomatik kirish (OTP shart emas)
+    if (!tokens.access) {
+      const initData = tgInitData();
+      if (initData) {
+        try {
+          const res = await Api.telegramAuth(initData);
+          tokens.set(res.accessToken, res.refreshToken);
+          set({ status: statusFor(res.user), user: res.user });
+          Api.adminCheck().then((isAdmin) => set({ isAdmin }));
+          return;
+        } catch { /* brauzerga/telefon usuliga tushadi */ }
+      }
+      set({ status: 'guest' });
+      return;
+    }
     try {
       const u = await Api.me();
       set({ status: statusFor(u), user: u });
@@ -39,7 +54,7 @@ export const useAuth = create<AuthState>((set) => ({
     const u = await Api.updateMe({ firstName, lastName, middleName });
     set({ status: 'authed', user: u });
   },
-  setUser: (u) => set({ user: u, status: statusFor(u) }),
+  setUser: (u) => { set({ user: u, status: statusFor(u) }); Api.adminCheck().then((isAdmin) => set({ isAdmin })); },
   logout: async () => {
     try { await api.post('/auth/logout'); } catch { /* ignore */ }
     tokens.clear();

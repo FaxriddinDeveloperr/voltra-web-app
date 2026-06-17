@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Truck, Store, Check } from 'lucide-react';
+import { Truck, Store, Check, Send } from 'lucide-react';
 import { Api, type Region, type City, type PickupPoint } from '../api';
-import { priceUsd, priceUzs, toE164, phoneFmt, maskInput } from '../lib';
+import { priceUsd, priceUzs, toE164, phoneFmt, maskInput, tgInitData, tgRequestPhone } from '../lib';
 import { TopBar } from '../shell';
 import { Select } from '../Select';
 import { useAuth, useCart } from '../store';
@@ -28,13 +28,15 @@ export default function Checkout() {
   const cart = useCart((s) => s.cart);
   const clearCart = useCart((s) => s.clear);
   const user = useAuth((s) => s.user);
+  const setUser = useAuth((s) => s.setUser);
+  const inTelegram = !!tgInitData();
 
   const [delivery, setDelivery] = useState('DELIVERY');
   const [customer, setCustomer] = useState('INDIVIDUAL');
   const [install, setInstall] = useState('SELF');
   const [f, setF] = useState<Record<string, string>>({
     fullName: user && (user.firstName || user.lastName) ? `${user.lastName ?? ''} ${user.firstName ?? ''}`.trim() : '',
-    phone: user ? phoneFmt(user.phone).replace('+998 ', '') : '',
+    phone: user?.phone ? phoneFmt(user.phone).replace('+998 ', '') : '',
   });
   const [region, setRegion] = useState('');
   const [city, setCity] = useState('');
@@ -49,6 +51,17 @@ export default function Checkout() {
   useEffect(() => { if (region) Api.cities(region).then(setCities); else setCities([]); setCity(''); }, [region]);
 
   const set = (k: string, v: string) => setF((s) => ({ ...s, [k]: v }));
+
+  async function shareTgPhone() {
+    const raw = await tgRequestPhone();
+    if (!raw) return;
+    set('phone', maskInput(raw));
+    // profilga ham saqlaymiz (keyingi safar avtomatik to'ladi)
+    try {
+      const u = await Api.updateMe({ phone: toE164(maskInput(raw)) });
+      setUser(u);
+    } catch { /* ignore */ }
+  }
   const items = cart?.items ?? [];
   const usd = items.reduce((s, l) => s + Number(l.product.priceUsd ?? 0) * l.quantity, 0);
 
@@ -115,6 +128,12 @@ export default function Checkout() {
               </>
             )}
             <Field label="Telefon raqamingiz" v={f.phone} prefix="+998 " on={(v) => set('phone', maskInput(v))} />
+            {inTelegram && (
+              <button type="button" onClick={shareTgPhone} className="press"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, height: 46, borderRadius: 'var(--r-input)', background: 'var(--accent-tint)', color: 'var(--accent-deep)', fontWeight: 700, fontSize: 14, border: '1px solid var(--accent-border)' }}>
+                <Send size={17} /> Telegram orqali raqamni ulashish
+              </button>
+            )}
           </div>
         </div>
 

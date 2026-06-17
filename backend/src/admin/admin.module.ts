@@ -18,7 +18,6 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { ConfigService } from '@nestjs/config';
 import { diskStorage } from 'multer';
 import { existsSync, mkdirSync } from 'fs';
 import { extname, join } from 'path';
@@ -579,11 +578,11 @@ export class AdminController {
 @UseGuards(JwtAuthGuard)
 @Controller('admin-check')
 export class AdminCheckController {
-  constructor(private readonly config: ConfigService) {}
+  constructor(private readonly guard: AdminGuard) {}
 
   @Get()
-  check(@CurrentUser() user: AuthUser) {
-    return { isAdmin: AdminGuard.isAdmin(this.config, user) };
+  async check(@CurrentUser() user: AuthUser) {
+    return { isAdmin: await this.guard.isAdminById(user.id) };
   }
 }
 

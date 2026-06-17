@@ -11,7 +11,9 @@ datasource db {
 // Foydalanuvchi
 model User {
   id           String        @id @default(uuid())
-  phone        String        @unique // +998940196141
+  phone        String?       @unique // +998940196141 (Telegram'da keyin ulashiladi)
+  telegramId   String?       @unique // Telegram user id (avtomatik kirish)
+  username     String? // Telegram @username
   firstName    String?
   lastName     String?
   middleName   String? // Sharif

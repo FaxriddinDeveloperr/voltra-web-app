@@ -126,7 +126,7 @@ function AppForm({ title, type, serviceId, powerField, priceField }: { title: st
   const [cities, setCities] = useState<City[]>([]);
   const [region, setRegion] = useState('');
   const [city, setCity] = useState('');
-  const [f, setF] = useState<Record<string, string>>({ fullName: user && (user.firstName || user.lastName) ? `${user.lastName ?? ''} ${user.firstName ?? ''}`.trim() : '', phone: user ? phoneFmt(user.phone).replace('+998 ', '') : '' });
+  const [f, setF] = useState<Record<string, string>>({ fullName: user && (user.firstName || user.lastName) ? `${user.lastName ?? ''} ${user.firstName ?? ''}`.trim() : '', phone: user?.phone ? phoneFmt(user.phone).replace('+998 ', '') : '' });
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   useEffect(() => { Api.regions().then(setRegions); }, []);
