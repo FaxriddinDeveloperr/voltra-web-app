@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, ShoppingBag, FileText, Headphones, Moon, Info, ScrollText, LogOut, ChevronRight, Sun, SunMoon, Check, ShieldCheck, Phone, Send, AtSign, MapPin } from 'lucide-react';
-import { phoneFmt } from '../lib';
+import { phoneFmt, tgInitData } from '../lib';
 import { Api } from '../api';
 import { useQuery } from '../useQuery';
 import { useAuth, useTheme } from '../store';
@@ -52,9 +52,11 @@ export default function Profile() {
       <Item icon={<Info size={22} color="var(--accent-deep)" />} label="Ilova haqida" onClick={() => nav('/content/about')} />
       <Item icon={<ScrollText size={22} color="var(--accent-deep)" />} label="Oferta va shartlar" onClick={() => nav('/content/offer')} />
 
-      <button onClick={() => { if (confirm('Hisobdan chiqasizmi?')) { logout(); nav('/'); } }} style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', margin: '28px auto', color: 'var(--danger)', fontWeight: 600 }}>
-        <LogOut size={20} /> Chiqish
-      </button>
+      {!tgInitData() && (
+        <button onClick={() => { if (confirm('Hisobdan chiqasizmi?')) { logout(); nav('/'); } }} style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', margin: '28px auto', color: 'var(--danger)', fontWeight: 600 }}>
+          <LogOut size={20} /> Chiqish
+        </button>
+      )}
 
       {sheet && <ThemeSheet onClose={() => setSheet(false)} />}
       {contactSheet && <ContactSheet contacts={contacts} onClose={() => setContactSheet(false)} />}
