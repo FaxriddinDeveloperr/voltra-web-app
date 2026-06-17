@@ -366,10 +366,20 @@ export function AdminBanners() {
 }
 function BannerModal({ banner, onClose, onSaved }: { banner: AdminBanner | null; onClose: () => void; onSaved: () => void }) {
   const [f, setF] = useState({ imageUrl: banner?.imageUrl ?? '', title: banner?.title ?? '', link: banner?.link ?? '', type: banner?.type ?? '', sortOrder: String(banner?.sortOrder ?? 0), isActive: banner?.isActive ?? true });
-  const [saving, setSaving] = useState(false); const toast = useToast();
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const toast = useToast();
   const set = (k: string, v: unknown) => setF((s) => ({ ...s, [k]: v }));
+  const pickImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; e.target.value = '';
+    if (!file) return;
+    setUploading(true);
+    try { const url = await Admin.uploadImage(file); set('imageUrl', url); toast('Rasm yuklandi'); }
+    catch { toast('Yuklashda xato', true); } finally { setUploading(false); }
+  };
   const save = async () => {
-    if (!f.imageUrl) { toast('Rasm URL majburiy', true); return; }
+    if (!f.imageUrl) { toast('Rasm majburiy', true); return; }
     setSaving(true);
     const body = { ...f, sortOrder: Number(f.sortOrder) || 0 };
     try { banner ? await Admin.updateBanner(banner.id, body) : await Admin.createBanner(body); onSaved(); }
@@ -377,8 +387,14 @@ function BannerModal({ banner, onClose, onSaved }: { banner: AdminBanner | null;
   };
   return (
     <Modal title={banner ? 'Bannerni tahrirlash' : 'Yangi banner'} onClose={onClose}>
-      <Field label="Rasm URL" value={f.imageUrl} onChange={(v) => set('imageUrl', v)} placeholder="https://…" />
-      {f.imageUrl && <img src={f.imageUrl} alt="" style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 10, marginBottom: 12 }} />}
+      <div className="adm-field">
+        <label>Rasm</label>
+        {f.imageUrl && <img src={f.imageUrl} alt="" style={{ width: '100%', height: 130, objectFit: 'cover', borderRadius: 12, marginBottom: 8, border: '1px solid var(--border)' }} />}
+        <button className="adm-btn" style={{ width: '100%' }} onClick={() => fileRef.current?.click()} disabled={uploading}>
+          {uploading ? <span className="spinner" /> : <><ImagePlus size={16} /> {f.imageUrl ? 'Rasmni almashtirish' : 'Rasm yuklash'}</>}
+        </button>
+        <input ref={fileRef} type="file" accept="image/*" hidden onChange={pickImage} />
+      </div>
       <Field label="Sarlavha" value={f.title} onChange={(v) => set('title', v)} />
       <Field label="Havola (link)" value={f.link} onChange={(v) => set('link', v)} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
