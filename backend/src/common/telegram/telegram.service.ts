@@ -16,10 +16,23 @@ export class TelegramService {
   }
 
   async send(html: string): Promise<void> {
-    const token = this.config.get<string>('TELEGRAM_BOT_TOKEN');
     const chatId = this.config.get<string>('TELEGRAM_ORDER_CHAT_ID');
-    if (!token || !chatId) {
+    if (!chatId) {
       this.logger.warn('TELEGRAM_ORDER_CHAT_ID o\'rnatilmagan — xabar yuborilmadi');
+      return;
+    }
+    await this.sendMessage(chatId, html);
+  }
+
+  /** Ixtiyoriy inline klaviatura bilan xabar yuborish. */
+  async sendMessage(
+    chatId: string | number,
+    html: string,
+    replyMarkup?: unknown,
+  ): Promise<void> {
+    const token = this.config.get<string>('TELEGRAM_BOT_TOKEN');
+    if (!token) {
+      this.logger.warn('TELEGRAM_BOT_TOKEN yo\'q — xabar yuborilmadi');
       return;
     }
     try {
@@ -31,6 +44,7 @@ export class TelegramService {
           text: html,
           parse_mode: 'HTML',
           disable_web_page_preview: true,
+          ...(replyMarkup ? { reply_markup: replyMarkup } : {}),
         }),
       });
       if (!res.ok) {
