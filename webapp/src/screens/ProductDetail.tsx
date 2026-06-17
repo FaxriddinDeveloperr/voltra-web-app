@@ -65,11 +65,6 @@ export default function ProductDetail() {
           {p.vatIncluded && <span className="muted" style={{ fontSize: 13, paddingBottom: 18 }}>QQS bilan</span>}
         </div>
 
-        <div style={{ marginTop: 14, display: 'flex', gap: 6 }}>
-          <span className="muted">Sotuvda mavjud:</span>
-          <span style={{ color: 'var(--success)', fontWeight: 700 }}>{p.stock} dona</span>
-        </div>
-
         {p.shortFeatures?.length > 0 && (
           <ul style={{ marginTop: 16, listStyle: 'none', display: 'grid', gap: 6 }}>
             {p.shortFeatures.map((f, i) => (
@@ -94,7 +89,7 @@ export default function ProductDetail() {
           <div className="price" style={{ fontSize: 17 }}>{priceUsd(p.priceUsd)}</div>
           <div className="muted" style={{ fontSize: 11 }}>≈ {priceUzs(p.price)}</div>
         </div>
-        <button className="btn" style={{ flex: 1 }} disabled={p.stock <= 0 || adding} onClick={add}>
+        <button className="btn" style={{ flex: 1 }} disabled={adding} onClick={add}>
           {adding ? <span className="spinner" /> : <><ShoppingCart size={18} /> Savatga</>}
         </button>
       </div>

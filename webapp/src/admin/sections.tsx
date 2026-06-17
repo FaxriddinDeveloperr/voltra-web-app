@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
-  Plus, Trash2, Pencil, RefreshCw, Eye, EyeOff, Phone, Package,
+  Plus, Trash2, Pencil, RefreshCw, Eye, EyeOff, Phone, Package, ImagePlus, X,
 } from 'lucide-react';
 import {
   Admin, type AdminProduct, type AdminOrder, type AdminApplication,
   type AdminBanner, type AdminCategory, type AdminBrand, type AdminService,
-  type AdminPickup, type AdminContent, type AdminUser,
+  type AdminPickup, type AdminContent, type AdminUser, type ProductImage,
 } from '../api';
 import { Select } from '../Select';
 import {
@@ -78,7 +78,7 @@ export function AdminProducts() {
             <span className="ti">{p.nameUz}</span>
             {p.hidden && <Pill tone="gray">Yashirin</Pill>}
           </div>
-          <div className="sub">{usd(p.priceUsd)} · {uzs(p.price)} · Ombor: {p.stock}</div>
+          <div className="sub">{usd(p.priceUsd)} · {uzs(p.price)}</div>
           <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
             {p.isHot && <Pill tone="red">Hot</Pill>}
             {p.isNew && <Pill tone="green">Yangi</Pill>}
@@ -108,30 +108,70 @@ function ProductModal({ product, cats, brands, onClose, onSaved }: {
 }) {
   const [f, setF] = useState({
     nameUz: product.nameUz, priceUsd: product.priceUsd ?? '', price: product.price,
-    oldPrice: product.oldPrice ?? '', stock: String(product.stock), discountPct: product.discountPct?.toString() ?? '',
+    oldPrice: product.oldPrice ?? '', discountPct: product.discountPct?.toString() ?? '',
     categoryId: product.categoryId ?? '', brandId: product.brandId ?? '',
     descriptionUz: product.descriptionUz ?? '',
     hidden: product.hidden, isHot: product.isHot, isNew: product.isNew, isBestSeller: product.isBestSeller, isXit: product.isXit,
   });
+  const [images, setImages] = useState<ProductImage[]>(product.images ?? []);
+  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
   const set = (k: string, v: unknown) => setF((s) => ({ ...s, [k]: v }));
+
+  const pickImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await Admin.uploadImage(file);
+      const img = await Admin.addProductImage(product.id, url);
+      setImages((s) => [...s, img]);
+      toast('Rasm qo\'shildi');
+    } catch { toast('Yuklashda xato', true); } finally { setUploading(false); }
+  };
+  const delImage = async (img: ProductImage) => {
+    setImages((s) => s.filter((x) => x.id !== img.id));
+    try { await Admin.removeProductImage(product.id, img.id); } catch { toast('Xato', true); }
+  };
 
   const save = async () => {
     setSaving(true);
     try {
       const u = await Admin.updateProduct(product.id, {
         nameUz: f.nameUz, price: f.price, priceUsd: f.priceUsd || null, oldPrice: f.oldPrice || null,
-        stock: Number(f.stock) || 0, discountPct: f.discountPct ? Number(f.discountPct) : null,
+        discountPct: f.discountPct ? Number(f.discountPct) : null,
         categoryId: f.categoryId || null, brandId: f.brandId || null, descriptionUz: f.descriptionUz,
         hidden: f.hidden, isHot: f.isHot, isNew: f.isNew, isBestSeller: f.isBestSeller, isXit: f.isXit,
       });
-      onSaved(u as AdminProduct);
+      onSaved({ ...(u as AdminProduct), images });
     } catch { toast('Xato yuz berdi', true); } finally { setSaving(false); }
   };
 
   return (
     <Modal title="Mahsulotni tahrirlash" onClose={onClose}>
+      {/* Rasmlar */}
+      <div className="adm-field">
+        <label>Rasmlar</label>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {images.map((img) => (
+            <div key={img.id} style={{ position: 'relative', width: 76, height: 76 }}>
+              <img src={img.url} alt="" style={{ width: 76, height: 76, objectFit: 'cover', borderRadius: 12, border: '1px solid var(--border)' }} />
+              <button onClick={() => delImage(img)} aria-label="O'chirish"
+                style={{ position: 'absolute', top: -7, right: -7, width: 24, height: 24, borderRadius: '50%', background: 'var(--danger)', color: '#fff', display: 'grid', placeItems: 'center', boxShadow: '0 2px 6px rgba(0,0,0,.3)' }}>
+                <X size={14} />
+              </button>
+            </div>
+          ))}
+          <button onClick={() => fileRef.current?.click()} disabled={uploading}
+            style={{ width: 76, height: 76, borderRadius: 12, border: '1.5px dashed var(--accent-border)', background: 'var(--accent-tint-soft)', color: 'var(--accent-deep)', display: 'grid', placeItems: 'center', gap: 2 }}>
+            {uploading ? <span className="spinner" /> : <><ImagePlus size={22} /><span style={{ fontSize: 10, fontWeight: 700 }}>Qo'shish</span></>}
+          </button>
+          <input ref={fileRef} type="file" accept="image/*" hidden onChange={pickImage} />
+        </div>
+      </div>
       <Field label="Nomi" value={f.nameUz} onChange={(v) => set('nameUz', v)} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
         <Field label="Narx (USD)" type="number" value={String(f.priceUsd)} onChange={(v) => set('priceUsd', v)} />
@@ -139,7 +179,7 @@ function ProductModal({ product, cats, brands, onClose, onSaved }: {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
         <Field label="Eski narx (UZS)" type="number" value={String(f.oldPrice)} onChange={(v) => set('oldPrice', v)} />
-        <Field label="Ombor (dona)" type="number" value={f.stock} onChange={(v) => set('stock', v)} />
+        <Field label="Chegirma %" type="number" value={f.discountPct} onChange={(v) => set('discountPct', v)} />
       </div>
       <div style={{ marginBottom: 12 }}>
         <Select label="Kategoriya" value={f.categoryId} onChange={(v) => set('categoryId', v)}
@@ -158,7 +198,7 @@ function ProductModal({ product, cats, brands, onClose, onSaved }: {
         <Toggle label="🏆 Xit" on={f.isXit} onChange={(v) => set('isXit', v)} />
       </div>
       <p style={{ fontSize: 12, color: 'var(--text-3)', margin: '0 0 12px' }}>
-        Eslatma: narx va nom Google Sheets'dan har daqiqada yangilanadi. Belgilar, ombor va yashirish — admin nazoratida saqlanadi.
+        Eslatma: narx va nom Google Sheets'dan har daqiqada yangilanadi. Rasmlar, belgilar va yashirish — admin nazoratida saqlanadi.
       </p>
       <button className="adm-btn primary" style={{ width: '100%', height: 48 }} onClick={save} disabled={saving}>
         {saving ? 'Saqlanmoqda…' : 'Saqlash'}

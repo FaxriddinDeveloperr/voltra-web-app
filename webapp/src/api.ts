@@ -167,6 +167,12 @@ export const Admin = {
     api.get<Paged<AdminProduct>>(`${adm}/products`, { params: p }).then((r) => r.data),
   updateProduct: (id: string, b: Record<string, unknown>) => api.patch(`${adm}/products/${id}`, b).then((r) => r.data),
   deleteProduct: (id: string) => api.delete(`${adm}/products/${id}`).then((r) => r.data),
+  uploadImage: (file: File) => {
+    const fd = new FormData(); fd.append('file', file);
+    return api.post<{ url: string }>(`${adm}/upload`, fd).then((r) => r.data.url);
+  },
+  addProductImage: (id: string, url: string) => api.post<ProductImage>(`${adm}/products/${id}/images`, { url }).then((r) => r.data),
+  removeProductImage: (id: string, imageId: string) => api.delete(`${adm}/products/${id}/images/${imageId}`).then((r) => r.data),
 
   orders: (p: Record<string, string> = {}) => api.get<AdminOrder[]>(`${adm}/orders`, { params: p }).then((r) => r.data),
   orderStatus: (id: string, status: string) => api.patch(`${adm}/orders/${id}/status`, { status }).then((r) => r.data),

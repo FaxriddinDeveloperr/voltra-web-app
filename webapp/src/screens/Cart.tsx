@@ -39,7 +39,6 @@ export default function Cart() {
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 500, fontSize: 14, lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{l.product.nameUz}</div>
                 <div className="price" style={{ fontSize: 16, marginTop: 4 }}>{priceUsd(l.product.priceUsd)}</div>
-                <div className="muted" style={{ fontSize: 12 }}>Mavjud: {l.product.stock} dona</div>
               </div>
               <button onClick={() => remove(l.id)} className="press" style={{ alignSelf: 'flex-start' }}><Trash2 size={20} color="var(--accent-deep)" /></button>
             </div>

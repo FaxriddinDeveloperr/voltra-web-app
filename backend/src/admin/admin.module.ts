@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -11,10 +12,16 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { diskStorage } from 'multer';
+import { existsSync, mkdirSync } from 'fs';
+import { extname, join } from 'path';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { PriceSyncService } from '../price-sync/price-sync.service';
@@ -37,6 +44,22 @@ const dec = (v: unknown) =>
   v === null || v === undefined || v === ''
     ? null
     : new Prisma.Decimal(v as Prisma.Decimal.Value);
+
+// ── Rasm yuklash (multer) sozlamasi ──────────────────────────
+const UPLOAD_SUBDIR = 'products';
+const UPLOAD_DIR = join(process.cwd(), process.env.UPLOADS_DIR ?? 'uploads', UPLOAD_SUBDIR);
+const imageStorage = diskStorage({
+  destination: (_req, _file, cb) => {
+    if (!existsSync(UPLOAD_DIR)) mkdirSync(UPLOAD_DIR, { recursive: true });
+    cb(null, UPLOAD_DIR);
+  },
+  filename: (_req, file, cb) => {
+    const ext = (extname(file.originalname) || '.jpg').toLowerCase();
+    const name = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+    cb(null, name);
+  },
+});
+interface MulterFile { filename: string }
 
 @Injectable()
 export class AdminService {
@@ -173,6 +196,24 @@ export class AdminService {
   async deleteProduct(id: string) {
     await this.exists('product', id);
     return this.prisma.product.delete({ where: { id } });
+  }
+
+  // Mahsulot rasmlari
+  async addImage(productId: string, url: string) {
+    if (!url) throw new BadRequestException('url majburiy');
+    await this.exists('product', productId);
+    const max = await this.prisma.productImage.aggregate({
+      where: { productId },
+      _max: { sortOrder: true },
+    });
+    return this.prisma.productImage.create({
+      data: { productId, url, sortOrder: (max._max.sortOrder ?? -1) + 1 },
+    });
+  }
+
+  async removeImage(imageId: string) {
+    await this.exists('productImage', imageId);
+    return this.prisma.productImage.delete({ where: { id: imageId } });
   }
 
   // ── Orders ───────────────────────────────────────────────────
@@ -396,6 +437,29 @@ export class AdminController {
   }
   @Delete('products/:id') deleteProduct(@Param('id') id: string) {
     return this.admin.deleteProduct(id);
+  }
+
+  // Rasm yuklash (qurilmadan) — /uploads/products/... URL qaytaradi
+  @Post('upload')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: imageStorage,
+      limits: { fileSize: 10 * 1024 * 1024 },
+      fileFilter: (_req, file, cb) =>
+        cb(null, /^image\//.test(file.mimetype)),
+    }),
+  )
+  upload(@UploadedFile() file?: MulterFile) {
+    if (!file) throw new BadRequestException('Rasm yuborilmadi (faqat rasm, ≤10MB)');
+    return { url: `/uploads/${UPLOAD_SUBDIR}/${file.filename}` };
+  }
+
+  @Post('products/:id/images') addImage(@Param('id') id: string, @Body() b: Body0) {
+    return this.admin.addImage(id, String(b.url ?? ''));
+  }
+  @Delete('products/:id/images/:imageId') removeImage(@Param('imageId') imageId: string) {
+    return this.admin.removeImage(imageId);
   }
 
   // Orders
