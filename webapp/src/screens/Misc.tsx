@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ShoppingBag, FileText, Wrench, Check } from 'lucide-react';
-import { Api, type Order, type Region, type City, type ServiceItem } from '../api';
+import { Api, type Region, type City } from '../api';
+import { useQuery, invalidate } from '../useQuery';
 import { priceUzs, toE164, maskInput, phoneFmt } from '../lib';
 import { TopBar } from '../shell';
 import { Select } from '../Select';
@@ -10,8 +11,7 @@ import { useAuth } from '../store';
 
 // ── Buyurtmalar ─────────────────────────────────────────────
 export function Orders() {
-  const [list, setList] = useState<Order[] | null>(null);
-  useEffect(() => { Api.orders().then(setList).catch(() => setList([])); }, []);
+  const { data: list } = useQuery('orders', Api.orders);
   const labels: Record<string, string> = { NEW: 'Yangi', CONFIRMED: 'Tasdiqlangan', PROCESSING: 'Jarayonda', SHIPPED: "Yo'lda", DELIVERED: 'Yetkazilgan', CANCELLED: 'Bekor' };
   return (
     <div><TopBar title="Buyurtmalarim" back />
@@ -36,8 +36,7 @@ export function Orders() {
 
 // ── Arizalar ────────────────────────────────────────────────
 export function Applications() {
-  const [list, setList] = useState<{ id: string; type: string; status: string; createdAt: string }[] | null>(null);
-  useEffect(() => { Api.applications().then((d) => setList(d as never)).catch(() => setList([])); }, []);
+  const { data: list } = useQuery('applications', Api.applications as () => Promise<{ id: string; type: string; status: string; createdAt: string }[]>);
   const t: Record<string, string> = { SERVICE: 'Xizmat arizasi', DEALER: 'Diler arizasi', SELLER: 'Savdo vakili', MASTER: 'Usta arizasi' };
   return (
     <div><TopBar title="Arizalarim" back />
@@ -59,8 +58,7 @@ export function Applications() {
 // ── Xizmatlar ───────────────────────────────────────────────
 export function Services() {
   const nav = useNavigate();
-  const [list, setList] = useState<ServiceItem[] | null>(null);
-  useEffect(() => { Api.services().then(setList).catch(() => setList([])); }, []);
+  const { data: list } = useQuery('services', Api.services);
   return (
     <div><TopBar title="Xizmatlar" back />
       {!list ? <GridSkeleton /> : (
@@ -141,6 +139,7 @@ function AppForm({ title, type, serviceId, powerField, priceField }: { title: st
         type, serviceId, region: regions.find((r) => r.id === region)?.nameUz, city: cities.find((c) => c.id === city)?.nameUz,
         fullName: f.fullName, phone: toE164(f.phone), power: f.power, servicePrice: f.servicePrice, comment: f.comment,
       });
+      invalidate('applications');
       setDone(true);
     } finally { setBusy(false); }
   }
@@ -184,8 +183,7 @@ function AppForm({ title, type, serviceId, powerField, priceField }: { title: st
 // ── Kontent ─────────────────────────────────────────────────
 export function Content() {
   const { key = 'about' } = useParams();
-  const [data, setData] = useState<{ titleUz?: string; bodyUz?: string } | null>(null);
-  useEffect(() => { Api.content(key).then((d) => setData(d as never)).catch(() => setData({})); }, [key]);
+  const { data } = useQuery(`content:${key}`, Api.content.bind(null, key) as () => Promise<{ titleUz?: string; bodyUz?: string }>);
   if (!data) return (<><TopBar back /><Spinner center /></>);
   return (
     <div><TopBar title={data.titleUz || (key === 'about' ? 'Biz haqimizda' : 'Oferta')} back />

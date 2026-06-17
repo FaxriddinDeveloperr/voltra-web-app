@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Heart, Grid2x2, Wrench, Handshake, Info } from 'lucide-react';
-import { Api, type Banner, type Brand, type Product } from '../api';
+import { Api, type Product } from '../api';
+import { useQuery } from '../useQuery';
 import { Logo } from '../shell';
 import { Img, ProductCard } from '../components';
 
@@ -30,20 +31,12 @@ const QA = [
 
 export default function Home() {
   const nav = useNavigate();
-  const [banners, setBanners] = useState<Banner[]>([]);
-  const [hot, setHot] = useState<Product[]>([]);
-  const [fresh, setFresh] = useState<Product[]>([]);
-  const [best, setBest] = useState<Product[]>([]);
-  const [brands, setBrands] = useState<Brand[]>([]);
+  const { data: banners = [] } = useQuery('banners', Api.banners);
+  const { data: hot = [] } = useQuery('hot', Api.hot);
+  const { data: fresh = [] } = useQuery('new', Api.newest);
+  const { data: best = [] } = useQuery('best', Api.best);
+  const { data: brands = [] } = useQuery('brands', Api.brands);
   const [bi, setBi] = useState(0);
-
-  useEffect(() => {
-    Api.banners().then(setBanners).catch(() => {});
-    Api.hot().then(setHot).catch(() => {});
-    Api.newest().then(setFresh).catch(() => {});
-    Api.best().then(setBest).catch(() => {});
-    Api.brands().then(setBrands).catch(() => {});
-  }, []);
 
   useEffect(() => {
     if (banners.length < 2) return;

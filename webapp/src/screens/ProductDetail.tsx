@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Heart, Zap, ShoppingCart, Download } from 'lucide-react';
-import { Api, type Product } from '../api';
+import { Api } from '../api';
+import { useQuery } from '../useQuery';
 import { priceUsd, priceUzs } from '../lib';
 import { TopBar } from '../shell';
 import { Img, Spinner, PriceRow } from '../components';
@@ -10,15 +11,13 @@ import { useCart, useFav } from '../store';
 export default function ProductDetail() {
   const { id = '' } = useParams();
   const nav = useNavigate();
-  const [p, setP] = useState<Product | null>(null);
+  const { data: p } = useQuery(id ? `product:${id}` : null, () => Api.product(id));
   const [gi, setGi] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
   const [adding, setAdding] = useState(false);
   const fav = useFav((s) => s.ids.has(id));
   const toggleFav = useFav((s) => s.toggle);
   const addCart = useCart((s) => s.add);
-
-  useEffect(() => { Api.product(id).then(setP).catch(() => {}); }, [id]);
 
   async function add() {
     setAdding(true);

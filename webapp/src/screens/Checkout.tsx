@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Truck, Store, Check, Send } from 'lucide-react';
 import { Api, type Region, type City, type PickupPoint } from '../api';
 import { priceUsd, priceUzs, toE164, phoneFmt, maskInput, tgInitData, tgRequestPhone } from '../lib';
+import { invalidate } from '../useQuery';
 import { TopBar } from '../shell';
 import { Select } from '../Select';
 import { useAuth, useCart } from '../store';
@@ -88,6 +89,7 @@ export default function Checkout() {
     try {
       const order = await Api.createOrder(body);
       clearCart();
+      invalidate('orders');
       setDone(order.orderNumber);
     } catch { alert('Buyurtma yaratilmadi'); } finally { setSubmitting(false); }
   }

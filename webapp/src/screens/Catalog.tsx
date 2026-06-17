@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import { Api, type Category } from '../api';
+import { Api } from '../api';
+import { useQuery } from '../useQuery';
 import { TopBar } from '../shell';
 import { Img, GridSkeleton } from '../components';
 
 export default function Catalog() {
   const nav = useNavigate();
-  const [cats, setCats] = useState<Category[] | null>(null);
-  useEffect(() => { Api.categories().then(setCats).catch(() => setCats([])); }, []);
+  const { data: cats } = useQuery('categories', Api.categories);
   return (
     <div>
       <TopBar title="Katalog" />

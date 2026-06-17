@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart } from 'lucide-react';
-import { Api, type Product } from '../api';
+import { Api } from '../api';
+import { useQuery } from '../useQuery';
 import { TopBar } from '../shell';
 import { ProductGrid, GridSkeleton, Empty } from '../components';
 import { useFav } from '../store';
@@ -9,8 +9,8 @@ import { useFav } from '../store';
 export default function Favorites() {
   const nav = useNavigate();
   const ids = useFav((s) => s.ids);
-  const [items, setItems] = useState<Product[] | null>(null);
-  useEffect(() => { Api.favorites().then(setItems).catch(() => setItems([])); }, [ids]);
+  const key = `favorites:${[...ids].sort().join(',')}`;
+  const { data: items } = useQuery(key, Api.favorites);
   return (
     <div>
       <TopBar title="Sevimlilar" back />
