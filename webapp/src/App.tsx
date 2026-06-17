@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate, useNavigationType } from 'react-router-dom';
 import { telegram } from './lib';
 import { useAuth, useCart, useFav, useTheme } from './store';
 import { Logo, BottomNav } from './shell';
@@ -20,6 +20,37 @@ import {
 import AdminApp from './admin/AdminApp';
 
 const TAB_PATHS = ['/home', '/catalog', '/cart', '/profile'];
+
+// Sahifa scroll holatini eslab qoladi: orqaga (POP) qaytilganda o'sha joyga tiklaydi.
+const scrollPositions = new Map<string, number>();
+function ScrollRestoration() {
+  const loc = useLocation();
+  const navType = useNavigationType();
+  useEffect(() => {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    const key = loc.key;
+    const save = () => scrollPositions.set(key, window.scrollY);
+    window.addEventListener('scroll', save, { passive: true });
+
+    if (navType === 'POP') {
+      // Kontent (ma'lumot) yuklanib, sahifa balandligi yetguncha qayta urinamiz
+      const target = scrollPositions.get(key) ?? 0;
+      let tries = 0;
+      const restore = () => {
+        window.scrollTo(0, target);
+        if (Math.abs(window.scrollY - target) > 2 && tries < 60) {
+          tries++;
+          requestAnimationFrame(restore);
+        }
+      };
+      requestAnimationFrame(restore);
+    } else {
+      window.scrollTo(0, 0);
+    }
+    return () => { save(); window.removeEventListener('scroll', save); };
+  }, [loc.key, navType]);
+  return null;
+}
 
 export default function App() {
   const status = useAuth((s) => s.status);
@@ -67,6 +98,7 @@ export default function App() {
   const showNav = TAB_PATHS.includes(loc.pathname);
   return (
     <div className="app" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <ScrollRestoration />
       <div style={{ flex: 1 }}>
         <Routes>
           <Route path="/home" element={<Home />} />
