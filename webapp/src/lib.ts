@@ -61,7 +61,7 @@ interface TG {
   ready(): void; expand(): void;
   colorScheme?: 'light' | 'dark';
   initData?: string;
-  initDataUnsafe?: { user?: { id?: number; first_name?: string } };
+  initDataUnsafe?: { user?: { id?: number; first_name?: string; photo_url?: string } };
   setHeaderColor?(c: string): void; setBackgroundColor?(c: string): void;
   onEvent?(e: string, cb: () => void): void;
   themeParams?: Record<string, string>;

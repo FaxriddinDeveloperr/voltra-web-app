@@ -76,7 +76,7 @@ export interface PickupPoint { id: string; name: string; city: string }
 export interface CartLine { id: string; productId: string; quantity: number; product: Product; lineTotal: string }
 export interface Cart { items: CartLine[]; count: number; itemsTotal: string; discountTotal: string; grandTotal: string }
 export interface Order { id: string; orderNumber: string; status: string; grandTotal: string; createdAt: string; items: { productName: string; price: string; quantity: number }[] }
-export interface AppUser { id: string; phone?: string | null; telegramId?: string | null; firstName?: string; lastName?: string; middleName?: string }
+export interface AppUser { id: string; phone?: string | null; telegramId?: string | null; avatarUrl?: string | null; firstName?: string; lastName?: string; middleName?: string }
 
 interface Paged<T> { items: T[]; total: number }
 

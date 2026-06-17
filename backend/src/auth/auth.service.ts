@@ -132,6 +132,7 @@ export class AuthService {
       first_name?: string;
       last_name?: string;
       username?: string;
+      photo_url?: string;
     };
     const telegramId = String(tgUser.id);
 
@@ -144,8 +145,15 @@ export class AuthService {
           username: tgUser.username ?? null,
           firstName: tgUser.first_name ?? null,
           lastName: tgUser.last_name ?? null,
+          avatarUrl: tgUser.photo_url ?? null,
           isVerified: true,
         },
+      });
+    } else if (tgUser.photo_url && tgUser.photo_url !== user.avatarUrl) {
+      // Rasm yangilanган bo'lsa — yangilab qo'yamiz
+      user = await this.prisma.user.update({
+        where: { id: user.id },
+        data: { avatarUrl: tgUser.photo_url },
       });
     }
 

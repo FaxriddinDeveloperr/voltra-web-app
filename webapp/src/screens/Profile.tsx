@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, ShoppingBag, FileText, Headphones, Moon, Info, ScrollText, LogOut, ChevronRight, Sun, SunMoon, Check, ShieldCheck, Phone, Send, AtSign, MapPin } from 'lucide-react';
-import { phoneFmt, tgInitData } from '../lib';
+import { phoneFmt, tgInitData, telegram } from '../lib';
 import { Api } from '../api';
 import { useQuery } from '../useQuery';
 import { useAuth, useTheme } from '../store';
@@ -24,7 +24,12 @@ export default function Profile() {
       <header style={{ padding: '16px', textAlign: 'center' }}><h2 style={{ fontSize: 18, fontWeight: 700 }}>Profil</h2></header>
 
       <button className="press" onClick={() => nav('/profile/edit')} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 16px 12px', width: '100%', textAlign: 'left' }}>
-        <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--accent)', display: 'grid', placeItems: 'center', flex: '0 0 auto' }}><User size={28} color="var(--on-accent)" /></span>
+        {(() => {
+          const avatar = user?.avatarUrl || telegram()?.initDataUnsafe?.user?.photo_url;
+          return avatar
+            ? <img src={avatar} alt="" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flex: '0 0 auto' }} />
+            : <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--accent)', display: 'grid', placeItems: 'center', flex: '0 0 auto' }}><User size={28} color="var(--on-accent)" /></span>;
+        })()}
         <span style={{ flex: 1 }}>
           <div style={{ fontWeight: 700, fontSize: 16 }}>{user?.phone ? phoneFmt(user.phone) : (user && (user.firstName || user.lastName) ? `${user.lastName ?? ''} ${user.firstName ?? ''}`.trim() : 'Profil')}</div>
           <div className="muted" style={{ fontSize: 13 }}>{user?.phone ? (user.firstName || user.lastName ? `${user.lastName ?? ''} ${user.firstName ?? ''}`.trim() : "Profilni to'ldiring") : "Telefon: buyurtmada ulashiladi"}</div>
