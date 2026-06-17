@@ -346,14 +346,14 @@ export class AdminService {
   }
   createService(b: Body0) {
     return this.prisma.service.create({
-      data: pick(b, ['nameUz', 'nameRu', 'isActive', 'comingSoon', 'hasPowerField', 'sortOrder']) as Prisma.ServiceCreateInput,
+      data: pick(b, ['nameUz', 'nameRu', 'imageUrl', 'isActive', 'comingSoon', 'hasPowerField', 'sortOrder']) as Prisma.ServiceCreateInput,
     });
   }
   async updateService(id: string, b: Body0) {
     await this.exists('service', id);
     return this.prisma.service.update({
       where: { id },
-      data: pick(b, ['nameUz', 'nameRu', 'isActive', 'comingSoon', 'hasPowerField', 'sortOrder']),
+      data: pick(b, ['nameUz', 'nameRu', 'imageUrl', 'isActive', 'comingSoon', 'hasPowerField', 'sortOrder']),
     });
   }
   async deleteService(id: string) {

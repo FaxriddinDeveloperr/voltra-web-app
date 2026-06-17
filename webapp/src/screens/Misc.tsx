@@ -71,7 +71,12 @@ export function Services() {
               <button key={s.id} disabled={!on} onClick={() => nav(`/services/apply?id=${s.id}&name=${encodeURIComponent(s.nameUz)}&power=${s.hasPowerField ? 1 : 0}`)}
                 className={on ? 'press card' : 'card'} style={{ padding: 16, aspectRatio: 1.1, position: 'relative', opacity: on ? 1 : 0.7, display: 'grid', placeItems: 'center', textAlign: 'center' }}>
                 {s.comingSoon && <span className="badge badge-status" style={{ position: 'absolute', top: 10, left: 10 }}>Tez kunda</span>}
-                <div><Wrench size={36} color="var(--accent-deep)" /><div style={{ fontWeight: 600, fontSize: 14, marginTop: 8 }}>{s.nameUz}</div></div>
+                <div>
+                  {s.imageUrl
+                    ? <img src={s.imageUrl} alt="" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 14, margin: '0 auto' }} />
+                    : <Wrench size={36} color="var(--accent-deep)" />}
+                  <div style={{ fontWeight: 600, fontSize: 14, marginTop: 8 }}>{s.nameUz}</div>
+                </div>
               </button>
             );
           })}
