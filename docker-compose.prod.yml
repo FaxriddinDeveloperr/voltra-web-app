@@ -1,0 +1,36 @@
+# Voltra Mini App — production (izolyatsiya: alohida konteyner, tarmoq, port).
+# Boshqa loyihalarga ta'sir qilmaydi. Port faqat 127.0.0.1:3010 (tashqariga ochiq emas).
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: voltra-mini-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: voltra
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: voltra
+    volumes:
+      - voltra_db:/var/lib/postgresql/data
+    mem_limit: 256m
+    networks: [voltra]
+
+  app:
+    image: voltra-mini:latest
+    container_name: voltra-mini-app
+    restart: unless-stopped
+    env_file: ./backend/.env.production
+    ports:
+      - "127.0.0.1:3010:3000"
+    volumes:
+      - voltra_uploads:/app/backend/uploads
+    mem_limit: 512m
+    depends_on: [db]
+    networks: [voltra]
+
+volumes:
+  voltra_db:
+  voltra_uploads:
+
+networks:
+  voltra:
+    name: voltra-mini-net
