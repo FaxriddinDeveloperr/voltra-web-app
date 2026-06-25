@@ -11,10 +11,10 @@ export function Logo({ size = 40, wordmark, onDark }: { size?: number; wordmark?
         background: onDark ? 'rgba(255,255,255,.10)' : 'var(--card)',
         border: `1.4px solid ${onDark ? 'rgba(255,255,255,.25)' : 'var(--accent-border)'}`,
         boxShadow: onDark ? 'none' : 'var(--shadow-soft)',
-        display: 'grid', placeItems: 'center',
+        display: 'grid', placeItems: 'center', overflow: 'hidden',
       }}
     >
-      <img src={logoUrl} alt="Voltra" width={size * 0.62} height={size * 0.62} style={{ objectFit: 'contain' }} />
+      <img src={logoUrl} alt="Voltra" style={{ width: size * 0.72, height: 'auto', objectFit: 'contain', display: 'block' }} />
     </div>
   );
   if (!wordmark) return tile;
