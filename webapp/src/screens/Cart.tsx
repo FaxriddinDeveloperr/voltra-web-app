@@ -29,7 +29,7 @@ export default function Cart() {
   }
 
   return (
-    <div style={{ paddingBottom: 90 }}>
+    <div style={{ paddingBottom: 'calc(160px + env(safe-area-inset-bottom))' }}>
       <TopBar title="Savat" back />
       <div style={{ padding: 16, display: 'grid', gap: 12 }}>
         {items.map((l) => (
@@ -62,7 +62,7 @@ export default function Cart() {
         </div>
       </div>
 
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 20, background: 'var(--bg)', borderTop: '1px solid var(--border)', padding: 16, maxWidth: 520, margin: '0 auto' }}>
+      <div style={{ position: 'fixed', bottom: 'calc(65px + env(safe-area-inset-bottom))', left: 0, right: 0, zIndex: 20, background: 'var(--bg)', borderTop: '1px solid var(--border)', padding: 16, maxWidth: 520, margin: '0 auto' }}>
         <button className="btn" onClick={() => nav('/checkout')}>Buyurtma berish</button>
       </div>
     </div>
