@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import {
   Package, ShoppingCart, FileText, Image, FolderTree, Tag, Wrench,
-  MapPin, ScrollText, Users, RefreshCw, ChevronRight, TrendingUp, Layers, Phone,
+  MapPin, ScrollText, Users, RefreshCw, ChevronRight, TrendingUp, Layers, Phone, Send,
 } from 'lucide-react';
 import { Admin, type AdminStats } from '../api';
 import { useAuth } from '../store';
@@ -10,6 +10,7 @@ import { ToastHost, AdminHeader, Loader, useToast } from './ui';
 import {
   AdminProducts, AdminOrders, AdminApplications, AdminBanners, AdminCategories,
   AdminBrands, AdminServices, AdminPickups, AdminContents, AdminUsers, AdminContacts,
+  AdminOrderGroups,
 } from './sections';
 
 export default function AdminApp() {
@@ -35,6 +36,7 @@ export default function AdminApp() {
         <Route path="brands" element={<AdminBrands />} />
         <Route path="services" element={<AdminServices />} />
         <Route path="pickups" element={<AdminPickups />} />
+        <Route path="order-groups" element={<AdminOrderGroups />} />
         <Route path="content" element={<AdminContents />} />
         <Route path="contacts" element={<AdminContacts />} />
         <Route path="users" element={<AdminUsers />} />
@@ -68,6 +70,7 @@ function Dashboard() {
     { to: 'brands', icon: Tag, label: 'Brendlar', count: stats?.counts.brands },
     { to: 'services', icon: Wrench, label: 'Xizmatlar', count: stats?.counts.services },
     { to: 'pickups', icon: MapPin, label: 'Olib ketish punktlari' },
+    { to: 'order-groups', icon: Send, label: 'Buyurtma guruhlari' },
     { to: 'content', icon: ScrollText, label: 'Kontent sahifalari' },
     { to: 'contacts', icon: Phone, label: 'Aloqa ma\'lumotlari' },
     { to: 'users', icon: Users, label: 'Foydalanuvchilar', count: stats?.counts.users },

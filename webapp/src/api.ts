@@ -160,6 +160,7 @@ export interface AdminService { id: string; nameUz: string; nameRu?: string; ima
 export interface AdminPickup { id: string; name: string; city: string; lat?: number; lng?: number }
 export interface AdminContent { id: string; key: string; titleUz?: string; bodyUz?: string }
 export interface AdminUser { id: string; phone: string; firstName?: string; lastName?: string; createdAt: string; _count?: { orders: number; applications: number } }
+export interface AdminOrderGroup { chatId: string; title?: string; isActive: boolean; addedAt: string }
 
 const adm = '/admin';
 export const Admin = {
@@ -214,4 +215,8 @@ export const Admin = {
 
   users: () => api.get<AdminUser[]>(`${adm}/users`).then((r) => r.data),
   priceSync: () => api.post<{ updated: number }>(`${adm}/price-sync`).then((r) => r.data),
+
+  orderGroups: () => api.get<AdminOrderGroup[]>(`${adm}/order-groups`).then((r) => r.data),
+  updateOrderGroup: (chatId: string, b: Record<string, unknown>) => api.patch(`${adm}/order-groups/${chatId}`, b).then((r) => r.data),
+  deleteOrderGroup: (chatId: string) => api.delete(`${adm}/order-groups/${chatId}`).then((r) => r.data),
 };

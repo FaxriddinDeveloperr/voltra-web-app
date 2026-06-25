@@ -210,6 +210,15 @@ model PickupPoint {
   lng  Float?
 }
 
+// Buyurtma yuboriladigan Telegram guruhlari.
+// Bot guruhga qo'shilib admin qilinganda avtomatik yoziladi.
+model OrderGroup {
+  chatId   String   @id // Telegram chat id (guruhlar uchun manfiy son)
+  title    String? // Guruh nomi
+  isActive Boolean  @default(true) // Buyurtma shu guruhga ketadimi
+  addedAt  DateTime @default(now())
+}
+
 // Xizmat turlari
 model Service {
   id            String  @id @default(uuid())

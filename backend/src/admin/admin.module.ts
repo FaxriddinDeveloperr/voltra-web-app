@@ -394,6 +394,22 @@ export class AdminService {
     });
   }
 
+  // ── Order groups (buyurtma yuboriladigan Telegram guruhlari) ──
+  orderGroups() {
+    return this.prisma.orderGroup.findMany({ orderBy: { addedAt: 'desc' } });
+  }
+  async updateOrderGroup(chatId: string, b: Body0) {
+    await this.exists('orderGroup', chatId, 'chatId');
+    return this.prisma.orderGroup.update({
+      where: { chatId },
+      data: pick(b, ['isActive', 'title']),
+    });
+  }
+  async deleteOrderGroup(chatId: string) {
+    await this.exists('orderGroup', chatId, 'chatId');
+    return this.prisma.orderGroup.delete({ where: { chatId } });
+  }
+
   // ── Users ────────────────────────────────────────────────────
   users() {
     return this.prisma.user.findMany({
@@ -409,9 +425,9 @@ export class AdminService {
   }
 
   // ── helper ───────────────────────────────────────────────────
-  private async exists(model: string, id: string) {
+  private async exists(model: string, id: string, key = 'id') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const found = await (this.prisma as any)[model].findUnique({ where: { id } });
+    const found = await (this.prisma as any)[model].findUnique({ where: { [key]: id } });
     if (!found) throw new NotFoundException('Topilmadi');
   }
 }
@@ -559,6 +575,17 @@ export class AdminController {
   }
   @Put('content/:key') upsertContent(@Param('key') key: string, @Body() b: Body0) {
     return this.admin.upsertContent(key, b);
+  }
+
+  // Order groups (buyurtma guruhlari)
+  @Get('order-groups') orderGroups() {
+    return this.admin.orderGroups();
+  }
+  @Patch('order-groups/:chatId') updateOrderGroup(@Param('chatId') chatId: string, @Body() b: Body0) {
+    return this.admin.updateOrderGroup(chatId, b);
+  }
+  @Delete('order-groups/:chatId') deleteOrderGroup(@Param('chatId') chatId: string) {
+    return this.admin.deleteOrderGroup(chatId);
   }
 
   // Users

@@ -17,6 +17,11 @@ interface TgUpdate {
     text?: string;
     from?: { first_name?: string };
   };
+  // Botning chatdagi statusi o'zgarganda keladi (guruhga qo'shilish/chiqarilish)
+  my_chat_member?: {
+    chat?: { id?: number; title?: string; type?: string };
+    new_chat_member?: { status?: string };
+  };
 }
 
 @ApiTags('telegram')
@@ -36,6 +41,21 @@ export class TelegramController {
   ) {
     const expected = this.config.get<string>('TELEGRAM_WEBHOOK_SECRET');
     if (expected && secret !== expected) return { ok: false };
+
+    // Bot guruhga qo'shilib admin qilinsa — guruhni buyurtma ro'yxatiga yozamiz.
+    const cm = update?.my_chat_member;
+    if (cm?.chat?.id) {
+      const status = cm.new_chat_member?.status;
+      const type = cm.chat.type ?? '';
+      const isGroup = type === 'group' || type === 'supergroup';
+      if (isGroup && (status === 'administrator' || status === 'creator')) {
+        await this.telegram.registerGroup(String(cm.chat.id), cm.chat.title);
+      } else if (status === 'left' || status === 'kicked' || status === 'member' || status === 'restricted') {
+        // Botdan adminlik olib qo'yilsa yoki guruhdan chiqarilsa — ro'yxatdan o'chiramiz.
+        await this.telegram.removeGroup(String(cm.chat.id));
+      }
+      return { ok: true };
+    }
 
     const msg = update?.message;
     const text = msg?.text?.trim() ?? '';

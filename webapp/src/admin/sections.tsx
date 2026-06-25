@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Plus, Trash2, Pencil, RefreshCw, Eye, EyeOff, Phone, Package, ImagePlus, X,
+  Send,
 } from 'lucide-react';
 import {
   Admin, type AdminProduct, type AdminOrder, type AdminApplication,
   type AdminBanner, type AdminCategory, type AdminBrand, type AdminService,
   type AdminPickup, type AdminContent, type AdminUser, type ProductImage,
+  type AdminOrderGroup,
 } from '../api';
 import { Select } from '../Select';
 import {
@@ -668,6 +670,60 @@ function PickupModal({ p, onClose, onSaved }: { p: AdminPickup | null; onClose: 
       </div>
       <button className="adm-btn primary" style={{ width: '100%', height: 48 }} onClick={save} disabled={saving}>{saving ? 'Saqlanmoqda…' : 'Saqlash'}</button>
     </Modal>
+  );
+}
+
+// ═══════════════ BUYURTMA GURUHLARI ═══════════════
+export function AdminOrderGroups() {
+  const [items, setItems] = useState<AdminOrderGroup[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState<string | null>(null);
+  const toast = useToast(); const confirm = useConfirm();
+  const load = () => { setLoading(true); Admin.orderGroups().then(setItems).finally(() => setLoading(false)); };
+  useEffect(() => { load(); }, []);
+
+  const toggle = async (g: AdminOrderGroup, on: boolean) => {
+    setBusy(g.chatId);
+    setItems((s) => s.map((x) => (x.chatId === g.chatId ? { ...x, isActive: on } : x)));
+    try { await Admin.updateOrderGroup(g.chatId, { isActive: on }); }
+    catch { toast('Xato', true); load(); } finally { setBusy(null); }
+  };
+  const del = async (g: AdminOrderGroup) => {
+    if (await confirm("Guruh ro'yxatdan o'chirilsinmi?")) {
+      await Admin.deleteOrderGroup(g.chatId);
+      setItems((s) => s.filter((x) => x.chatId !== g.chatId));
+      toast("O'chirildi");
+    }
+  };
+
+  return (
+    <div className="adm">
+      <AdminHeader title="Buyurtma guruhlari" right={
+        <button className="adm-iconbtn" onClick={load} aria-label="Yangilash"><RefreshCw size={18} /></button>
+      } />
+      <div className="card" style={{ padding: 14, marginBottom: 14, fontSize: 13, color: 'var(--text-2)', lineHeight: 1.5 }}>
+        <b style={{ color: 'var(--text-1)' }}>Qanday qo'shiladi?</b><br />
+        1. Botni kerakli Telegram guruhiga qo'shing.<br />
+        2. Botni guruhda <b>admin</b> qiling.<br />
+        Shundan so'ng guruh shu yerda avtomatik chiqadi. Faol (✓) guruhlarga buyurtmalar yuboriladi.
+      </div>
+      {loading ? <Loader /> : items.length === 0 ? (
+        <Empty text="Hali guruh qo'shilmagan" />
+      ) : items.map((g) => (
+        <div className="adm-card" key={g.chatId}>
+          <div className="hd">
+            <Send size={16} color="var(--text-2)" />
+            <span className="ti">{g.title || 'Guruh'}</span>
+            <Pill tone={g.isActive ? 'green' : 'gray'}>{g.isActive ? 'Faol' : "O'chiq"}</Pill>
+          </div>
+          <div className="sub" style={{ fontFamily: 'monospace' }}>{g.chatId}</div>
+          <div className="adm-actions" style={{ alignItems: 'center' }}>
+            <Toggle label="Buyurtma yuborilsin" on={g.isActive} onChange={(v) => toggle(g, v)} />
+            <button className="adm-btn sm danger" disabled={busy === g.chatId} onClick={() => del(g)}><Trash2 size={15} /></button>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 
