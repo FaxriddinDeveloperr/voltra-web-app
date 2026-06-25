@@ -5,7 +5,7 @@ import type { Product } from './api';
 import { priceUsd, priceUzs } from './lib';
 import { useFav } from './store';
 
-export function Img({ url, style }: { url?: string; style?: React.CSSProperties }) {
+export function Img({ url, style, fit = 'cover' }: { url?: string; style?: React.CSSProperties; fit?: 'cover' | 'contain' }) {
   const [err, setErr] = useState(false);
   if (!url || err) {
     return (
@@ -14,7 +14,7 @@ export function Img({ url, style }: { url?: string; style?: React.CSSProperties 
       </div>
     );
   }
-  return <img src={url} onError={() => setErr(true)} style={{ width: '100%', height: '100%', objectFit: 'cover', ...style }} />;
+  return <img src={url} onError={() => setErr(true)} style={{ width: '100%', height: '100%', objectFit: fit, ...style }} />;
 }
 
 export function HeartBtn({ id }: { id: string }) {
@@ -43,8 +43,8 @@ export function ProductCard({ p, horizontal }: { p: Product; horizontal?: boolea
       onClick={() => nav(`/product/${p.id}`)}
       style={{ width: horizontal ? 160 : 'auto', flex: horizontal ? '0 0 auto' : undefined }}
     >
-      <div style={{ position: 'relative', aspectRatio: '1', borderRadius: 'var(--r-card)', background: 'var(--surface)', boxShadow: 'var(--shadow-float)', overflow: 'hidden' }}>
-        <Img url={p.images?.[0]?.url} />
+      <div style={{ position: 'relative', aspectRatio: '1', borderRadius: 'var(--r-card)', background: '#fff', boxShadow: 'var(--shadow-float)', overflow: 'hidden' }}>
+        <Img url={p.images?.[0]?.url} fit="contain" />
         {p.isXit && (
           <span className="badge badge-xit" style={{ position: 'absolute', top: 10, left: 10 }}>
             <Zap size={12} /> Xit

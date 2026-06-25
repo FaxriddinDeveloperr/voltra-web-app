@@ -35,7 +35,7 @@ export default function Cart() {
         {items.map((l) => (
           <div key={l.id} className="card" style={{ padding: 12 }}>
             <div style={{ display: 'flex', gap: 12 }}>
-              <span style={{ width: 72, height: 72, borderRadius: 12, overflow: 'hidden', flex: '0 0 auto' }}><Img url={l.product.images?.[0]?.url} /></span>
+              <span style={{ width: 72, height: 72, borderRadius: 12, overflow: 'hidden', flex: '0 0 auto', background: '#fff' }}><Img url={l.product.images?.[0]?.url} fit="contain" /></span>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 500, fontSize: 14, lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{l.product.nameUz}</div>
                 <div className="price" style={{ fontSize: 16, marginTop: 4 }}>{priceUsd(l.product.priceUsd)}</div>

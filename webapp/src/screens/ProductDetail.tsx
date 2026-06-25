@@ -35,7 +35,7 @@ export default function ProductDetail() {
           <Heart size={22} fill={fav ? 'var(--danger)' : 'none'} color={fav ? 'var(--danger)' : 'var(--text)'} />
         </button>} />
 
-      <div style={{ aspectRatio: 1, background: 'var(--surface)', position: 'relative' }}>
+      <div style={{ aspectRatio: 1, background: '#fff', position: 'relative' }}>
         {imgs.length > 1 ? (
           <>
             <div
@@ -50,7 +50,7 @@ export default function ProductDetail() {
             >
               {imgs.map((im, i) => (
                 <div key={i} style={{ flex: '0 0 100%', width: '100%', height: '100%', scrollSnapAlign: 'center' }}>
-                  <Img url={im?.url} />
+                  <Img url={im?.url} fit="contain" />
                 </div>
               ))}
             </div>
@@ -66,7 +66,7 @@ export default function ProductDetail() {
             </div>
           </>
         ) : (
-          <Img url={imgs[0]?.url} />
+          <Img url={imgs[0]?.url} fit="contain" />
         )}
       </div>
 

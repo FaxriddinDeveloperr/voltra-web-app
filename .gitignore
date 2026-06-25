@@ -30,3 +30,6 @@ mobile/.idea/
 
 # Uploads (runtime)
 backend/uploads/
+
+# Source product image dump (named originals) — keraksiz repo'da
+img-voltra/
