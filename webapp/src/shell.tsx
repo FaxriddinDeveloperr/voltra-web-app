@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, LayoutGrid, ShoppingCart, User } from 'lucide-react';
 import { useCart } from './store';
+import logoUrl from './assets/logo.png';
 
 export function Logo({ size = 40, wordmark, onDark }: { size?: number; wordmark?: boolean; onDark?: boolean }) {
   const tile = (
@@ -13,14 +14,7 @@ export function Logo({ size = 40, wordmark, onDark }: { size?: number; wordmark?
         display: 'grid', placeItems: 'center',
       }}
     >
-      <svg width={size * 0.56} height={size * 0.56} viewBox="0 0 100 100">
-        {/* chap diagonal */}
-        <polygon points="4,6 30,6 58,94 40,94" fill="var(--accent)" />
-        {/* o'ng yuqori diagonal */}
-        <polygon points="96,6 72,6 54,60 68,60" fill="var(--accent)" />
-        {/* chaqmoq */}
-        <polygon points="62,56 80,56 56,96" fill="var(--accent-deep)" />
-      </svg>
+      <img src={logoUrl} alt="Voltra" width={size * 0.62} height={size * 0.62} style={{ objectFit: 'contain' }} />
     </div>
   );
   if (!wordmark) return tile;
