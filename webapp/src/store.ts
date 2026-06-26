@@ -21,26 +21,32 @@ export const useAuth = create<AuthState>((set) => ({
   status: 'unknown',
   isAdmin: false,
   bootstrap: async () => {
-    // Telegram ichida — avtomatik kirish (OTP shart emas)
-    if (!tokens.access) {
-      const initData = tgInitData();
-      if (initData) {
-        try {
-          const res = await Api.telegramAuth(initData);
-          tokens.set(res.accessToken, res.refreshToken);
-          set({ status: statusFor(res.user), user: res.user });
-          Api.adminCheck().then((isAdmin) => set({ isAdmin }));
-          return;
-        } catch { /* brauzerga/telefon usuliga tushadi */ }
+    const initData = tgInitData();
+    // Telegram ichida — JORIY akkaunt manbai. Har ochilganda shu bilan kiramiz,
+    // chunki bitta telefonda bir nechta akkaunt localStorage'ni bo'lishadi va
+    // eski/boshqa akkaunt tokeni qolib ketgan bo'lishi mumkin.
+    if (initData) {
+      try {
+        const res = await Api.telegramAuth(initData);
+        tokens.set(res.accessToken, res.refreshToken);
+        set({ status: statusFor(res.user), user: res.user });
+        Api.adminCheck().then((isAdmin) => set({ isAdmin }));
+      } catch {
+        // Tasdiqlab bo'lmadi — noto'g'ri akkauntni ko'rsatmaslik uchun guest
+        set({ status: 'guest' });
       }
-      set({ status: 'guest' });
       return;
     }
-    try {
-      const u = await Api.me();
-      set({ status: statusFor(u), user: u });
-      Api.adminCheck().then((isAdmin) => set({ isAdmin }));
-    } catch { tokens.clear(); set({ status: 'guest' }); }
+    // Telegram tashqarisida (brauzer) — saqlangan token bilan
+    if (tokens.access) {
+      try {
+        const u = await Api.me();
+        set({ status: statusFor(u), user: u });
+        Api.adminCheck().then((isAdmin) => set({ isAdmin }));
+        return;
+      } catch { tokens.clear(); }
+    }
+    set({ status: 'guest' });
   },
   verify: async (phone, code) => {
     const res = await Api.verifyOtp(phone, code);
