@@ -61,7 +61,7 @@ export interface ProductImage { id: string; url: string }
 export interface Spec { icon: string; label: string; value: string }
 export interface Product {
   id: string; nameUz: string; slug: string;
-  price: string; oldPrice?: string; priceUsd?: string; discountPct?: number;
+  price: string; oldPrice?: string; priceUsd?: string; priceUsdPerWatt?: string; discountPct?: number;
   stock: number; vatIncluded: boolean; descriptionUz?: string;
   shortFeatures: string[]; specs?: Spec[]; images: ProductImage[];
   datasheetUrl?: string; isHot: boolean; isNew: boolean; isBestSeller: boolean;

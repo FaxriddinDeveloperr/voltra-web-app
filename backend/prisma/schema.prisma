@@ -88,6 +88,7 @@ model Product {
   price         Decimal        @db.Decimal(14, 2) // so'mda
   oldPrice      Decimal?       @db.Decimal(14, 2) // chegirmadan oldingi
   priceUsd      Decimal?       @db.Decimal(10, 2) // y.e. (340 y.e.)
+  priceUsdPerWatt Decimal?     @db.Decimal(10, 4) // Quyosh panellari: 1 Watt narxi ($/W) — asosiy manba
   discountPct   Int? // 3, 15, 56
   currency      String         @default("UZS")
   stock         Int            @default(0) // Sotuvda mavjud: 100 dona

@@ -16,6 +16,7 @@ interface Row {
   label: string;
   priceUzs?: number;
   priceUsd?: number;
+  priceUsdPerWatt?: number;
   priceUzsFrom?: number;
 }
 
@@ -104,6 +105,7 @@ export class PriceSyncService implements OnModuleInit, OnModuleDestroy {
         label: c[2]?.trim(),
         priceUzs: this.num(c[3]),
         priceUsd: this.num(c[4]),
+        priceUsdPerWatt: this.num(c[5]),
         priceUzsFrom: this.num(c[6]),
       });
     }
@@ -149,6 +151,15 @@ export class PriceSyncService implements OnModuleInit, OnModuleDestroy {
   private power(label: string): string | null {
     const m = label.match(/(\d+(?:[.,]\d+)?)\s*(kVt·s|kWh|kVt|kW|kwt|kwh|W)\b/i);
     return m ? `${m[1]} ${this.unit(m[2])}` : null;
+  }
+
+  /** Label'dan quvvatni Watt'da son sifatida ajratadi (kW/kVt -> ×1000). */
+  private watts(label: string): number | null {
+    const m = label.match(/(\d+(?:[.,]\d+)?)\s*(kVt|kW|kwt|W)\b/i);
+    if (!m) return null;
+    const n = Number(m[1].replace(',', '.'));
+    if (!Number.isFinite(n)) return null;
+    return /^k/i.test(m[2]) ? n * 1000 : n;
   }
 
   /** O'lchov birligini tartibga keltirish: kwt -> kVt, kwh -> kWh. */
@@ -205,22 +216,33 @@ export class PriceSyncService implements OnModuleInit, OnModuleDestroy {
 
       let updated = 0;
       for (const r of items) {
-        let priceUzs = r.type === 'system' ? r.priceUzsFrom ?? r.priceUzs : r.priceUzs;
-        let priceUsd = r.priceUsd;
-        if (priceUzs == null && priceUsd != null) priceUzs = Math.round(priceUsd * rate);
-        if (priceUsd == null && priceUzs != null) priceUsd = Math.round((priceUzs / rate) * 100) / 100;
-        if (priceUzs == null) continue;
-
         const cat = this.category(r.label);
         const brand = this.brand(r.label);
         const power = this.power(r.label);
         const isPanel = cat === 'Quyosh panellari';
+
+        let priceUzs = r.type === 'system' ? r.priceUzsFrom ?? r.priceUzs : r.priceUzs;
+        let priceUsd = r.priceUsd;
+
+        // Quyosh paneli: 1 Watt narxi ASOSIY MANBA — donasi narxi = Watt × $/W
+        const w = this.watts(r.label);
+        const perWatt = r.priceUsdPerWatt;
+        if (isPanel && perWatt != null && w != null) {
+          priceUsd = Math.round(w * perWatt * 100) / 100;
+          priceUzs = Math.round(priceUsd * rate);
+        } else {
+          if (priceUzs == null && priceUsd != null) priceUzs = Math.round(priceUsd * rate);
+          if (priceUsd == null && priceUzs != null) priceUsd = Math.round((priceUzs / rate) * 100) / 100;
+        }
+        if (priceUzs == null) continue;
 
         // Faqat jadvaldan keladigan maydonlar (har sinxronda yangilanadi).
         const syncData = {
           nameUz: this.cleanName(r.label),
           price: new Prisma.Decimal(priceUzs),
           priceUsd: priceUsd != null ? new Prisma.Decimal(priceUsd) : null,
+          priceUsdPerWatt:
+            isPanel && perWatt != null ? new Prisma.Decimal(perWatt) : null,
           vatIncluded: true,
           shortFeatures: power ? [`Quvvat: ${power}`] : [],
           specs: power

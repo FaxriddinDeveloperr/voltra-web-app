@@ -24,6 +24,14 @@ export function priceUsd(v: number | string | undefined | null): string {
     .padStart(2, '0')}`;
 }
 
+/** Quyosh paneli — 1 Watt narxi: "$0.158 / Vt". */
+export function pricePerWatt(v: number | string | undefined | null): string {
+  if (v == null || v === '') return '';
+  const d = Number(v);
+  if (!Number.isFinite(d) || d <= 0) return '';
+  return `$${d.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')} / Vt`;
+}
+
 export function phoneFmt(raw: string): string {
   const dd = raw.replace(/\D/g, '');
   const b = dd.startsWith('998') ? dd.slice(3) : dd;

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Zap, SunMedium } from 'lucide-react';
 import type { Product } from './api';
-import { priceUsd, priceUzs } from './lib';
+import { priceUsd, priceUzs, pricePerWatt } from './lib';
 import { useFav } from './store';
 
 export function Img({ url, style, fit = 'cover' }: { url?: string; style?: React.CSSProperties; fit?: 'cover' | 'contain' }) {
@@ -56,6 +56,9 @@ export function ProductCard({ p, horizontal }: { p: Product; horizontal?: boolea
         {p.nameUz}
       </div>
       <div className="price" style={{ fontSize: 16, marginTop: 4 }}>{priceUsd(p.priceUsd)}</div>
+      {p.priceUsdPerWatt && (
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent-deep)', marginTop: 1 }}>{pricePerWatt(p.priceUsdPerWatt)}</div>
+      )}
     </div>
   );
 }
@@ -73,6 +76,9 @@ export function PriceRow({ p }: { p: Product }) {
     <div>
       <div className="price-lg" style={{ color: 'var(--accent-deep)' }}>{priceUsd(p.priceUsd)}</div>
       <div className="muted" style={{ fontSize: 13 }}>≈ {priceUzs(p.price)}</div>
+      {p.priceUsdPerWatt && (
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent-deep)', marginTop: 2 }}>{pricePerWatt(p.priceUsdPerWatt)}</div>
+      )}
     </div>
   );
 }

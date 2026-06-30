@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Heart, Zap, ShoppingCart, Download } from 'lucide-react';
 import { Api } from '../api';
 import { useQuery } from '../useQuery';
-import { priceUsd, priceUzs } from '../lib';
+import { priceUsd, priceUzs, pricePerWatt } from '../lib';
 import { TopBar } from '../shell';
 import { Img, Spinner, PriceRow } from '../components';
 import { useCart, useFav } from '../store';
@@ -113,7 +113,7 @@ export default function ProductDetail() {
       <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 20, background: 'var(--bg)', borderTop: '1px solid var(--border)', padding: 12, display: 'flex', gap: 12, maxWidth: 520, margin: '0 auto' }}>
         <div style={{ flex: 1 }}>
           <div className="price" style={{ fontSize: 17 }}>{priceUsd(p.priceUsd)}</div>
-          <div className="muted" style={{ fontSize: 11 }}>≈ {priceUzs(p.price)}</div>
+          <div className="muted" style={{ fontSize: 11 }}>≈ {priceUzs(p.price)}{p.priceUsdPerWatt ? ` · ${pricePerWatt(p.priceUsdPerWatt)}` : ''}</div>
         </div>
         <button className="btn" style={{ flex: 1 }} disabled={adding} onClick={add}>
           {adding ? <span className="spinner" /> : <><ShoppingCart size={18} /> Savatga</>}
