@@ -98,6 +98,7 @@ model Product {
   isBestSeller  Boolean        @default(false) // Ko'p sotilgan
   isXit         Boolean        @default(false) // Xit badge
   hidden        Boolean        @default(false) // Admin yashirgan — userga ko'rinmaydi
+  source        String         @default("SHEET") // SHEET = Google Sheets sinxron, MANUAL = admin qo'shgan
   specs         Json? // texnik xususiyatlar: [{icon, label, value}]
   categoryId    String?
   category      Category?      @relation(fields: [categoryId], references: [id])

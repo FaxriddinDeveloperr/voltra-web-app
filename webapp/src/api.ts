@@ -135,7 +135,7 @@ export interface AdminStats {
   recentApps: AdminApplication[];
 }
 export interface AdminProduct extends Product {
-  hidden: boolean; createdAt: string; slug: string;
+  hidden: boolean; createdAt: string; slug: string; source?: string;
   categoryId?: string; brandId?: string;
   category?: { id: string; nameUz: string };
 }
@@ -168,6 +168,7 @@ export const Admin = {
 
   products: (p: Record<string, string | number> = {}) =>
     api.get<Paged<AdminProduct>>(`${adm}/products`, { params: p }).then((r) => r.data),
+  createProduct: (b: Record<string, unknown>) => api.post<AdminProduct>(`${adm}/products`, b).then((r) => r.data),
   updateProduct: (id: string, b: Record<string, unknown>) => api.patch(`${adm}/products/${id}`, b).then((r) => r.data),
   deleteProduct: (id: string) => api.delete(`${adm}/products/${id}`).then((r) => r.data),
   uploadImage: (file: File) => {

@@ -170,6 +170,67 @@ export class AdminService {
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
+  // Admin qo'lda mahsulot qo'shadi (DB'da MANUAL — Google Sheets sinxron unga tegmaydi)
+  async createProduct(body: Body0) {
+    const nameUz = String(body.nameUz ?? '').trim();
+    if (!nameUz) throw new BadRequestException('Mahsulot nomi majburiy');
+
+    const priceUsd =
+      body.priceUsd != null && body.priceUsd !== '' ? Number(body.priceUsd) : null;
+    let priceUzs =
+      body.price != null && body.price !== '' ? Number(body.price) : null;
+    if (priceUzs == null && priceUsd != null) {
+      priceUzs = Math.round(priceUsd * this.priceSync.rate);
+    }
+    if (priceUzs == null || !Number.isFinite(priceUzs)) {
+      throw new BadRequestException('Narx (USD yoki UZS) majburiy');
+    }
+
+    // Sheet kalitlari bilan to'qnashmaydigan noyob slug
+    const base =
+      nameUz.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 40) ||
+      'mahsulot';
+    const slug = `manual-${base}-${Date.now().toString(36)}`;
+
+    const images = Array.isArray(body.images)
+      ? (body.images as unknown[]).map(String).filter(Boolean)
+      : [];
+
+    const data: Prisma.ProductUncheckedCreateInput = {
+      nameUz,
+      slug,
+      source: 'MANUAL',
+      descriptionUz: body.descriptionUz != null ? String(body.descriptionUz) : null,
+      price: new Prisma.Decimal(priceUzs),
+      priceUsd: priceUsd != null ? new Prisma.Decimal(priceUsd) : null,
+      oldPrice: dec(body.oldPrice),
+      discountPct:
+        body.discountPct != null && body.discountPct !== ''
+          ? Number(body.discountPct)
+          : null,
+      shortFeatures: Array.isArray(body.shortFeatures)
+        ? (body.shortFeatures as unknown[]).map(String)
+        : [],
+      vatIncluded: true,
+      stock: 100,
+      isHot: !!body.isHot,
+      isNew: !!body.isNew,
+      isBestSeller: !!body.isBestSeller,
+      isXit: !!body.isXit,
+      hidden: !!body.hidden,
+      categoryId: body.categoryId ? String(body.categoryId) : null,
+      brandId: body.brandId ? String(body.brandId) : null,
+      ...(images.length
+        ? { images: { create: images.map((url, i) => ({ url, sortOrder: i })) } }
+        : {}),
+    };
+
+    return this.prisma.product.create({
+      data,
+      include: { images: true, category: true, brand: true },
+    });
+  }
+
   async updateProduct(id: string, body: Body0) {
     const data = pick(body, [
       'nameUz',
@@ -446,6 +507,9 @@ export class AdminController {
   // Products
   @Get('products') products(@Query() q: Body0) {
     return this.admin.products(q as never);
+  }
+  @Post('products') createProduct(@Body() b: Body0) {
+    return this.admin.createProduct(b);
   }
   @Patch('products/:id') updateProduct(@Param('id') id: string, @Body() b: Body0) {
     return this.admin.updateProduct(id, b);

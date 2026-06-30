@@ -45,6 +45,12 @@ export class PriceSyncService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PriceSyncService.name);
   private timer?: NodeJS.Timeout;
   private syncing = false;
+  private _rate = 12200; // oxirgi ma'lum USD→UZS kursi
+
+  /** Joriy USD→UZS kursi (qo'lda mahsulot narxini hisoblash uchun). */
+  get rate(): number {
+    return this._rate;
+  }
 
   constructor(
     private readonly prisma: PrismaService,
@@ -170,6 +176,7 @@ export class PriceSyncService implements OnModuleInit, OnModuleDestroy {
     try {
       const rows = this.parse(await this.loadCsv());
       const rate = rows.find((r) => r.key === 'exchange-rate')?.priceUzs ?? 12200;
+      this._rate = rate;
       const items = rows.filter(
         (r) => (r.type === 'product' || r.type === 'system') && r.key && r.label,
       );
@@ -244,6 +251,23 @@ export class PriceSyncService implements OnModuleInit, OnModuleDestroy {
         });
         updated++;
       }
+
+      // Qo'lda qo'shilgan (MANUAL) mahsulotlar — faqat UZS narxini joriy kursga
+      // moslab turamiz (nom/kategoriya/rasm/flaglarga umuman tegmaymiz).
+      const manual = await this.prisma.product.findMany({
+        where: { source: 'MANUAL', priceUsd: { not: null } },
+        select: { id: true, price: true, priceUsd: true },
+      });
+      for (const m of manual) {
+        const uzs = Math.round(Number(m.priceUsd) * rate);
+        if (Number(m.price) !== uzs) {
+          await this.prisma.product.update({
+            where: { id: m.id },
+            data: { price: new Prisma.Decimal(uzs) },
+          });
+        }
+      }
+
       this.logger.log(`Narx sinxronlandi: ${updated} mahsulot (kurs ${rate})`);
       return { updated };
     } finally {

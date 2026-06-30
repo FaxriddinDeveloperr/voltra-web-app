@@ -41,7 +41,7 @@ export function AdminProducts() {
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState('');
   const [filter, setFilter] = useState('');
-  const [edit, setEdit] = useState<AdminProduct | null>(null);
+  const [edit, setEdit] = useState<AdminProduct | 'new' | null>(null);
   const [cats, setCats] = useState<AdminCategory[]>([]);
   const [brands, setBrands] = useState<AdminBrand[]>([]);
   const toast = useToast();
@@ -86,6 +86,7 @@ export function AdminProducts() {
             {p.isNew && <Pill tone="green">Yangi</Pill>}
             {p.isBestSeller && <Pill tone="amber">Best</Pill>}
             {p.isXit && <Pill tone="amber">Xit</Pill>}
+            {p.source === 'MANUAL' && <Pill tone="blue">Qo'lda</Pill>}
             {p.category && <Pill tone="gray">{p.category.nameUz}</Pill>}
           </div>
           <div className="adm-actions">
@@ -95,27 +96,30 @@ export function AdminProducts() {
           </div>
         </div>
       ))}
+      <button className="adm-fab" onClick={() => setEdit('new')} aria-label="Mahsulot qo'shish"><Plus size={26} /></button>
       {edit && (
-        <ProductModal product={edit} cats={cats} brands={brands}
+        <ProductModal product={edit === 'new' ? null : edit} cats={cats} brands={brands}
           onClose={() => setEdit(null)}
-          onSaved={(u) => { setItems((s) => s.map((x) => (x.id === u.id ? { ...x, ...u } : x))); setEdit(null); toast('Saqlandi'); }} />
+          onSaved={() => { setEdit(null); load(); toast('Saqlandi'); }} />
       )}
     </div>
   );
 }
 
 function ProductModal({ product, cats, brands, onClose, onSaved }: {
-  product: AdminProduct; cats: AdminCategory[]; brands: AdminBrand[];
-  onClose: () => void; onSaved: (p: AdminProduct) => void;
+  product: AdminProduct | null; cats: AdminCategory[]; brands: AdminBrand[];
+  onClose: () => void; onSaved: () => void;
 }) {
+  const isNew = !product;
   const [f, setF] = useState({
-    nameUz: product.nameUz, priceUsd: product.priceUsd ?? '', price: product.price,
-    oldPrice: product.oldPrice ?? '', discountPct: product.discountPct?.toString() ?? '',
-    categoryId: product.categoryId ?? '', brandId: product.brandId ?? '',
-    descriptionUz: product.descriptionUz ?? '',
-    hidden: product.hidden, isHot: product.isHot, isNew: product.isNew, isBestSeller: product.isBestSeller, isXit: product.isXit,
+    nameUz: product?.nameUz ?? '', priceUsd: product?.priceUsd ?? '', price: product?.price ?? '',
+    oldPrice: product?.oldPrice ?? '', discountPct: product?.discountPct?.toString() ?? '',
+    categoryId: product?.categoryId ?? '', brandId: product?.brandId ?? '',
+    descriptionUz: product?.descriptionUz ?? '',
+    hidden: product?.hidden ?? false, isHot: product?.isHot ?? false, isNew: product?.isNew ?? false,
+    isBestSeller: product?.isBestSeller ?? false, isXit: product?.isXit ?? false,
   });
-  const [images, setImages] = useState<ProductImage[]>(product.images ?? []);
+  const [images, setImages] = useState<ProductImage[]>(product?.images ?? []);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -129,31 +133,36 @@ function ProductModal({ product, cats, brands, onClose, onSaved }: {
     setUploading(true);
     try {
       const url = await Admin.uploadImage(file);
-      const img = await Admin.addProductImage(product.id, url);
+      // Tahrirda — darhol mahsulotga bog'laymiz; yangi mahsulotda — URL'ni mahalliy yig'amiz
+      const img = product ? await Admin.addProductImage(product.id, url) : { id: url, url };
       setImages((s) => [...s, img]);
       toast('Rasm qo\'shildi');
     } catch { toast('Yuklashda xato', true); } finally { setUploading(false); }
   };
   const delImage = async (img: ProductImage) => {
     setImages((s) => s.filter((x) => x.id !== img.id));
-    try { await Admin.removeProductImage(product.id, img.id); } catch { toast('Xato', true); }
+    if (product) { try { await Admin.removeProductImage(product.id, img.id); } catch { toast('Xato', true); } }
   };
 
   const save = async () => {
+    if (!f.nameUz.trim()) { toast('Nomi majburiy', true); return; }
+    if (isNew && !String(f.priceUsd) && !String(f.price)) { toast('Narx (USD yoki UZS) majburiy', true); return; }
     setSaving(true);
     try {
-      const u = await Admin.updateProduct(product.id, {
-        nameUz: f.nameUz, price: f.price, priceUsd: f.priceUsd || null, oldPrice: f.oldPrice || null,
+      const payload = {
+        nameUz: f.nameUz, price: f.price || null, priceUsd: f.priceUsd || null, oldPrice: f.oldPrice || null,
         discountPct: f.discountPct ? Number(f.discountPct) : null,
         categoryId: f.categoryId || null, brandId: f.brandId || null, descriptionUz: f.descriptionUz,
         hidden: f.hidden, isHot: f.isHot, isNew: f.isNew, isBestSeller: f.isBestSeller, isXit: f.isXit,
-      });
-      onSaved({ ...(u as AdminProduct), images });
+      };
+      if (product) await Admin.updateProduct(product.id, payload);
+      else await Admin.createProduct({ ...payload, images: images.map((i) => i.url) });
+      onSaved();
     } catch { toast('Xato yuz berdi', true); } finally { setSaving(false); }
   };
 
   return (
-    <Modal title="Mahsulotni tahrirlash" onClose={onClose}>
+    <Modal title={isNew ? 'Yangi mahsulot' : 'Mahsulotni tahrirlash'} onClose={onClose}>
       {/* Rasmlar */}
       <div className="adm-field">
         <label>Rasmlar</label>
@@ -200,7 +209,11 @@ function ProductModal({ product, cats, brands, onClose, onSaved }: {
         <Toggle label="🏆 Xit" on={f.isXit} onChange={(v) => set('isXit', v)} />
       </div>
       <p style={{ fontSize: 12, color: 'var(--text-3)', margin: '0 0 12px' }}>
-        Eslatma: narx va nom Google Sheets'dan har daqiqada yangilanadi. Rasmlar, belgilar va yashirish — admin nazoratida saqlanadi.
+        {isNew
+          ? "Qo'lda qo'shiladigan mahsulot. Narxni USD'da kiriting — UZS bo'sh qoldirilsa joriy kursdan avtomatik hisoblanadi. Google Sheets sinxron bu mahsulotga tegmaydi."
+          : product?.source === 'MANUAL'
+            ? "Qo'lda qo'shilgan mahsulot. Google Sheets sinxron bunga tegmaydi (faqat UZS narx kursga moslanadi)."
+            : "Eslatma: narx va nom Google Sheets'dan har daqiqada yangilanadi. Rasmlar, belgilar va yashirish — admin nazoratida saqlanadi."}
       </p>
       <button className="adm-btn primary" style={{ width: '100%', height: 48 }} onClick={save} disabled={saving}>
         {saving ? 'Saqlanmoqda…' : 'Saqlash'}
